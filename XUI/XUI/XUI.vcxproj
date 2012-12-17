@@ -74,6 +74,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WTL\atlapp.h" />
+    <ClInclude Include="WTL\atlcrack.h" />
+    <ClInclude Include="WTL\atlctrls.h" />
+    <ClInclude Include="WTL\atlctrlw.h" />
+    <ClInclude Include="WTL\atlctrlx.h" />
+    <ClInclude Include="WTL\atlddx.h" />
+    <ClInclude Include="WTL\atldlgs.h" />
+    <ClInclude Include="WTL\atldwm.h" />
+    <ClInclude Include="WTL\atlfind.h" />
+    <ClInclude Include="WTL\atlframe.h" />
+    <ClInclude Include="WTL\atlgdi.h" />
+    <ClInclude Include="WTL\atlmisc.h" />
+    <ClInclude Include="WTL\atlprint.h" />
+    <ClInclude Include="WTL\atlres.h" />
+    <ClInclude Include="WTL\atlresce.h" />
+    <ClInclude Include="WTL\atlribbon.h" />
+    <ClInclude Include="WTL\atlscrl.h" />
+    <ClInclude Include="WTL\atlsplit.h" />
+    <ClInclude Include="WTL\atltheme.h" />
+    <ClInclude Include="WTL\atluser.h" />
+    <ClInclude Include="WTL\atlwince.h" />
+    <ClInclude Include="WTL\atlwinx.h" />
+    <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XWnd.hpp" />
+    <ClInclude Include="XUI\XUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
