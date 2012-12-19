@@ -16,6 +16,9 @@
     <Filter Include="Header Files\Ctrl">
       <UniqueIdentifier>{6ed2345c-0c30-4f5f-906c-90a87d617d26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\TinyXML">
+      <UniqueIdentifier>{fc169ff7-a73e-4fcf-ad85-f354bc4ac355}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\WTL">
       <UniqueIdentifier>{bcde9a06-d1de-4b34-b045-eb14f1f8402f}</UniqueIdentifier>
     </Filter>
@@ -23,6 +26,18 @@
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\TinyXML\tinystr.cpp">
+      <Filter>Header Files\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\TinyXML\tinyxml.cpp">
+      <Filter>Header Files\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\TinyXML\tinyxmlerror.cpp">
+      <Filter>Header Files\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp">
+      <Filter>Header Files\TinyXML</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,71 +59,80 @@
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atldlgs.h">
+    <ClInclude Include="XUI\TinyXML\tinystr.h">
+      <Filter>Header Files\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\TinyXML\tinyxml.h">
+      <Filter>Header Files\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\WTL\atlctrlx.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atldwm.h">
+    <ClInclude Include="XUI\WTL\atlddx.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlfind.h">
+    <ClInclude Include="XUI\WTL\atldlgs.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlframe.h">
+    <ClInclude Include="XUI\WTL\atldwm.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlgdi.h">
+    <ClInclude Include="XUI\WTL\atlfind.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlmisc.h">
+    <ClInclude Include="XUI\WTL\atlframe.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlprint.h">
+    <ClInclude Include="XUI\WTL\atlgdi.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlres.h">
+    <ClInclude Include="XUI\WTL\atlmisc.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlresce.h">
+    <ClInclude Include="XUI\WTL\atlprint.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlribbon.h">
+    <ClInclude Include="XUI\WTL\atlres.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlscrl.h">
+    <ClInclude Include="XUI\WTL\atlresce.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlsplit.h">
+    <ClInclude Include="XUI\WTL\atlribbon.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atltheme.h">
+    <ClInclude Include="XUI\WTL\atlscrl.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atluser.h">
+    <ClInclude Include="XUI\WTL\atlsplit.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlwince.h">
+    <ClInclude Include="XUI\WTL\atltheme.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlwinx.h">
+    <ClInclude Include="XUI\WTL\atluser.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlapp.h">
+    <ClInclude Include="XUI\WTL\atlwince.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlcrack.h">
+    <ClInclude Include="XUI\WTL\atlwinx.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlctrls.h">
+    <ClInclude Include="XUI\WTL\atlapp.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlctrlw.h">
+    <ClInclude Include="XUI\WTL\atlcrack.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlctrlx.h">
+    <ClInclude Include="XUI\WTL\atlctrls.h">
       <Filter>Header Files\WTL</Filter>
     </ClInclude>
-    <ClInclude Include="WTL\atlddx.h">
+    <ClInclude Include="XUI\WTL\atlctrlw.h">
       <Filter>Header Files\WTL</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

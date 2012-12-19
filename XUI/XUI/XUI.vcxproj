@@ -47,7 +47,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -58,7 +58,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
@@ -75,33 +75,40 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="XUI\TinyXML\tinystr.cpp" />
+    <ClCompile Include="XUI\TinyXML\tinyxml.cpp" />
+    <ClCompile Include="XUI\TinyXML\tinyxmlerror.cpp" />
+    <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WTL\atlapp.h" />
-    <ClInclude Include="WTL\atlcrack.h" />
-    <ClInclude Include="WTL\atlctrls.h" />
-    <ClInclude Include="WTL\atlctrlw.h" />
-    <ClInclude Include="WTL\atlctrlx.h" />
-    <ClInclude Include="WTL\atlddx.h" />
-    <ClInclude Include="WTL\atldlgs.h" />
-    <ClInclude Include="WTL\atldwm.h" />
-    <ClInclude Include="WTL\atlfind.h" />
-    <ClInclude Include="WTL\atlframe.h" />
-    <ClInclude Include="WTL\atlgdi.h" />
-    <ClInclude Include="WTL\atlmisc.h" />
-    <ClInclude Include="WTL\atlprint.h" />
-    <ClInclude Include="WTL\atlres.h" />
-    <ClInclude Include="WTL\atlresce.h" />
-    <ClInclude Include="WTL\atlribbon.h" />
-    <ClInclude Include="WTL\atlscrl.h" />
-    <ClInclude Include="WTL\atlsplit.h" />
-    <ClInclude Include="WTL\atltheme.h" />
-    <ClInclude Include="WTL\atluser.h" />
-    <ClInclude Include="WTL\atlwince.h" />
-    <ClInclude Include="WTL\atlwinx.h" />
+    <ClInclude Include="XUI\TinyXML\tinystr.h" />
+    <ClInclude Include="XUI\TinyXML\tinyxml.h" />
+    <ClInclude Include="XUI\WTL\atlapp.h" />
+    <ClInclude Include="XUI\WTL\atlcrack.h" />
+    <ClInclude Include="XUI\WTL\atlctrls.h" />
+    <ClInclude Include="XUI\WTL\atlctrlw.h" />
+    <ClInclude Include="XUI\WTL\atlctrlx.h" />
+    <ClInclude Include="XUI\WTL\atlddx.h" />
+    <ClInclude Include="XUI\WTL\atldlgs.h" />
+    <ClInclude Include="XUI\WTL\atldwm.h" />
+    <ClInclude Include="XUI\WTL\atlfind.h" />
+    <ClInclude Include="XUI\WTL\atlframe.h" />
+    <ClInclude Include="XUI\WTL\atlgdi.h" />
+    <ClInclude Include="XUI\WTL\atlmisc.h" />
+    <ClInclude Include="XUI\WTL\atlprint.h" />
+    <ClInclude Include="XUI\WTL\atlres.h" />
+    <ClInclude Include="XUI\WTL\atlresce.h" />
+    <ClInclude Include="XUI\WTL\atlribbon.h" />
+    <ClInclude Include="XUI\WTL\atlscrl.h" />
+    <ClInclude Include="XUI\WTL\atlsplit.h" />
+    <ClInclude Include="XUI\WTL\atltheme.h" />
+    <ClInclude Include="XUI\WTL\atluser.h" />
+    <ClInclude Include="XUI\WTL\atlwince.h" />
+    <ClInclude Include="XUI\WTL\atlwinx.h" />
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
     <ClInclude Include="XUI\XFrameWork\XWnd.hpp" />
     <ClInclude Include="XUI\XUI.h" />
