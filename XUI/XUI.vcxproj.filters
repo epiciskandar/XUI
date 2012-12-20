@@ -50,9 +50,6 @@
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XWnd.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="XUI\XUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -133,6 +130,15 @@
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\XFrameWork\XTree.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\XFrameWork\XElement.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\XFrameWork\XCtrls\XStatic.hpp">
+      <Filter>Header Files\Ctrl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

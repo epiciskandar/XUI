@@ -14,8 +14,10 @@ public:
 	XClass;
 };
 
-Description_Begin(CXRealWnd)
-Description_End;
+MyNameIs(CXRealWnd)
+End_Description;
+
+//////////////////////////////////////////////////////////////////////////
 
 VOID CXRealWnd::OnDestroy()
 {

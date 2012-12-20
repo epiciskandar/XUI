@@ -1,10 +1,7 @@
 #pragma once
 #include <atlbase.h>
 
-#include "XFrameWork/XDefine.hpp"
-#include "XFrameWork/XFrame.hpp"
-#include "XFrameWork/XWnd.hpp"
-#include "XFrameWork/XRealWnd.hpp"
+#include "XFrameWork/XBase.hpp"
 
 class CXUI
 {
@@ -20,6 +17,10 @@ private:
 	CAppModule m_atlModule;
 	HINSTANCE m_hInst;
 };
+
+#include "XFrameWork/XFrame.hpp"
+#include "XFrameWork/XRealWnd.hpp"
+#include "XFrameWork/XCtrls/XStatic.hpp"
 
 //////////////////////////////////////////////////////////////////////////
 

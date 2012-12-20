@@ -106,11 +106,13 @@
     <ClInclude Include="XUI\WTL\atlwince.h" />
     <ClInclude Include="XUI\WTL\atlwinx.h" />
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
+    <ClInclude Include="xui\XFrameWork\XCtrls\XStatic.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
+    <ClInclude Include="xui\XFrameWork\XElement.hpp" />
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XWnd.hpp" />
+    <ClInclude Include="xui\XFrameWork\XTree.hpp" />
     <ClInclude Include="XUI\XUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
