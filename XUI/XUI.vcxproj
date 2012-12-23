@@ -39,6 +39,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -50,6 +51,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -75,12 +77,75 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="XUI\Loki\LevelMutex.cpp" />
+    <ClCompile Include="XUI\Loki\OrderedStatic.cpp" />
+    <ClCompile Include="XUI\Loki\SafeFormat.cpp" />
+    <ClCompile Include="XUI\Loki\Singleton.cpp" />
+    <ClCompile Include="XUI\Loki\SmallObj.cpp" />
+    <ClCompile Include="XUI\Loki\SmartPtr.cpp" />
+    <ClCompile Include="XUI\Loki\StrongPtr.cpp" />
     <ClCompile Include="XUI\TinyXML\tinystr.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxml.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="XUI\Loki\AbstractFactory.h" />
+    <ClInclude Include="XUI\Loki\Allocator.h" />
+    <ClInclude Include="XUI\Loki\AssocVector.h" />
+    <ClInclude Include="XUI\Loki\CachedFactory.h" />
+    <ClInclude Include="XUI\Loki\Checker.h" />
+    <ClInclude Include="XUI\Loki\CheckReturn.h" />
+    <ClInclude Include="XUI\Loki\ConstPolicy.h" />
+    <ClInclude Include="XUI\Loki\DataGenerators.h" />
+    <ClInclude Include="XUI\Loki\EmptyType.h" />
+    <ClInclude Include="XUI\Loki\Factory.h" />
+    <ClInclude Include="XUI\Loki\flex\allocatorstringstorage.h" />
+    <ClInclude Include="XUI\Loki\flex\cowstringopt.h" />
+    <ClInclude Include="XUI\Loki\flex\flex_string.h" />
+    <ClInclude Include="XUI\Loki\flex\flex_string_details.h" />
+    <ClInclude Include="XUI\Loki\flex\flex_string_shell.h" />
+    <ClInclude Include="XUI\Loki\flex\simplestringstorage.h" />
+    <ClInclude Include="XUI\Loki\flex\smallstringopt.h" />
+    <ClInclude Include="XUI\Loki\flex\vectorstringstorage.h" />
+    <ClInclude Include="XUI\Loki\Function.h" />
+    <ClInclude Include="XUI\Loki\Functor.h" />
+    <ClInclude Include="XUI\Loki\HierarchyGenerators.h" />
+    <ClInclude Include="XUI\Loki\Key.h" />
+    <ClInclude Include="XUI\Loki\LevelMutex.h" />
+    <ClInclude Include="XUI\Loki\LockingPtr.h" />
+    <ClInclude Include="XUI\Loki\LokiExport.h" />
+    <ClInclude Include="XUI\Loki\LokiTypeInfo.h" />
+    <ClInclude Include="XUI\Loki\MultiMethods.h" />
+    <ClInclude Include="XUI\Loki\NullType.h" />
+    <ClInclude Include="XUI\Loki\OrderedStatic.h" />
+    <ClInclude Include="XUI\Loki\Pimpl.h" />
+    <ClInclude Include="XUI\Loki\RefToValue.h" />
+    <ClInclude Include="XUI\Loki\Register.h" />
+    <ClInclude Include="XUI\Loki\SafeBits.h" />
+    <ClInclude Include="XUI\Loki\SafeFormat.h" />
+    <ClInclude Include="XUI\Loki\ScopeGuard.h" />
+    <ClInclude Include="XUI\Loki\Sequence.h" />
+    <ClInclude Include="XUI\Loki\Singleton.h" />
+    <ClInclude Include="XUI\Loki\SmallObj.h" />
+    <ClInclude Include="XUI\Loki\SmartPtr.h" />
+    <ClInclude Include="XUI\Loki\SPCachedFactory.h" />
+    <ClInclude Include="XUI\Loki\static_check.h" />
+    <ClInclude Include="XUI\Loki\StrongPtr.h" />
+    <ClInclude Include="XUI\Loki\Threads.h" />
+    <ClInclude Include="XUI\Loki\Tuple.h" />
+    <ClInclude Include="XUI\Loki\Typelist.h" />
+    <ClInclude Include="XUI\Loki\TypelistMacros.h" />
+    <ClInclude Include="XUI\Loki\TypeManip.h" />
+    <ClInclude Include="XUI\Loki\TypeTraits.h" />
+    <ClInclude Include="XUI\Loki\Visitor.h" />
+    <ClInclude Include="XUI\Loki\yasli\platform.h" />
+    <ClInclude Include="XUI\Loki\yasli\random.h" />
+    <ClInclude Include="XUI\Loki\yasli\yasli_fill_iterator.h" />
+    <ClInclude Include="XUI\Loki\yasli\yasli_memory.h" />
+    <ClInclude Include="XUI\Loki\yasli\yasli_protocols.h" />
+    <ClInclude Include="XUI\Loki\yasli\yasli_traits.h" />
+    <ClInclude Include="XUI\Loki\yasli\yasli_vector.h" />
     <ClInclude Include="XUI\TinyXML\tinystr.h" />
     <ClInclude Include="XUI\TinyXML\tinyxml.h" />
     <ClInclude Include="XUI\WTL\atlapp.h" />
@@ -110,6 +175,7 @@
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
     <ClInclude Include="xui\XFrameWork\XElement.hpp" />
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
     <ClInclude Include="xui\XFrameWork\XTree.hpp" />

@@ -2,25 +2,22 @@
 #include <atlbase.h>
 
 #include "XFrameWork/XBase.hpp"
+#include "XFrameWork/XGaia.hpp"
 
 class CXUI
 {
+	Singleton(CXUI);
 public:
-	DISALLOW_COPY_AND_ASSIGN(CXUI);
-	CXUI();
 	static CXUI& GetInstance();
 public:
 	BOOL Initialize(HINSTANCE hInst);
 	VOID Finalize();
 	VOID Work();
+	CXGaia& GetGaia();
 private:
 	CAppModule m_atlModule;
 	HINSTANCE m_hInst;
 };
-
-#include "XFrameWork/XFrame.hpp"
-#include "XFrameWork/XRealWnd.hpp"
-#include "XFrameWork/XCtrls/XStatic.hpp"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -56,4 +53,9 @@ VOID CXUI::Work()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+}
+
+CXGaia& CXUI::GetGaia()
+{
+	return CXGaia::GetInstance();
 }

@@ -16,10 +16,16 @@
     <Filter Include="Header Files\Ctrl">
       <UniqueIdentifier>{6ed2345c-0c30-4f5f-906c-90a87d617d26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TinyXML">
+    <Filter Include="Header Files\ThirdParty">
+      <UniqueIdentifier>{6419b361-1903-4f0d-9170-7101b8290e2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ThirdParty\Loki">
+      <UniqueIdentifier>{15c877c9-ee02-4188-abec-ed60b6ad052c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ThirdParty\TinyXML">
       <UniqueIdentifier>{fc169ff7-a73e-4fcf-ad85-f354bc4ac355}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\WTL">
+    <Filter Include="Header Files\ThirdParty\WTL">
       <UniqueIdentifier>{bcde9a06-d1de-4b34-b045-eb14f1f8402f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -28,16 +34,37 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="XUI\TinyXML\tinystr.cpp">
-      <Filter>Header Files\TinyXML</Filter>
+      <Filter>Header Files\ThirdParty\TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="XUI\TinyXML\tinyxml.cpp">
-      <Filter>Header Files\TinyXML</Filter>
+      <Filter>Header Files\ThirdParty\TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="XUI\TinyXML\tinyxmlerror.cpp">
-      <Filter>Header Files\TinyXML</Filter>
+      <Filter>Header Files\ThirdParty\TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp">
-      <Filter>Header Files\TinyXML</Filter>
+      <Filter>Header Files\ThirdParty\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\Loki\SafeFormat.cpp">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\Loki\Singleton.cpp">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\Loki\SmallObj.cpp">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\Loki\SmartPtr.cpp">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\Loki\StrongPtr.cpp">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\Loki\LevelMutex.cpp">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\Loki\OrderedStatic.cpp">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,76 +84,76 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XUI\TinyXML\tinystr.h">
-      <Filter>Header Files\TinyXML</Filter>
+      <Filter>Header Files\ThirdParty\TinyXML</Filter>
     </ClInclude>
     <ClInclude Include="XUI\TinyXML\tinyxml.h">
-      <Filter>Header Files\TinyXML</Filter>
+      <Filter>Header Files\ThirdParty\TinyXML</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlctrlx.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlddx.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atldlgs.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atldwm.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlfind.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlframe.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlgdi.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlmisc.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlprint.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlres.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlresce.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlribbon.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlscrl.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlsplit.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atltheme.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atluser.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlwince.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlwinx.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlapp.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlcrack.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlctrls.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\WTL\atlctrlw.h">
-      <Filter>Header Files\WTL</Filter>
+      <Filter>Header Files\ThirdParty\WTL</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp">
       <Filter>Header Files</Filter>
@@ -139,6 +166,177 @@
     </ClInclude>
     <ClInclude Include="xui\XFrameWork\XCtrls\XStatic.hpp">
       <Filter>Header Files\Ctrl</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\AbstractFactory.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Allocator.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\AssocVector.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\CachedFactory.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Checker.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\CheckReturn.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\ConstPolicy.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\DataGenerators.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\EmptyType.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Factory.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\flex\allocatorstringstorage.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\flex\cowstringopt.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\flex\flex_string.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\flex\flex_string_details.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\flex\flex_string_shell.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\flex\simplestringstorage.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\flex\smallstringopt.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\flex\vectorstringstorage.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Function.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Functor.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\HierarchyGenerators.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Key.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\LevelMutex.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\LockingPtr.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\LokiExport.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\LokiTypeInfo.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\MultiMethods.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\NullType.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\OrderedStatic.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Pimpl.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\RefToValue.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Register.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\SafeBits.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\SafeFormat.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\ScopeGuard.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Sequence.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Singleton.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\SmallObj.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\SmartPtr.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\SPCachedFactory.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\static_check.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\StrongPtr.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Threads.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Tuple.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Typelist.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\TypelistMacros.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\TypeManip.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\TypeTraits.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\Visitor.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\yasli\platform.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\yasli\random.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\yasli\yasli_fill_iterator.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\yasli\yasli_memory.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\yasli\yasli_protocols.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\yasli\yasli_traits.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Loki\yasli\yasli_vector.h">
+      <Filter>Header Files\ThirdParty\Loki</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XGaia.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
