@@ -7,8 +7,6 @@
 #include <atldef.h>
 #include <list>
 
-#include "../Loki/SmartPtr.h"
-
 #define _WTL_NO_CSTRING
 #include "../WTL/atlapp.h"
 #include "../WTL/atlwinx.h"		// reflection
