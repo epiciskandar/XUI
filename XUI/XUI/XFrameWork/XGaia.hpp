@@ -13,7 +13,7 @@ class CXGaia
 	Singleton(CXGaia);
 public:
 	static CXGaia& GetInstance();
-	NodeRef CreateChild(CString className);
+	NodeRef Create(CString className);
 
 protected:
 	typedef std::map<CString,std::function<NodeRef()>> ElementRecord;
@@ -40,7 +40,7 @@ CXGaia::CXGaia()
 	RecordXClass(CXStatic);
 }
 
-NodeRef CXGaia::CreateChild( CString className )
+NodeRef CXGaia::Create( CString className )
 {
 	auto i = m_record.find(className);
 	if (i != m_record.end())

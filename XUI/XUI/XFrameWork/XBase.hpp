@@ -107,7 +107,7 @@ public:
 	XSmartPtr(PointerType const rhs) : m_ptr(rhs){if(m_ptr){m_ptr->AddRef();}};
 	XSmartPtr(const XSmartPtr& rhs) : m_ptr(NULL)
 	{
-		m_ptr = rhs.GetPointer();
+		m_ptr = rhs._GetPointer();
 		if (m_ptr)
 		{
 			m_ptr->AddRef();
@@ -128,7 +128,7 @@ public:
 		return m_ptr;
 	}
 protected:
-	PointerType GetPointer() const
+	PointerType _GetPointer() const
 	{
 		return m_ptr;
 	}
@@ -143,7 +143,7 @@ protected:
 template <class DestTypeRef,class SrcTypeRef>
 DestTypeRef TransformNode(SrcTypeRef& rhs)
 {
-	SrcTypeRef::PointerType ptr = rhs.GetPointer();
+	SrcTypeRef::PointerType ptr = rhs._GetPointer();
 	DestTypeRef newref(dynamic_cast<DestTypeRef::PointerType>(ptr));
 	return newref;
 }

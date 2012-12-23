@@ -9,7 +9,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	CXUI& xui = CXUI::GetInstance();
 	xui.Initialize(hInstance);
 
-	NodeRef node = xui.GetGaia().CreateChild(CXRealWnd::GetMyClassName());
+	NodeRef node = xui.GetGaia().Create(CXRealWnd::GetMyClassName());
 	CXRealWndRef wnd = TransformNode<CXRealWndRef>(node);
 	wnd->Create(NULL,NULL,_T("windowName"),WS_OVERLAPPEDWINDOW|WS_VISIBLE);
 	xui.Work();
