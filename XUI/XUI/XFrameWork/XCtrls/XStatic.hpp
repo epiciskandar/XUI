@@ -9,22 +9,21 @@ class CXStatic : public CXElement
 		XProperty(Text,CString)
 		XProperty(TextColor,COLORREF)
 	XProperty_End;
-public:
-	virtual XResult OnPaint();
 
+	BEGIN_MSG_MAP_EX(CXStatic)
+		On_XMessage(CXMsg_Paint)
+	END_MSG_MAP()
+public:
+	LRESULT On_CXMsg_Paint(CXMsg_Paint* arg);
 };
+
+typedef XSmartPtr<CXStatic> CXStaticRef;
 
 MyNameIs(CXStatic)
 	I_Can("ÏÔÊ¾¾²Ì¬ÎÄ±¾")
 End_Description;
 
 //////////////////////////////////////////////////////////////////////////
-
-
-XResult CXStatic::OnPaint()
-{
-	return XResult_OK;
-}
 
 XResult CXStatic::SetText(CString param)
 {
@@ -42,7 +41,13 @@ XResult CXStatic::SetTextColor(COLORREF param)
 	m_TextColor = param;
 	return XResult_OK;
 }
+
 COLORREF CXStatic::GetTextColor()
 {
 	return m_TextColor;
+}
+
+LRESULT On_CXMsg_Paint(CXMsg_Paint* arg)
+{
+	return 0;
 }

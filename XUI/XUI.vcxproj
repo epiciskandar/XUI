@@ -110,9 +110,11 @@
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
     <ClInclude Include="xui\XFrameWork\XCtrls\XStatic.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp" />
     <ClInclude Include="xui\XFrameWork\XElement.hpp" />
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
     <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XMsg.hpp" />
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
     <ClInclude Include="xui\XFrameWork\XTree.hpp" />

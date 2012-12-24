@@ -49,13 +49,31 @@ CString _className :: GetDescription() \
 //////////////////////////////////////////////////////////////////////////
 
 #define XProperty_Begin
-#define XProperty(_name,_paramtype) \
+#define XProperty_Interface(_name,_paramtype)\
 public: \
 	virtual XResult Set##_name (_paramtype param) ; \
 	virtual _paramtype Get##_name (); \
-protected: \
+protected:
+#define XProperty(_name,_paramtype) \
+	XProperty_Interface(_name,_paramtype) \
 	_paramtype m_##_name;
 #define XProperty_End
+
+//////////////////////////////////////////////////////////////////////////
+
+#define On_XMessage(_msg) \
+if (uMsg == WM_USER_XUIMSG) \
+{ \
+	CXMsg* pMsg = (CXMsg*)(void*)wParam; \
+	if(pMsg->GetMyMsgName().CompareNoCase(_msg::GetXMsgName()) == 0) \
+	{ \
+		_msg* pDeriMsg = dynamic_cast<_msg*>(pMsg); \
+		ATLASSERT(pDeriMsg && "invalid XMessage response!!!!!!!"); \
+		lResult = On_##_msg(pDeriMsg); \
+		if(IsMsgHandled()) \
+		return TRUE; \
+	} \
+}
 
 //////////////////////////////////////////////////////////////////////////
 
