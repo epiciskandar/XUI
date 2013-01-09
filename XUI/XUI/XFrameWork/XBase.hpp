@@ -6,6 +6,7 @@
 #include <atlstr.h>
 #include <atldef.h>
 #include <list>
+#include <set>
 
 #define _WTL_NO_CSTRING
 #include "../WTL/atlapp.h"
@@ -61,19 +62,42 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-#define On_XMessage(_msg) \
-if (uMsg == WM_USER_XUIMSG) \
+#define SupportXMessage		virtual BOOL ProcessXMessage(CXMsg& msg) = 0;
+
+#define BEGIN_XMESSAGE_MAP	virtual BOOL ProcessXMessage(CXMsg& msg) \
 { \
-	CXMsg* pMsg = (CXMsg*)(void*)wParam; \
-	if(pMsg->GetMyMsgName().CompareNoCase(_msg::GetXMsgName()) == 0) \
+	CXMsg_GetListenList* pListMsg = dynamic_cast<CXMsg_GetListenList*>(&msg);
+
+#define On_XMessage(_msg) \
+	if (pListMsg) \
 	{ \
-		_msg* pDeriMsg = dynamic_cast<_msg*>(pMsg); \
-		ATLASSERT(pDeriMsg && "invalid XMessage response!!!!!!!"); \
-		lResult = On_##_msg(pDeriMsg); \
-		if(IsMsgHandled()) \
-		return TRUE; \
+		pListMsg->XMsgList.push_back(_msg::GetXMsgName()); \
 	} \
-}
+	else if( msg.GetMyMsgName().CompareNoCase(_msg::GetXMsgName()) == 0) \
+	{ \
+		_msg* pDeriMsg = dynamic_cast<_msg*>(&msg); \
+		ATLASSERT(pDeriMsg && "invalid XMessage response!!!!!!!"); \
+		On_##_msg(*pDeriMsg); \
+		if(msg.msgHandled) \
+		return TRUE; \
+	}
+
+#define END_XMESSAGE_MAP	return pListMsg? TRUE: FALSE; }
+
+#define TranslateToXMessage(_transfunc, ...) \
+	{ \
+		UINT msgList[] = { __VA_ARGS__ }; \
+		static std::set<UINT> handleMsgSet; \
+		if (handleMsgSet.empty()) \
+			for(UINT n=0; n<_countof(msgList); ++n){handleMsgSet.insert(msgList[n]);} \
+		if(handleMsgSet.find(uMsg) != handleMsgSet.end()) \
+		{ \
+			SetMsgHandled(TRUE); \
+			lResult = _transfunc(uMsg, wParam, lParam); \
+			if(IsMsgHandled()) \
+			return TRUE; \
+		} \
+	}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -155,6 +179,8 @@ protected:
 protected:
 	T* m_ptr;
 };
+
+#define DefineRef(_Class) typedef XSmartPtr<_Class> _Class##Ref;
 
 template <class DestTypeRef,class SrcTypeRef>
 DestTypeRef TransformNode(SrcTypeRef& rhs)

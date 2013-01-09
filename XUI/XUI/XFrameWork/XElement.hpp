@@ -15,14 +15,21 @@ class CXElement : public CXBase
 		XProperty_Interface(Size,CPoint)
 	XProperty_End;
 
+	SupportXMessage;
+
 public:
 	CXElement();
 	~CXElement();
-public:
-	virtual XResult OnPaint();
+protected:
+	VOID _SendXMessageToChildren(CXMsg& pMsg);
+protected:
+	LRESULT On_CXMsg_Paint(CXMsg_Paint& arg);
 };
 
+DefineRef(CXElement);
+
 MyNameIs(CXElement)
+	I_Provide("可绘制元素的基本属性及X消息路由")
 End_Description;
 
 //////////////////////////////////////////////////////////////////////////
@@ -37,12 +44,13 @@ CXElement::~CXElement()
 
 }
 
-XResult CXElement::OnPaint()
+LRESULT CXElement::On_CXMsg_Paint(CXMsg_Paint& arg)
 {
-	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+	if (!arg.msgHandled)
 	{
+		_SendXMessageToChildren(arg);
 	}
-	return XResult_NotImpl;
+	return XResult_OK;
 }
 
 XResult CXElement::SetID(CString param)
@@ -87,4 +95,13 @@ XResult CXElement::SetSize(CPoint param)
 CPoint CXElement::GetSize()
 {
 	return CPoint(m_Rect.BottomRight());
+}
+
+VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
+{
+	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+	{
+		CXElementRef pElement = TransformNode<CXElementRef>(*i);
+		pElement->ProcessXMessage( pMsg );
+	}
 }

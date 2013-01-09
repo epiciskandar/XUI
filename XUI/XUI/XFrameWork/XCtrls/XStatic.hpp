@@ -10,11 +10,11 @@ class CXStatic : public CXElement
 		XProperty(TextColor,COLORREF)
 	XProperty_End;
 
-	BEGIN_MSG_MAP_EX(CXStatic)
+	BEGIN_XMESSAGE_MAP
 		On_XMessage(CXMsg_Paint)
-	END_MSG_MAP()
+	END_XMESSAGE_MAP;
 public:
-	LRESULT On_CXMsg_Paint(CXMsg_Paint* arg);
+	VOID On_CXMsg_Paint(CXMsg_Paint& arg);
 };
 
 typedef XSmartPtr<CXStatic> CXStaticRef;
@@ -47,7 +47,7 @@ COLORREF CXStatic::GetTextColor()
 	return m_TextColor;
 }
 
-LRESULT On_CXMsg_Paint(CXMsg_Paint* arg)
+VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& arg)
 {
-	return 0;
+	arg.msgHandled = TRUE;
 }
