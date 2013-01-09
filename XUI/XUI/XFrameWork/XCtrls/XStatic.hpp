@@ -14,7 +14,7 @@ class CXStatic : public CXElement
 		On_XMessage(CXMsg_Paint)
 	END_XMESSAGE_MAP;
 public:
-	VOID On_CXMsg_Paint(CXMsg_Paint& arg);
+	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
 };
 
 typedef XSmartPtr<CXStatic> CXStaticRef;
@@ -47,7 +47,12 @@ COLORREF CXStatic::GetTextColor()
 	return m_TextColor;
 }
 
-VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& arg)
+VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
-	arg.msgHandled = TRUE;
+	if (msg.drawDevice.IsRectNeedRePaint(m_Rect))
+	{
+		TextOut(msg.drawDevice.dc,0,0,m_Text,m_Text.GetLength());
+		_SendXMessageToChildren(msg);
+	}
+	msg.msgHandled = TRUE;
 }

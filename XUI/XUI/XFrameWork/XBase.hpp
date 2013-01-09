@@ -99,6 +99,21 @@ protected:
 		} \
 	}
 
+#define MessageTranslater(_msg) \
+	VOID	Before##_msg(_msg& msg, WPARAM wParam, LPARAM lParam); \
+	VOID	End##_msg(_msg& msg);
+
+#define XMsgTranslater(_msg,_xmsg) \
+	case _msg: \
+	{ \
+		_xmsg msg; \
+		Before##_xmsg(msg,wParam,lParam); \
+		_SendXMessageToChildren(msg); \
+		End##_xmsg(msg); \
+		lResult = msg.msgRet; \
+		SetMsgHandled(msg.msgHandled); \
+	} \
+	break;
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef DISALLOW_COPY_AND_ASSIGN
@@ -132,6 +147,8 @@ virtual ULONG STDMETHODCALLTYPE Release() \
 } \
 unsigned long m_refCount;
 #endif
+
+#define URP(...)	(__VA_ARGS__);
 
 //////////////////////////////////////////////////////////////////////////
 
