@@ -51,7 +51,15 @@ VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
 	if (msg.drawDevice.IsRectNeedRePaint(m_Rect))
 	{
-		TextOut(msg.drawDevice.dc,0,0,m_Text,m_Text.GetLength());
+		DRAWTEXTPARAMS params;
+		ZeroMemory(&params,sizeof(params));
+		params.cbSize = sizeof(params);
+		DrawTextEx(msg.drawDevice.dc,
+			m_Text.GetBuffer(m_Text.GetLength()),
+			m_Text.GetLength(),
+			m_Rect,DT_CENTER | DT_SINGLELINE | DT_VCENTER,
+			&params);
+		m_Text.ReleaseBuffer();
 		_SendXMessageToChildren(msg);
 	}
 	msg.msgHandled = TRUE;

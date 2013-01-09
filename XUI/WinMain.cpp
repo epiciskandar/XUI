@@ -15,7 +15,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	NodeRef textNode = xui.GetGaia().Create(CXStatic::GetMyClassName());
 	CXStaticRef textRef = TransformNode<CXStaticRef>(textNode);
 	node->AppendChild(textNode);
-	textRef->SetRect(CRect(0,0,100,20));
+	CXRealWndRef wndRef = TransformNode<CXRealWndRef>(node);
+	CRect rect;
+	wndRef->GetClientRect(rect);
+	textRef->SetRect(rect);
 	textRef->SetText(_T("Hello World!"));
 	xui.Work();
 

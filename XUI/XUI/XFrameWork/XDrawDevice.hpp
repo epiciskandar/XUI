@@ -19,3 +19,25 @@ public:
 		return *this;
 	}
 };
+
+class CGDIHandleSwitcher
+{
+public:
+	CGDIHandleSwitcher(HDC dc,HGDIOBJ GDIObj,BOOL autoDelete=TRUE)
+		: m_dc(dc),m_oldGDIObj(0),m_autoDelete(autoDelete)
+	{
+		m_oldGDIObj = SelectObject(dc,GDIObj);
+	}
+	~CGDIHandleSwitcher()
+	{
+		HGDIOBJ hObj = SelectObject(m_dc,m_oldGDIObj);
+		if (m_autoDelete)
+		{
+			DeleteObject(hObj);
+		}
+	}
+protected:
+	HDC		m_dc;
+	HGDIOBJ	m_oldGDIObj;
+	BOOL	m_autoDelete;
+};
