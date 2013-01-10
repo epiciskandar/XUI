@@ -14,3 +14,7 @@
 /ipch
 /Debug
 /XUI/Debug
+/*.suo
+/*.opensdf
+/*.sdf
+/*.suo
