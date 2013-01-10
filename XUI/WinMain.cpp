@@ -1,5 +1,16 @@
 #include "XUI/XUI.h"
 
+void Prepare()
+{
+	CString path;
+	GetModuleFileName(NULL,path.GetBuffer(MAX_PATH),MAX_PATH);
+	path.ReleaseBuffer();
+	Util::Path::GetDir(path);
+	Util::Path::GetParentDir(path);
+	path += _T("Resource/");
+	CXResPool::GetInstance().SetResDir(_T("res:"),path);
+}
+
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
@@ -8,6 +19,11 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 
 	CXUI& xui = CXUI::GetInstance();
 	xui.Initialize(hInstance);
+	Prepare();
+
+	CString xmlPath = _T("res:/test.xml");
+	CXResPool::GetInstance().TranslateResPath(xmlPath);
+	NodeRef xmlNode = xui.GetGaia().CreateFromXML(xmlPath);
 
 	NodeRef node = xui.GetGaia().Create(CXRealWnd::GetMyClassName());
 	CXRealWndRef wnd = TransformNode<CXRealWndRef>(node);

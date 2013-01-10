@@ -10,10 +10,10 @@
 class CXGaia
 {
 	XClass;
-	Singleton(CXGaia);
+	XSingleton(CXGaia);
 public:
-	static CXGaia& GetInstance();
 	NodeRef Create(CString className);
+	NodeRef CreateFromXML(CString xmlFile);
 
 protected:
 	typedef std::map<CString,std::function<NodeRef()>> ElementRecord;
@@ -25,12 +25,6 @@ MyNameIs(CXGaia)
 End_Description;
 
 //////////////////////////////////////////////////////////////////////////
-
-CXGaia& CXGaia::GetInstance()
-{
-	static CXGaia gaia;
-	return gaia;
-}
 
 #define RecordXClass(xclass) m_record[xclass::GetMyClassName()] = []{return new xclass;};
 
@@ -47,6 +41,13 @@ NodeRef CXGaia::Create( CString className )
 	{
 		return NodeRef((i->second)());	// it is important to init NodeRef this way
 	}
+	return nullptr;
+}
+
+NodeRef CXGaia::CreateFromXML( CString xmlFile )
+{
+	ATL::CFile file;
+	file.Open(xmlFile,GENERIC_READ);
 	return nullptr;
 }
 

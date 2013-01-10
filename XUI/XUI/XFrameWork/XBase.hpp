@@ -14,6 +14,7 @@
 #include "../WTL/atlframe.h"
 #include "../WTL/atlcrack.h"	// message handle
 #include "../WTL/atlmisc.h"
+#include "Others/CFile.hpp"
 
 class CXBase
 {
@@ -56,8 +57,8 @@ public: \
 	virtual _paramtype Get##_name (); \
 protected:
 #define XProperty(_name,_paramtype) \
-	XProperty_Interface(_name,_paramtype) \
-	_paramtype m_##_name;
+	_paramtype m_##_name; \
+	XProperty_Interface(_name,_paramtype)
 #define XProperty_End
 
 //////////////////////////////////////////////////////////////////////////
@@ -123,12 +124,12 @@ private: \
 	void operator=(const TypeName&);
 #endif
 
-#ifndef Singleton
-#define Singleton(ClassName) \
+#define XSingleton(ClassName) \
 DISALLOW_COPY_AND_ASSIGN(ClassName) \
 private: \
-	ClassName();
-#endif
+	ClassName(); \
+public: \
+	static ClassName& GetInstance(){static ClassName _instance;return _instance;};
 
 #ifndef RefCountImpl
 #define RefCountImpl \
@@ -149,6 +150,8 @@ unsigned long m_refCount;
 #endif
 
 #define URP(...)	(__VA_ARGS__);
+#define IF_RETURN(_exp,_ret)	{if(_exp){return _ret;}}
+#define Return_OnXError(_exp)	{XResult result = _exp;if(XFAILED(result)){return result;}}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -206,3 +209,7 @@ DestTypeRef TransformNode(SrcTypeRef& rhs)
 	DestTypeRef newref(dynamic_cast<DestTypeRef::PointerType>(ptr));
 	return newref;
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+#include "XUtil.hpp"

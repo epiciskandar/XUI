@@ -1,14 +1,12 @@
 #pragma once
-#include <atlbase.h>
 
 #include "XFrameWork/XBase.hpp"
 #include "XFrameWork/XGaia.hpp"
+#include "XFrameWork/XResPool.hpp"
 
 class CXUI
 {
-	Singleton(CXUI);
-public:
-	static CXUI& GetInstance();
+	XSingleton(CXUI);
 public:
 	BOOL Initialize(HINSTANCE hInst);
 	VOID Finalize();
@@ -24,12 +22,6 @@ private:
 CXUI::CXUI() : m_hInst(0)
 {
 
-}
-
-CXUI& CXUI::GetInstance()
-{
-	static CXUI xuiMain;
-	return xuiMain;
 }
 
 BOOL CXUI::Initialize( HINSTANCE hInst )

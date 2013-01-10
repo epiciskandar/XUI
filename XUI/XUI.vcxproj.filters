@@ -25,6 +25,9 @@
     <Filter Include="Header Files\ThirdParty\WTL">
       <UniqueIdentifier>{bcde9a06-d1de-4b34-b045-eb14f1f8402f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Others">
+      <UniqueIdentifier>{bfd782b2-f658-4c31-8499-7caa66484a3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -152,5 +155,19 @@
     <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XUtil.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\Others\CFile.hpp">
+      <Filter>Header Files\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\XFrameWork\XProperty.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resource\Test.xml">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

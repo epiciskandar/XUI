@@ -83,6 +83,7 @@
     <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="XUI\Others\CFile.hpp" />
     <ClInclude Include="XUI\TinyXML\tinystr.h" />
     <ClInclude Include="XUI\TinyXML\tinyxml.h" />
     <ClInclude Include="XUI\WTL\atlapp.h" />
@@ -115,10 +116,15 @@
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
     <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />
     <ClInclude Include="XUI\XFrameWork\XMsg.hpp" />
+    <ClInclude Include="xui\XFrameWork\XProperty.hpp" />
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
     <ClInclude Include="xui\XFrameWork\XTree.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XUtil.hpp" />
     <ClInclude Include="XUI\XUI.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resource\Test.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<XUI version="1" >
+  <XRealWnd Name="testWnd" ID="10086" Title="Test" Size="300,250" LayoutType="OffsetLayout">
+    <XText Text="Hello World!" Size="100,20" HCenter="TRUE" VCenter="TRUE" />
+  </XRealWnd>
+</XUI>
