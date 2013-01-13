@@ -17,7 +17,7 @@ class CXElement : public CXBase
 	XProperty_End;
 
 	SupportXMessage;
-	SupportXProperty(m_property);
+	CXProperty& GetPrpertyRef(){return m_property;};
 
 public:
 	CXElement();
