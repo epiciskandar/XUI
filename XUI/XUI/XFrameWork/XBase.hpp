@@ -51,15 +51,31 @@ CString _className :: GetDescription() \
 //////////////////////////////////////////////////////////////////////////
 
 #define XProperty_Begin
-#define XProperty_Interface(_name,_paramtype)\
+#define XProperty(_m_prop,_paramtype,_name) \
 public: \
-	virtual XResult Set##_name (_paramtype param) ; \
-	virtual _paramtype Get##_name (); \
-protected:
-#define XProperty(_name,_paramtype) \
-	_paramtype m_##_name; \
-	XProperty_Interface(_name,_paramtype)
+	virtual XResult Set##_name (_paramtype param) \
+	{ \
+		return _m_prop.SetProperty(L#_name,param); \
+	} \
+	virtual XResult Get##_name (_paramtype& value) \
+	{ \
+		return _m_prop.GetProperty(L#_name,value); \
+	}
 #define XProperty_End
+
+#define SupportXProperty(_prop) \
+	XResult SetProperty(CString key,CString value)		{return _prop.SetProperty(key,value);}; \
+	XResult SetProperty(CString key,DWORD value)		{return _prop.SetProperty(key,value);}; \
+	XResult SetProperty(CString key,NodeRef value)		{return _prop.SetProperty(key,value);}; \
+	XResult GetProperty(CString key,CString& value) const{return _prop.GetProperty(key,value);}; \
+	XResult GetProperty(CString key,DWORD& value) const	{return _prop.GetProperty(key,value);}; \
+	XResult GetProperty(CString key,NodeRef& value)		{return _prop.GetProperty(key,value);}; \
+	XResult GetPropertySet(CXProperty& prop)			{prop = _prop;return XResult_OK;}; \
+	XResult SetPropertySet(const CXProperty& prop)		{_prop = prop;return XResult_OK;}
+
+#define SupportCopyAndAssign(_type,_value) \
+	_type& operator=(const _type& rhs){_value=rhs._value;return *this;} \
+	_type(const _type& rhs){_value=rhs._value;}
 
 //////////////////////////////////////////////////////////////////////////
 

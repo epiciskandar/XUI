@@ -77,12 +77,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="xui\Others\CBuffer.cpp" />
     <ClCompile Include="XUI\TinyXML\tinystr.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxml.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="xui\Others\CBuffer.h" />
     <ClInclude Include="XUI\Others\CFile.hpp" />
     <ClInclude Include="XUI\TinyXML\tinystr.h" />
     <ClInclude Include="XUI\TinyXML\tinyxml.h" />
@@ -117,6 +119,7 @@
     <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />
     <ClInclude Include="XUI\XFrameWork\XMsg.hpp" />
     <ClInclude Include="xui\XFrameWork\XProperty.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XPropertyValue.hpp" />
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
     <ClInclude Include="xui\XFrameWork\XTree.hpp" />

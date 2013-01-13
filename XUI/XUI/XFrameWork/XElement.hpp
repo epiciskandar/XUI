@@ -2,6 +2,7 @@
 #include "XBase.hpp"
 #include "XTree.hpp"
 #include "XMsg.hpp"
+#include "XProperty.hpp"
 
 class CXElement : public CXBase
 	, public CXTreeNode
@@ -9,21 +10,23 @@ class CXElement : public CXBase
 	XClass;
 
 	XProperty_Begin
-		XProperty(ID,CString)
-		XProperty(Rect,CRect)
-		XProperty_Interface(Position,CPoint)
-		XProperty_Interface(Size,CPoint)
+		XProperty(m_property,CString,	ID)
+		XProperty(m_property,CRect,		Rect)
+		XProperty(m_property,CPoint,	Position)
+		XProperty(m_property,CPoint,	Size)
 	XProperty_End;
 
 	SupportXMessage;
+	SupportXProperty(m_property);
 
 public:
 	CXElement();
 	~CXElement();
 protected:
 	VOID _SendXMessageToChildren(CXMsg& pMsg);
-protected:
 	LRESULT On_CXMsg_Paint(CXMsg_Paint& arg);
+protected:
+	CXProperty m_property;
 };
 
 DefineRef(CXElement);
@@ -51,50 +54,6 @@ LRESULT CXElement::On_CXMsg_Paint(CXMsg_Paint& arg)
 		_SendXMessageToChildren(arg);
 	}
 	return XResult_OK;
-}
-
-XResult CXElement::SetID(CString param)
-{
-	m_ID = param;
-	return XResult_OK;
-}
-
-CString CXElement::GetID()
-{
-	return m_ID;
-}
-
-XResult CXElement::SetRect(CRect param)
-{
-	m_Rect = param;
-	return XResult_OK;
-}
-
-CRect CXElement::GetRect()
-{
-	return m_Rect;
-}
-
-XResult CXElement::SetPosition(CPoint param)
-{
-	m_Rect.TopLeft() = param;
-	return XResult_OK;
-}
-
-CPoint CXElement::GetPosition()
-{
-	return CPoint(m_Rect.TopLeft());
-}
-
-XResult CXElement::SetSize(CPoint param)
-{
-	m_Rect.BottomRight() = param;
-	return XResult_OK;
-}
-
-CPoint CXElement::GetSize()
-{
-	return CPoint(m_Rect.BottomRight());
 }
 
 VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )

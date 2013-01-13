@@ -45,6 +45,9 @@
     <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp">
       <Filter>Header Files\ThirdParty\TinyXML</Filter>
     </ClCompile>
+    <ClCompile Include="xui\Others\CBuffer.cpp">
+      <Filter>Header Files\Others</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XUI\XFrameWork\XBase.hpp">
@@ -163,6 +166,12 @@
     </ClInclude>
     <ClInclude Include="xui\XFrameWork\XProperty.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XPropertyValue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\Others\CBuffer.h">
+      <Filter>Header Files\Others</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

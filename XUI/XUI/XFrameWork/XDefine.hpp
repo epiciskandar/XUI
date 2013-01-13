@@ -9,6 +9,7 @@ enum XResult
 	XResult_InvalidArg,
 	XResult_NotImpl,
 	XResult_Fail,
+	XResult_NotFound,
 };
 
 #define XSUCCEEDED(_result) (_result&0xfffffff0? FALSE: TRUE)
@@ -20,3 +21,5 @@ enum XResult
 #define BackSlash	_T('\\')
 #define BackSlashStr	_T("\\")
 #define SplitChar(_slashtype)	(_slashtype? Slash: BackSlash)
+
+#define RGBA(r,g,b,a)	((COLORREF)RGB(r,g,b)|a<<24)

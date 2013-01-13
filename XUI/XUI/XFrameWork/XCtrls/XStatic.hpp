@@ -6,8 +6,8 @@ class CXStatic : public CXElement
 	XClass;
 
 	XProperty_Begin
-		XProperty(Text,CString)
-		XProperty(TextColor,COLORREF)
+		XProperty(m_property,CString,Text)
+		XProperty(m_property,COLORREF,TextColor)
 	XProperty_End;
 
 	BEGIN_XMESSAGE_MAP
@@ -25,41 +25,23 @@ End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
-XResult CXStatic::SetText(CString param)
-{
-	m_Text = param;
-	return XResult_OK;
-}
-
-CString CXStatic::GetText()
-{
-	return m_Text;
-}
-
-XResult CXStatic::SetTextColor(COLORREF param)
-{
-	m_TextColor = param;
-	return XResult_OK;
-}
-
-COLORREF CXStatic::GetTextColor()
-{
-	return m_TextColor;
-}
-
 VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
-	if (msg.drawDevice.IsRectNeedRePaint(m_Rect))
+	CRect rect;
+	GetRect(rect);
+	CString text;
+	GetText(text);
+	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
 		DRAWTEXTPARAMS params;
 		ZeroMemory(&params,sizeof(params));
 		params.cbSize = sizeof(params);
 		DrawTextEx(msg.drawDevice.dc,
-			m_Text.GetBuffer(m_Text.GetLength()),
-			m_Text.GetLength(),
-			m_Rect,DT_CENTER | DT_SINGLELINE | DT_VCENTER,
+			text.GetBuffer(text.GetLength()),
+			text.GetLength(),
+			rect,DT_CENTER | DT_SINGLELINE | DT_VCENTER,
 			&params);
-		m_Text.ReleaseBuffer();
+		text.ReleaseBuffer();
 		_SendXMessageToChildren(msg);
 	}
 	msg.msgHandled = TRUE;
