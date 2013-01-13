@@ -41,6 +41,7 @@ public:
 
 	CXProperty& operator=(const CXProperty& rhs);
 	XResult	Switch(CXProperty& rhs);
+	~CXProperty(){};
 protected:
 	std::map<CString,CBuffer>	m_propertyMap;
 };

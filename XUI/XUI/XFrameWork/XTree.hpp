@@ -7,7 +7,21 @@ typedef XSmartPtr<CXTreeNode> NodeRef;
 class CXTreeNode
 {
 	XClass;
-	RefCountImpl;
+
+	virtual ULONG STDMETHODCALLTYPE AddRef()
+	{
+		return InterlockedIncrement(&m_refCount);
+	}
+	virtual ULONG STDMETHODCALLTYPE Release()
+	{
+		unsigned long ul = 0;
+		if ((ul = InterlockedDecrement(&m_refCount)) == 0)
+		{
+			delete this;
+		}
+		return ul;
+	}
+	unsigned long m_refCount;
 public:
 	CXTreeNode();
 	virtual ~CXTreeNode();
@@ -42,7 +56,9 @@ End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
-CXTreeNode::CXTreeNode() : m_father(NodeRef())
+CXTreeNode::CXTreeNode()
+: m_father(NodeRef())
+, m_refCount(0)
 {}
 
 CXTreeNode::~CXTreeNode()

@@ -29,8 +29,6 @@ protected:
 	CXProperty m_property;
 };
 
-DefineRef(CXElement);
-
 MyNameIs(CXElement)
 	I_Provide("可绘制元素的基本属性及X消息路由")
 End_Description;
@@ -60,7 +58,7 @@ VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
 {
 	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
 	{
-		CXElementRef pElement = TransformNode<CXElementRef>(*i);
+		XSmartPtr<CXElement> pElement = TransformNode<XSmartPtr<CXElement>>(*i);
 		pElement->ProcessXMessage( pMsg );
 	}
 }

@@ -137,24 +137,6 @@ private: \
 public: \
 	static ClassName& GetInstance(){static ClassName _instance;return _instance;};
 
-#ifndef RefCountImpl
-#define RefCountImpl \
-virtual ULONG STDMETHODCALLTYPE AddRef() \
-{ \
-	return InterlockedIncrement(&m_refCount); \
-} \
-virtual ULONG STDMETHODCALLTYPE Release() \
-{ \
-	unsigned long ul = 0; \
-	if ((ul = InterlockedDecrement(&m_refCount)) == 0) \
-	{ \
-		delete this; \
-	} \
-	return ul; \
-} \
-unsigned long m_refCount;
-#endif
-
 #define URP(...)	(__VA_ARGS__);
 #define IF_RETURN(_exp,_ret)	{if(_exp){return _ret;}}
 #define Return_OnXError(_exp)	{XResult result = _exp;if(XFAILED(result)){return result;}}
@@ -179,6 +161,7 @@ public:
 			m_ptr->AddRef();
 		}
 	};
+	XSmartPtr(ConstRefType rhs) : m_ptr(rhs){};
 	virtual ~XSmartPtr(){if(m_ptr){m_ptr->Release();}}
 
 	operator bool() const
@@ -205,8 +188,6 @@ protected:
 protected:
 	T* m_ptr;
 };
-
-#define DefineRef(_Class) typedef XSmartPtr<_Class> _Class##Ref;
 
 template <class DestTypeRef,class SrcTypeRef>
 DestTypeRef TransformNode(SrcTypeRef& rhs)

@@ -1,4 +1,5 @@
 #include "XUI/XUI.h"
+#include "VisualLeakDetector/include/vld.h"
 
 void Prepare()
 {
@@ -16,9 +17,11 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(szCmdLine);
 	UNREFERENCED_PARAMETER(iCmdShow);
-
+	
+	VLDDisable();
 	CXUI& xui = CXUI::GetInstance();
 	xui.Initialize(hInstance);
+	VLDRestore();
 	Prepare();
 
 	CString xmlPath = _T("res:/test.xml");
@@ -35,7 +38,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	CRect rect;
 	wndRef->GetClientRect(rect);
 	textRef->SetRect(rect);
-	textRef->SetText(_T("Hello World!"));
+	textRef->SetText(CString(_T("Hello World!")));
+
 	xui.Work();
 
 	xui.Finalize();
