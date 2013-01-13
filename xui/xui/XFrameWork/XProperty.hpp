@@ -16,10 +16,7 @@
 			buffer.Alloc(sizeof(_type)); \
 			propValue = new(buffer.GetBuffer()) _type(value); \
 		} \
-		else \
-		{ \
-			*propValue = value; \
-		} \
+		*propValue = value; \
 		return XResult_OK; \
 	} \
 	XResult GetProperty(CString key,_type::ValueType& value) const \
