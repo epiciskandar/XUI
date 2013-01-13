@@ -10,9 +10,16 @@
 	XResult SetProperty(CString key,const _type::ValueType& value) \
 	{ \
 		CBuffer &buffer = _prop[key]; \
-		buffer.Alloc(sizeof(_type)); \
-		_type *propValue; \
-		propValue = new(buffer.GetBuffer()) _type(value); \
+		_type *propValue = (_type*)buffer.GetBuffer(); \
+		if (propValue == nullptr) \
+		{ \
+			buffer.Alloc(sizeof(_type)); \
+			propValue = new(buffer.GetBuffer()) _type(value); \
+		} \
+		else \
+		{ \
+			*propValue = value; \
+		} \
 		return XResult_OK; \
 	} \
 	XResult GetProperty(CString key,_type::ValueType& value) const \
