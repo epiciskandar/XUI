@@ -1,5 +1,6 @@
+//#include "VisualLeakDetector/include/vld.h"
+#define _CRTDBG_MAP_ALLOC
 #include "XUI/XUI.h"
-#include "VisualLeakDetector/include/vld.h"
 
 void Prepare()
 {
@@ -10,18 +11,17 @@ void Prepare()
 	Util::Path::GetParentDir(path);
 	path += _T("Resource/");
 	CXResPool::GetInstance().SetResDir(_T("res:"),path);
-}
+} 
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
+	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(szCmdLine);
 	UNREFERENCED_PARAMETER(iCmdShow);
 	
-	VLDDisable();
 	CXUI& xui = CXUI::GetInstance();
 	xui.Initialize(hInstance);
-	VLDRestore();
 	Prepare();
 
 	CString xmlPath = _T("res:/test.xml");
@@ -43,5 +43,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	xui.Work();
 
 	xui.Finalize();
+	
 	return 0;
 }
