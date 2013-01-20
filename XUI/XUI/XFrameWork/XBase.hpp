@@ -163,6 +163,19 @@ public:
 	};
 	XSmartPtr(ConstRefType rhs) : m_ptr(rhs){};
 	virtual ~XSmartPtr(){if(m_ptr){m_ptr->Release();}}
+	XSmartPtr operator=(const XSmartPtr& rhs)
+	{
+		if (m_ptr)
+		{
+			m_ptr->Release();
+		}
+		m_ptr = rhs._GetPointer();
+		if (m_ptr)
+		{
+			m_ptr->AddRef();
+		}
+		return *this;
+	}
 
 	operator bool() const
 	{

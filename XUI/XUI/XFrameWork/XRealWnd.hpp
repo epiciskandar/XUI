@@ -7,6 +7,8 @@ class CXRealWnd :
 {
 	XClass;
 public:
+	CXRealWnd();
+
 	BEGIN_MSG_MAP_EX(CXRealWnd)
 		MSG_WM_DESTROY(OnDestroy)
 		TranslateToXMessage( MessageTranslateFunc 
@@ -30,6 +32,11 @@ MyNameIs(CXRealWnd)
 End_Description;
 
 //////////////////////////////////////////////////////////////////////////
+
+CXRealWnd::CXRealWnd() : CWindowImpl()
+{
+
+}
 
 VOID CXRealWnd::OnDestroy()
 {

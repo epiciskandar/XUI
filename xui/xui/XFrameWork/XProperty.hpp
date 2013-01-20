@@ -45,9 +45,11 @@ public:
 
 	CXProperty& operator=(const CXProperty& rhs);
 	XResult	Switch(CXProperty& rhs);
-	~CXProperty(){};
+	XResult MarkSupportedProperty(CString key);
+	XResult IsSupported(CString key);
 protected:
 	std::map<CString,CBuffer>	m_propertyMap;
+	std::set<CString>			m_supportedProps;
 };
 
 MyNameIs(CXProperty)
@@ -56,3 +58,16 @@ End_Description;
 
 
 //////////////////////////////////////////////////////////////////////////
+
+
+XResult CXProperty::MarkSupportedProperty( CString key )
+{
+	m_supportedProps.insert(key);
+	return XResult_OK;
+}
+
+XResult CXProperty::IsSupported( CString key )
+{
+	bool bFound = m_supportedProps.find(key) != m_supportedProps.end();
+	return bFound? XResult_OK: XResult_NotSupport;
+}

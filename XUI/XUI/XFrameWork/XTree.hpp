@@ -25,9 +25,13 @@ class CXTreeNode
 public:
 	CXTreeNode();
 	virtual ~CXTreeNode();
+	XResult SetID(CString id);
+	CString GetID() const;
 	XResult	AppendChild(NodeRef pChild);
 	XResult InsertAfter(NodeRef pChild,NodeRef pAfterMe);
 	XResult InsertBefore(NodeRef pChild,NodeRef pAfterMe);
+	XResult GetFirstChild(NodeRef& pChild);
+	XResult GetChild(CString id,NodeRef& pChild);
 	XResult	SwapNode(NodeRef pNode1,NodeRef pNode2);
 	XResult	GetSibling(NodeRef pBefore,NodeRef pAfter);
 	XResult RemoveChild(NodeRef pChild);
@@ -42,6 +46,7 @@ protected:
 	XResult _SetZOrder(INT zOrder);
 	XNodeList::iterator _GetNodeIter(NodeRef pNode);
 protected:
+	CString m_ID;
 	NodeRef m_father;
 	XNodeList m_children;
 };
@@ -64,6 +69,17 @@ CXTreeNode::CXTreeNode()
 CXTreeNode::~CXTreeNode()
 {
 	m_children.clear();
+}
+
+XResult CXTreeNode::SetID(CString id)
+{
+	m_ID = id;
+	return XResult_OK;
+}
+
+CString CXTreeNode::GetID() const
+{
+	return m_ID;
 }
 
 XResult CXTreeNode::AppendChild( NodeRef pChild )
@@ -109,4 +125,28 @@ CXTreeNode::XNodeList::iterator CXTreeNode::_GetNodeIter( NodeRef pNode )
 		}
 	}
 	return i;
+}
+
+XResult CXTreeNode::GetFirstChild( NodeRef& pChild )
+{
+	if (m_children.empty())
+	{
+		return XResult_NotFound;
+	}
+	pChild = *m_children.begin();
+	return XResult_OK;
+}
+
+XResult CXTreeNode::GetChild( CString id,NodeRef& pChild )
+{
+	auto i = m_children.begin();
+	while (i != m_children.end())
+	{
+		if ((*i)->GetID() == id)
+		{
+			pChild = *i;
+			return XResult_OK;
+		}
+	}
+	return XResult_NotFound;
 }

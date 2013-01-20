@@ -3,6 +3,7 @@
 #include "XTree.hpp"
 #include "XMsg.hpp"
 #include "XProperty.hpp"
+#include "XGaia.hpp"
 
 class CXElement : public CXBase
 	, public CXTreeNode
@@ -10,7 +11,6 @@ class CXElement : public CXBase
 	XClass;
 
 	XProperty_Begin
-		XProperty(m_property,CString,	ID)
 		XProperty(m_property,CRect,		Rect)
 		XProperty(m_property,CPoint,	Position)
 		XProperty(m_property,CPoint,	Size)
@@ -37,7 +37,7 @@ End_Description;
 
 CXElement::CXElement()
 {
-
+	CString myName = GetMyClassName();
 }
 
 CXElement::~CXElement()

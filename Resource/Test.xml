@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--位置排版属性应当与style分离-->
 <XUI version="1" >
   <XRealWnd Name="testWnd" ID="10086" Title="Test" Size="300,250" LayoutType="OffsetLayout">
-    <XText Text="Hello World!" Size="100,20" HCenter="TRUE" VCenter="TRUE" />
+    <XStatic Text="Hello World!" Size="100,20" HCenter="TRUE" VCenter="TRUE" />
   </XRealWnd>
 </XUI>

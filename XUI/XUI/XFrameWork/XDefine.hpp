@@ -10,10 +10,13 @@ enum XResult
 	XResult_NotImpl,
 	XResult_Fail,
 	XResult_NotFound,
+	XResult_NotSupport,
 };
 
-#define XSUCCEEDED(_result) (_result&0xfffffff0? FALSE: TRUE)
-#define XFAILED(_result) !XSUCCEEDED(_result)
+#define XSUCCEEDED(_result)			(_result&0xfffffff0? FALSE: TRUE)
+#define XFAILED(_result)			!XSUCCEEDED(_result)
+#define CheckParam(_paramsCheck)	{if(!_paramsCheck){return XResult_InvalidArg;}}
+#define XUIFlag		_T("XUI")
 
 #define UseSlash	TRUE	// 决定了库将使用哪种路径分割线作为默认值
 #define Slash		_T('/')

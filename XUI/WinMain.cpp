@@ -28,13 +28,14 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	CXResPool::GetInstance().TranslateResPath(xmlPath);
 	NodeRef xmlNode = xui.GetGaia().CreateFromXML(xmlPath);
 
-	NodeRef node = xui.GetGaia().Create(CXRealWnd::GetMyClassName());
-	CXRealWndRef wnd = TransformNode<CXRealWndRef>(node);
+	//NodeRef node = xui.GetGaia().Create(CXRealWnd::GetMyClassName());
+	CXRealWndRef wnd = TransformNode<CXRealWndRef>(xmlNode);
 	wnd->Create(NULL,NULL,_T("windowName"),WS_OVERLAPPEDWINDOW|WS_VISIBLE);
-	NodeRef textNode = xui.GetGaia().Create(CXStatic::GetMyClassName());
+	NodeRef textNode;
+	xmlNode->GetFirstChild(textNode);
 	CXStaticRef textRef = TransformNode<CXStaticRef>(textNode);
-	node->AppendChild(textNode);
-	CXRealWndRef wndRef = TransformNode<CXRealWndRef>(node);
+	//node->AppendChild(textNode);
+	CXRealWndRef wndRef = TransformNode<CXRealWndRef>(xmlNode);
 	CRect rect;
 	wndRef->GetClientRect(rect);
 	textRef->SetRect(rect);
