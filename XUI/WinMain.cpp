@@ -39,7 +39,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	CRect rect;
 	wndRef->GetClientRect(rect);
 	textRef->SetRect(rect);
-	textRef->SetText(CString(_T("Hello World!")));
+	//textRef->SetText(CString(_T("Hello World!")));
 
 	xui.Work();
 

@@ -41,6 +41,7 @@ public:
 	XResult IncreaseZOrder();
 	XResult DecreaseZOrder();
 	XResult MoveZOrderBottom();
+
 protected:
 	typedef std::list<NodeRef> XNodeList;
 	XResult _SetZOrder(INT zOrder);

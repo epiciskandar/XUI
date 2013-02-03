@@ -13,6 +13,12 @@ enum XResult
 	XResult_NotSupport,
 };
 
+enum LayoutType
+{
+	Layout_Offset,
+	Layout_Block
+};
+
 #define XSUCCEEDED(_result)			(_result&0xfffffff0? FALSE: TRUE)
 #define XFAILED(_result)			!XSUCCEEDED(_result)
 #define CheckParam(_paramsCheck)	{if(!_paramsCheck){return XResult_InvalidArg;}}

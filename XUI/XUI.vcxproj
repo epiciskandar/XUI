@@ -55,15 +55,18 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnablePREfast>false</EnablePREfast>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LinkStatus>true</LinkStatus>
     </Link>
     <PostBuildEvent>
       <Command>postbuild.bat $(Configuration)</Command>
     </PostBuildEvent>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -120,6 +123,7 @@
     <ClInclude Include="XUI\WTL\atluser.h" />
     <ClInclude Include="XUI\WTL\atlwince.h" />
     <ClInclude Include="XUI\WTL\atlwinx.h" />
+    <ClInclude Include="XUI\XFrameWork\Utils\XMLConverter.hpp" />
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
     <ClInclude Include="xui\XFrameWork\XCtrls\XStatic.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />

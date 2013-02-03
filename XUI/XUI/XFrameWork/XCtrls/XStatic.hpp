@@ -6,9 +6,14 @@ class CXStatic : public CXElement
 	XClass;
 
 	XProperty_Begin
-		XProperty(m_property,CString,Text)
-		XProperty(m_property,COLORREF,TextColor)
+		XProperty(CString,	Text)
+		XProperty(COLORREF,	TextColor)
 	XProperty_End;
+
+	XMLConvert_Begin
+		XMLConvert(Text,		XMLConverter_CString)
+		XMLConvert(TextColor,	XMLConverter_CPoint)
+	XMLConvert_End(CXElement)
 
 	BEGIN_XMESSAGE_MAP
 		On_XMessage(CXMsg_Paint)

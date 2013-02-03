@@ -48,22 +48,6 @@ CString _className :: GetDescription() \
 #define I_Provide(_function) description.AppendFormat(_T("I provide functions like %s\n"),_CRT_WIDE(#_function));
 #define And_You_Should_Notice(_instruction) description.AppendFormat(_T("%s\n"),_CRT_WIDE(#_instruction));
 
-//////////////////////////////////////////////////////////////////////////
-
-#define XProperty_Begin
-#define XProperty(_m_prop,_paramtype,_name) \
-public: \
-	virtual XResult Set##_name (_paramtype param) \
-	{ \
-		return _m_prop.SetProperty(L#_name,param); \
-	} \
-	virtual XResult Get##_name (_paramtype& value) \
-	{ \
-		return _m_prop.GetProperty(L#_name,value); \
-	}
-#define XProperty_End
-
-//////////////////////////////////////////////////////////////////////////
 
 #define SupportXMessage		virtual BOOL ProcessXMessage(CXMsg& msg) = 0;
 

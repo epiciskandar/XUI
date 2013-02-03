@@ -17,6 +17,7 @@ public:
 	NodeRef Create(CString className);
 	NodeRef CreateFromXML(CString xmlFile);
 	NodeRef ParseXMLNode(TiXmlElement* pElement);
+	XResult ParseAndSetParams(NodeRef node,const TiXmlElement* pElement);
 
 protected:
 	XResult _CheckAndSkipXMLRoot(TiXmlElement* pRoot);
@@ -89,6 +90,11 @@ NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 	CString strClassName = _T("C");
 	strClassName += strClass;
 	node = Create(strClassName);
+	if (!node)
+	{
+		return nullptr;
+	}
+	ParseAndSetParams(node,pElement);
 	TiXmlNode* pChild = pElement->FirstChild();
 	if (pChild)
 	{
@@ -122,5 +128,24 @@ XResult CXGaia::_CheckAndSkipXMLRoot( TiXmlElement* pRoot )
 		}
 	}
 	return XResult_Error;
+}
+
+XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElement )
+{
+	CheckParam(node && pElement);
+	ElementRef element = TransformNode<ElementRef>(node);
+	if (element)
+	{
+		element->RegisterXMLSupportProperty();	// 通知构造解析器map
+		const TiXmlAttribute* attr = pElement->FirstAttribute();
+		while (attr)
+		{
+			CString key = attr->Name();
+			CString value = attr->Value();
+			element->SetXMLProperty(key,value);
+			attr = attr->Next();
+		}
+	}
+	return XResult_OK;
 }
 

@@ -28,6 +28,9 @@
     <Filter Include="Header Files\Others">
       <UniqueIdentifier>{bfd782b2-f658-4c31-8499-7caa66484a3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{99626314-f240-4630-8637-6dd05e878a48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="xui\Others\CBuffer.h">
       <Filter>Header Files\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\Utils\XMLConverter.hpp">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
