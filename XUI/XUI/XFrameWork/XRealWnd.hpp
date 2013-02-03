@@ -12,11 +12,28 @@ public:
 	BEGIN_MSG_MAP_EX(CXRealWnd)
 		MSG_WM_DESTROY(OnDestroy)
 		TranslateToXMessage( MessageTranslateFunc 
-		,WM_PAINT )
+		, WM_PAINT
+		)
 	END_MSG_MAP();
 
 	BEGIN_XMESSAGE_MAP
 	END_XMESSAGE_MAP;
+
+	XProperty_Begin
+		XProperty(CString,	Title)
+		XProperty(DWORD,	Style)
+		XProperty(DWORD,	ExStyle)
+		XProperty(HWND,		HWnd)
+	XProperty_End;
+
+	XMLConvert_Begin
+		XMLConvert(Title,		XMLConverter_CString)
+		XMLConvert(ShowState,	XMLConverter_BOOL)
+		XMLConvert(Style,		XMLConverter_DWORD)
+		XMLConvert(ExStyle,		XMLConverter_DWORD)
+	XMLConvert_End(CXElement)
+
+	XResult Create(HWND hwndParent=0);
 protected:
 	LRESULT MessageTranslateFunc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	VOID	OnDestroy();
@@ -79,5 +96,22 @@ VOID CXRealWnd::EndCXMsg_Paint( CXMsg_Paint& msg )
 	ps.hdc = msg.drawDevice.dc;
 	ps.rcPaint = msg.drawDevice.invalidRect;
 	EndPaint(&ps);
+}
+
+XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
+{
+	CString title;
+	GetTitle(title);
+	DWORD style=0;
+	GetStyle(style);
+	DWORD ExStyle=0;
+	GetExStyle(ExStyle);
+	HWND hWnd = CWindowImpl::Create(hwndParent,NULL,title,style,ExStyle);
+	SetHWnd(hWnd);
+	if (hWnd)
+	{
+		return XResult_OK;
+	}
+	return XResult_Fail;
 }
 

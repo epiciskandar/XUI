@@ -31,6 +31,30 @@ public:
 	}
 };
 
+class XMLConverter_DWORD : XMLConverter
+{
+public:
+	XMLConverter_DWORD(CXProperty& prop) : XMLConverter(prop){}
+	XResult Convert(CString name,CString value)
+	{
+		DWORD dwValue;
+		_stscanf_s(value,_T("%u"),&dwValue);
+		return m_prop.SetProperty(name , dwValue);
+	}
+};
+
+class XMLConverter_BOOL : XMLConverter
+{
+public:
+	XMLConverter_BOOL(CXProperty& prop) : XMLConverter(prop){}
+	XResult Convert(CString name,CString value)
+	{
+		INT intValue;
+		intValue = _ttoi(value);
+		return m_prop.SetProperty(name , (intValue==0? FALSE: TRUE));
+	}
+};
+
 class XMLConverter_CRect : XMLConverter
 {
 public:

@@ -9,16 +9,21 @@
 //////////////////////////////////////////////////////////////////////////
 
 #define XProperty_Begin
-#define XProperty(_paramtype,_name) \
-public: \
-	virtual XResult Set##_name (_paramtype param) \
-	{ \
-		return m_property.SetProperty(L#_name,param); \
-	} \
+#define XProperty_Get(_paramtype,_name) \
 	virtual XResult Get##_name (_paramtype& value) \
 	{ \
 		return m_property.GetProperty(L#_name,value); \
 	}
+#define XProperty_Set(_paramtype,_name) \
+public: \
+	virtual XResult Set##_name (_paramtype param) \
+	{ \
+		return m_property.SetProperty(L#_name,param); \
+	}
+#define XProperty(_paramtype,_name) \
+	XProperty_Get(_paramtype,_name) \
+	XProperty_Set(_paramtype,_name)
+
 #define XProperty_End
 
 #define XMLConvert_Begin virtual XResult RegisterXMLSupportProperty(){
