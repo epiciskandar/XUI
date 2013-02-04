@@ -1,11 +1,15 @@
 #pragma once
+#include <tchar.h>
 
-// 只要不是0就是有错误
 enum XResult
 {
 	XResult_OK = 0,
 	XResult_FALSE = 1,
-	XResult_Error = 16,
+
+	XResult_Handled = 16,
+	XResult_NotHandled,
+
+	XResult_Error = 256,
 	XResult_InvalidArg,
 	XResult_NotImpl,
 	XResult_Fail,
@@ -19,7 +23,7 @@ enum LayoutType
 	Layout_Block
 };
 
-#define XSUCCEEDED(_result)			(_result&0xfffffff0? FALSE: TRUE)
+#define XSUCCEEDED(_result)			(_result>=XResult_Error? FALSE: TRUE)
 #define XFAILED(_result)			!XSUCCEEDED(_result)
 #define CheckParam(_paramsCheck)	{if(!_paramsCheck){return XResult_InvalidArg;}}
 #define XUIFlag		_T("XUI")

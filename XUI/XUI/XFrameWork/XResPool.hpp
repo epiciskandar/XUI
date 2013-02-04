@@ -5,7 +5,7 @@
 
 class CXResPool
 {
-	XClass;
+	XClass(VOID);
 	XSingleton(CXResPool);
 public:
 	XResult SetResDir(CString prefix,CString dirPath);

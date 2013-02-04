@@ -25,10 +25,11 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-#define XClass \
+#define XClass(_baseclass) \
 public: \
 	virtual CString GetDescription(); \
-	static CString GetMyClassName();
+	static CString GetMyClassName(); \
+	typedef _baseclass BaseClass;
 
 #define MyNameIs(_className) \
 CString _className :: GetMyClassName() \
@@ -47,30 +48,7 @@ CString _className :: GetDescription() \
 #define I_Can(_use) description.AppendFormat(_T("I can %s.\n"),_CRT_WIDE(#_use));
 #define I_Provide(_function) description.AppendFormat(_T("I provide functions like %s\n"),_CRT_WIDE(#_function));
 #define And_You_Should_Notice(_instruction) description.AppendFormat(_T("%s\n"),_CRT_WIDE(#_instruction));
-
-
-#define SupportXMessage		virtual BOOL ProcessXMessage(CXMsg& msg) = 0;
-
-#define BEGIN_XMESSAGE_MAP	virtual BOOL ProcessXMessage(CXMsg& msg) \
-{ \
-	CXMsg_GetListenList* pListMsg = dynamic_cast<CXMsg_GetListenList*>(&msg);
-
-#define On_XMessage(_msg) \
-	if (pListMsg) \
-	{ \
-		pListMsg->XMsgList.push_back(_msg::GetXMsgName()); \
-	} \
-	else if( msg.GetMyMsgName().CompareNoCase(_msg::GetXMsgName()) == 0) \
-	{ \
-		_msg* pDeriMsg = dynamic_cast<_msg*>(&msg); \
-		ATLASSERT(pDeriMsg && "invalid XMessage response!!!!!!!"); \
-		On_##_msg(*pDeriMsg); \
-		if(msg.msgHandled) \
-		return TRUE; \
-	}
-
-#define END_XMESSAGE_MAP	return pListMsg? TRUE: FALSE; }
-
+	
 #define TranslateToXMessage(_transfunc, ...) \
 	{ \
 		UINT msgList[] = { __VA_ARGS__ }; \

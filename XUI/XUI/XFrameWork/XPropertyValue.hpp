@@ -5,38 +5,49 @@
 #include <map>
 #include "..\WTL\atlmisc.h"
 
+class CChangable
+{
+public:
+	BOOL valueChanged;
+
+	CChangable():valueChanged(FALSE){}
+
+	VOID Change()	{valueChanged = TRUE;}
+	BOOL IsChanged(){return valueChanged;}
+	VOID Restore()	{valueChanged = FALSE;}
+};
+
 // because of using placement new,and we won't call destructor,so destructor is useless.
 template <class ValueTypeT>
-class PropertyValue
+class CPropertyValue : public CChangable
 {
 public:
 	typedef ValueTypeT ValueType;
 
-	BOOL		valueChanged;
 	ValueType	m_value;
 
-	PropertyValue():valueChanged(FALSE)
+	CPropertyValue():valueChanged(FALSE)
 	{};
-	PropertyValue& operator=(const PropertyValue& rhs)
+	CPropertyValue& operator=(const CPropertyValue& rhs)
 	{
 		m_value=rhs.m_value;
-		valueChanged = TRUE;
+		Change();
 		return *this;
 	}
-	PropertyValue(const PropertyValue& rhs)
+	CPropertyValue(const CPropertyValue& rhs)
 	{
-		valueChanged = TRUE;
+		Change();
 		m_value=rhs.m_value;
 	}
-	PropertyValue(const ValueType& rhs)
+	CPropertyValue(const ValueType& rhs)
 	{
 		m_value=rhs;
-		valueChanged = TRUE;
+		Change();
 	};
-	PropertyValue& operator=(const ValueType& rhs)
+	CPropertyValue& operator=(const ValueType& rhs)
 	{
 		m_value=rhs;
-		valueChanged = TRUE;
+		Change();
 		return *this;
 	}
 	operator const ValueType&() const

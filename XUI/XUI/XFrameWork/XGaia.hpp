@@ -11,7 +11,7 @@
 
 class CXGaia
 {
-	XClass;
+	XClass(VOID);
 	XSingleton(CXGaia);
 public:
 	NodeRef Create(CString className);

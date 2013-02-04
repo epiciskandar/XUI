@@ -5,7 +5,7 @@ class CXRealWnd :
 	public CXElement,
 	public CWindowImpl<CXRealWnd>
 {
-	XClass;
+	XClass(CXElement);
 public:
 	CXRealWnd();
 
@@ -16,24 +16,19 @@ public:
 		)
 	END_MSG_MAP();
 
-	BEGIN_XMESSAGE_MAP
-	END_XMESSAGE_MAP;
+	virtual XResult ProcessXMessage(CXMsg& msg);
 
 	XProperty_Begin
-		XProperty(CString,	Title)
-		XProperty(DWORD,	Style)
-		XProperty(DWORD,	ExStyle)
-		XProperty(HWND,		HWnd)
+		XProperty(Title)
+		XProperty(Style)
+		XProperty(ExStyle)
+		XProperty(HWnd)
 	XProperty_End;
 
-	XMLConvert_Begin
-		XMLConvert(Title,		XMLConverter_CString)
-		XMLConvert(ShowState,	XMLConverter_BOOL)
-		XMLConvert(Style,		XMLConverter_DWORD)
-		XMLConvert(ExStyle,		XMLConverter_DWORD)
-	XMLConvert_End(CXElement)
+	virtual XResult RegisterXMLSupportProperty();
 
 	XResult Create(HWND hwndParent=0);
+
 protected:
 	LRESULT MessageTranslateFunc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	VOID	OnDestroy();
@@ -113,5 +108,20 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 		return XResult_OK;
 	}
 	return XResult_Fail;
+}
+
+XResult CXRealWnd::RegisterXMLSupportProperty()
+{
+	XMLConvert(Title);
+	XMLConvert(ShowState);
+	XMLConvert(Style);
+	XMLConvert(ExStyle);
+
+	return CXElement::RegisterXMLSupportProperty();
+}
+
+XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
+{
+	return BaseClass::ProcessXMessage(msg);
 }
 

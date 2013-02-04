@@ -1,28 +1,30 @@
 #pragma once
 
-class XMLConverter
+class CXProperty;
+
+class CXMLConverterBase
 {
 public:
 	CXProperty& m_prop;
 public:
-	XMLConverter(CXProperty& prop) : m_prop(prop){}
+	CXMLConverterBase(CXProperty& prop) : m_prop(prop){}
 	virtual XResult Convert(CString name,CString value)=0;
 };
 
-class XMLConverter_CString : XMLConverter
+class CXMLConverter_CString : CXMLConverterBase
 {
 public:
-	XMLConverter_CString(CXProperty& prop) : XMLConverter(prop){}
+	CXMLConverter_CString(CXProperty& prop) : CXMLConverterBase(prop){}
 	XResult Convert(CString name,CString value)
 	{
 		return m_prop.SetProperty(name , value);
 	}
 };
 
-class XMLConverter_INT : XMLConverter
+class CXMLConverter_INT : CXMLConverterBase
 {
 public:
-	XMLConverter_INT(CXProperty& prop) : XMLConverter(prop){}
+	CXMLConverter_INT(CXProperty& prop) : CXMLConverterBase(prop){}
 	XResult Convert(CString name,CString value)
 	{
 		INT intValue;
@@ -31,10 +33,10 @@ public:
 	}
 };
 
-class XMLConverter_DWORD : XMLConverter
+class CXMLConverter_DWORD : CXMLConverterBase
 {
 public:
-	XMLConverter_DWORD(CXProperty& prop) : XMLConverter(prop){}
+	CXMLConverter_DWORD(CXProperty& prop) : CXMLConverterBase(prop){}
 	XResult Convert(CString name,CString value)
 	{
 		DWORD dwValue;
@@ -43,10 +45,22 @@ public:
 	}
 };
 
-class XMLConverter_BOOL : XMLConverter
+typedef CXMLConverter_DWORD CXMLConverter_HWND;
+
+class CXMLConverter_COLORREF : CXMLConverterBase
 {
 public:
-	XMLConverter_BOOL(CXProperty& prop) : XMLConverter(prop){}
+	CXMLConverter_COLORREF(CXProperty& prop) : CXMLConverterBase(prop){}
+	XResult Convert(CString name,CString value)
+	{
+		return m_prop.SetProperty(name,value);
+	}
+};
+
+class CXMLConverter_BOOL : CXMLConverterBase
+{
+public:
+	CXMLConverter_BOOL(CXProperty& prop) : CXMLConverterBase(prop){}
 	XResult Convert(CString name,CString value)
 	{
 		INT intValue;
@@ -55,10 +69,10 @@ public:
 	}
 };
 
-class XMLConverter_CRect : XMLConverter
+class CXMLConverter_CRect : CXMLConverterBase
 {
 public:
-	XMLConverter_CRect(CXProperty& prop) : XMLConverter(prop){}
+	CXMLConverter_CRect(CXProperty& prop) : CXMLConverterBase(prop){}
 	XResult Convert(CString name,CString value)
 	{
 		CRect rect;
@@ -68,14 +82,26 @@ public:
 	}
 };
 
-class XMLConverter_CPoint : XMLConverter
+class CXMLConverter_CPoint : CXMLConverterBase
 {
 public:
-	XMLConverter_CPoint(CXProperty& prop) : XMLConverter(prop){}
+	CXMLConverter_CPoint(CXProperty& prop) : CXMLConverterBase(prop){}
 	XResult Convert(CString name,CString value)
 	{
 		CPoint point;
 		_stscanf_s(value,_T("%d,%d"),&point.x,&point.y);
 		return m_prop.SetProperty(name ,point);
+	}
+};
+
+class CXMLConverter_CSize : CXMLConverterBase
+{
+public:
+	CXMLConverter_CSize(CXProperty& prop) : CXMLConverterBase(prop){}
+	XResult Convert(CString name,CString value)
+	{
+		CSize size;
+		_stscanf_s(value,_T("%d,%d"),&size.cx,&size.cy);
+		return m_prop.SetProperty(name ,size);
 	}
 };

@@ -6,7 +6,7 @@ typedef XSmartPtr<CXTreeNode> NodeRef;
 
 class CXTreeNode
 {
-	XClass;
+	XClass(VOID);
 
 	virtual ULONG STDMETHODCALLTYPE AddRef()
 	{

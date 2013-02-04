@@ -27,6 +27,13 @@ public:
 	std::list<CString> XMsgList;
 };
 
+class CXMsg_PropertyChanged : public CXMsg
+{
+	XMessage(CXMsg_PropertyChanged);
+public:
+	CString name;
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 class CXMsg_Paint : public CXMsg

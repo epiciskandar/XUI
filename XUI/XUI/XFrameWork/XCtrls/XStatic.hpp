@@ -3,21 +3,17 @@
 
 class CXStatic : public CXElement
 {
-	XClass;
+	XClass(CXElement);
 
 	XProperty_Begin
-		XProperty(CString,	Text)
-		XProperty(COLORREF,	TextColor)
+		XProperty(Text)
+		XProperty(TextColor)
 	XProperty_End;
 
-	XMLConvert_Begin
-		XMLConvert(Text,		XMLConverter_CString)
-		XMLConvert(TextColor,	XMLConverter_CPoint)
-	XMLConvert_End(CXElement)
+	virtual XResult RegisterXMLSupportProperty();
 
-	BEGIN_XMESSAGE_MAP
-		On_XMessage(CXMsg_Paint)
-	END_XMESSAGE_MAP;
+	virtual XResult ProcessXMessage(CXMsg& msg);
+
 public:
 	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
 };
@@ -50,4 +46,21 @@ VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 		_SendXMessageToChildren(msg);
 	}
 	msg.msgHandled = TRUE;
+}
+
+XResult CXStatic::ProcessXMessage( CXMsg& msg )
+{
+	BEGIN_XMSG_MAP(msg)
+		OnXMsg(CXMsg_Paint);
+	END_XMSG_MAP;
+
+	return BaseClass::ProcessXMessage(msg);
+}
+
+XResult CXStatic::RegisterXMLSupportProperty()
+{
+	XMLConvert(Text);
+	XMLConvert(TextColor);
+
+	return BaseClass::RegisterXMLSupportProperty();
 }
