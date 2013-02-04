@@ -176,9 +176,6 @@
     <ClInclude Include="xui\Others\CBuffer.h">
       <Filter>Header Files\Others</Filter>
     </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\Utils\XMLConverter.hpp">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resource\Test.xml">

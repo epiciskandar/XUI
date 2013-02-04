@@ -136,7 +136,6 @@ XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElement )
 	ElementRef element = TransformNode<ElementRef>(node);
 	if (element)
 	{
-		element->RegisterXMLSupportProperty();	// 通知构造解析器map
 		const TiXmlAttribute* attr = pElement->FirstAttribute();
 		while (attr)
 		{

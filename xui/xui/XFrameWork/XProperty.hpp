@@ -98,7 +98,122 @@ VOID CXProperty::ChangeRestore( CString key )
 	}
 }
 
-#include "Utils/XMLConverter.hpp"
+//////////////////////////////////////////////////////////////////////////
+
+class CXMLConverter_CString
+{
+public:
+	static CString ConvertToValue(CString value)
+	{
+		return value;
+	}
+};
+
+class CXMLConverter_INT
+{
+public:
+	static INT ConvertToValue(CString value)
+	{
+		INT intValue;
+		intValue = _ttoi(value);
+		return intValue;
+	}
+};
+
+class CXMLConverter_DWORD
+{
+public:
+	static DWORD ConvertToValue(CString value)
+	{
+		DWORD dwValue;
+		_stscanf_s(value,_T("%u"),&dwValue);
+		return dwValue;
+	}
+};
+
+typedef CXMLConverter_DWORD CXMLConverter_HWND;
+
+class CXMLConverter_COLORREF
+{
+public:
+	static COLORREF ConvertToValue(CString value)
+	{
+		COLORREF dwValue;
+		DWORD r,g,b,a;
+		_stscanf_s(value,_T("%u,%u,%u,%u"),&r,&g,&b,&a);
+		dwValue = RGBA(r,g,b,a);
+		return dwValue;
+	}
+};
+
+class CXMLConverter_BOOL
+{
+public:
+	static COLORREF ConvertToValue(CString value)
+	{
+		BOOL boolValue = FALSE;
+		if (value == _T("TRUE"))
+		{
+			boolValue = TRUE;
+		}
+		else
+		{
+			boolValue = _ttoi(value)==0? FALSE:TRUE;
+		}
+		return boolValue;
+	}
+};
+
+class CXMLConverter_CRect
+{
+public:
+	static CRect ConvertToValue(CString value)
+	{
+		CRect rect;
+		_stscanf_s(value,_T("%d,%d,%d,%d"),&rect.left,&rect.top,&rect.right,&rect.bottom);
+		return rect;
+	}
+};
+
+class CXMLConverter_CPoint
+{
+public:
+	static CPoint ConvertToValue(CString value)
+	{
+		CPoint point;
+		_stscanf_s(value,_T("%d,%d"),&point.x,&point.y);
+		return point;
+	}
+};
+
+class CXMLConverter_CSize
+{
+public:
+	static CSize ConvertToValue(CString value)
+	{
+		CSize size;
+		_stscanf_s(value,_T("%d,%d"),&size.cx,&size.cy);
+		return size;
+	}
+};
+
+class CXMLConverter_LayoutType
+{
+public:
+	static LayoutType ConvertToValue(CString value)
+	{
+		LayoutType type = Layout_Offset;
+		if (value == _T("Layout_Offset"))
+		{
+			type = Layout_Offset;
+		}
+		else if (value == _T("Layout_Block"))
+		{
+			type = Layout_Block;
+		}
+		return type;
+	}
+};
 
 // contains each properties definition
 namespace Property
@@ -120,4 +235,5 @@ namespace Property
 	DefineProperty(ExStyle	,DWORD,		0);
 	DefineProperty(HWnd		,HWND,		0);
 	DefineProperty(ShowState,BOOL,		FALSE);
+	DefineProperty(Layout	,LayoutType,	Layout_Offset)
 };

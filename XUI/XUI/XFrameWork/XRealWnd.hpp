@@ -1,6 +1,33 @@
 #pragma once
 #include "XElement.hpp"
 
+//////////////////////////////////////////////////////////////////////////
+
+// for process WM_XX faster,we need a map
+#define TranslateToXMessage(_transfunc, ...) \
+	{ \
+	UINT msgList[] = { __VA_ARGS__ }; \
+	static std::set<UINT> handleMsgSet; \
+	if (handleMsgSet.empty()) \
+	for(UINT n=0; n<_countof(msgList); ++n){handleMsgSet.insert(msgList[n]);} \
+	if(handleMsgSet.find(uMsg) != handleMsgSet.end()) \
+		{ \
+		SetMsgHandled(TRUE); \
+		lResult = _transfunc(uMsg, wParam, lParam); \
+		if(IsMsgHandled()) \
+		return TRUE; \
+		} \
+	}
+
+#define XMsgTranslater(_msg,_func) \
+	case _msg: \
+	{ \
+		return _func(wParam,lParam); \
+	} \
+	break;
+
+//////////////////////////////////////////////////////////////////////////
+
 class CXRealWnd :
 	public CXElement,
 	public CWindowImpl<CXRealWnd>
@@ -13,6 +40,7 @@ public:
 		MSG_WM_DESTROY(OnDestroy)
 		TranslateToXMessage( MessageTranslateFunc 
 		, WM_PAINT
+		, WM_SIZE
 		)
 	END_MSG_MAP();
 
@@ -25,7 +53,7 @@ public:
 		XProperty(HWnd)
 	XProperty_End;
 
-	virtual XResult RegisterXMLSupportProperty();
+	virtual XResult SetXMLProperty( CString name,CString value );
 
 	XResult Create(HWND hwndParent=0);
 
@@ -33,7 +61,8 @@ protected:
 	LRESULT MessageTranslateFunc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	VOID	OnDestroy();
 
-	MessageTranslater(CXMsg_Paint);
+	LRESULT _Translate_WM_PAINT(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_Size(WPARAM wParam,LPARAM lParam);
 
 	//--------------------------------//
 };
@@ -57,40 +86,13 @@ VOID CXRealWnd::OnDestroy()
 
 LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	LRESULT lResult=0;
 	switch(uMsg)
 	{
-		XMsgTranslater(WM_PAINT,CXMsg_Paint);
+		XMsgTranslater(WM_PAINT,_Translate_WM_PAINT);
+		XMsgTranslater(WM_SIZE,_Translate_WM_Size);
 	}
 
-	return lResult;
-}
-
-VOID CXRealWnd::BeforeCXMsg_Paint( CXMsg_Paint& msg, WPARAM wParam, LPARAM lParam )
-{	URP(wParam,lParam);
-	PAINTSTRUCT ps;
-	BeginPaint(&ps);
-	msg.drawDevice.invalidRect = CRect(ps.rcPaint);
-	msg.drawDevice.dc = ps.hdc;
-}
-
-VOID CXRealWnd::EndCXMsg_Paint( CXMsg_Paint& msg )
-{
-	BitBlt(msg.drawDevice.dc,
-		msg.drawDevice.invalidRect.left,
-		msg.drawDevice.invalidRect.top,
-		msg.drawDevice.invalidRect.Width(),
-		msg.drawDevice.invalidRect.Height(),
-		msg.drawDevice.dc,
-		0, 0,
-		SRCCOPY
-		);
-
-	PAINTSTRUCT ps;
-	ZeroMemory(&ps,sizeof(ps));
-	ps.hdc = msg.drawDevice.dc;
-	ps.rcPaint = msg.drawDevice.invalidRect;
-	EndPaint(&ps);
+	return 0;
 }
 
 XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
@@ -110,18 +112,73 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 	return XResult_Fail;
 }
 
-XResult CXRealWnd::RegisterXMLSupportProperty()
-{
-	XMLConvert(Title);
-	XMLConvert(ShowState);
-	XMLConvert(Style);
-	XMLConvert(ExStyle);
-
-	return CXElement::RegisterXMLSupportProperty();
-}
-
 XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 {
 	return BaseClass::ProcessXMessage(msg);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// message translate
+
+LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
+{
+	URP(wParam,lParam);
+	CXMsg_Paint msg;
+	msg.msgRet = 0;
+	PAINTSTRUCT ps;
+	BeginPaint(&ps);
+	msg.drawDevice.invalidRect = CRect(ps.rcPaint);
+	msg.drawDevice.dc = ps.hdc;
+
+	ProcessXMessage(msg);
+
+	BitBlt(msg.drawDevice.dc,
+		msg.drawDevice.invalidRect.left,
+		msg.drawDevice.invalidRect.top,
+		msg.drawDevice.invalidRect.Width(),
+		msg.drawDevice.invalidRect.Height(),
+		msg.drawDevice.dc,
+		0, 0,
+		SRCCOPY
+		);
+
+	ZeroMemory(&ps,sizeof(ps));
+	ps.hdc = msg.drawDevice.dc;
+	ps.rcPaint = msg.drawDevice.invalidRect;
+	EndPaint(&ps);
+	SetMsgHandled(msg.msgHandled);
+	return msg.msgRet;
+}
+
+LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
+{
+	if (wParam != SIZE_RESTORED)
+	{
+		CXMsg_SizeChanged msg;
+		msg.node = this;
+		msg.sizeType = (SizeType)wParam;
+
+		ProcessXMessage(msg);
+
+		return msg.msgRet;
+	}
+
+	CSize size;
+	size.cx = LOWORD(lParam);
+	size.cy = HIWORD(lParam);
+	SetSize(size);
+
+	return 0;
+}
+
+XResult CXRealWnd::SetXMLProperty( CString name,CString value )
+{
+	XMLConvert_Begin(name,value)
+		XMLConvert(Title)
+		XMLConvert(ShowState)
+		XMLConvert(Style)
+		XMLConvert(ExStyle)
+	XMLConvert_End
+
+	return BaseClass::SetXMLProperty(name,value);
+}

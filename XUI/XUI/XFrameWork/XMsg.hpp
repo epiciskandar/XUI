@@ -43,6 +43,16 @@ public:
 	CXDrawDevice	drawDevice;
 };
 
+class CXMsg_SizeChanged : public CXMsg
+{
+	XMessage(CXMsg_SizeChanged);
+public:
+	NodeRef node;
+	SizeType sizeType;
+
+	CXMsg_SizeChanged():sizeType(SizeType_Restored){}
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 #undef XMessage

@@ -23,6 +23,15 @@ enum LayoutType
 	Layout_Block
 };
 
+enum SizeType	// see WM_SIZE on MSDN
+{
+	SizeType_Restored	= 0,
+	SizeType_MiniMized	= 1,
+	SizeType_MaxiMized	= 2,
+	SizeType_MaxShow	= 3,
+	SizeType_MAXHIDE	= 4,
+};
+
 #define XSUCCEEDED(_result)			(_result>=XResult_Error? FALSE: TRUE)
 #define XFAILED(_result)			!XSUCCEEDED(_result)
 #define CheckParam(_paramsCheck)	{if(!_paramsCheck){return XResult_InvalidArg;}}

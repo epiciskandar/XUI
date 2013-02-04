@@ -49,36 +49,6 @@ CString _className :: GetDescription() \
 #define I_Provide(_function) description.AppendFormat(_T("I provide functions like %s\n"),_CRT_WIDE(#_function));
 #define And_You_Should_Notice(_instruction) description.AppendFormat(_T("%s\n"),_CRT_WIDE(#_instruction));
 	
-#define TranslateToXMessage(_transfunc, ...) \
-	{ \
-		UINT msgList[] = { __VA_ARGS__ }; \
-		static std::set<UINT> handleMsgSet; \
-		if (handleMsgSet.empty()) \
-			for(UINT n=0; n<_countof(msgList); ++n){handleMsgSet.insert(msgList[n]);} \
-		if(handleMsgSet.find(uMsg) != handleMsgSet.end()) \
-		{ \
-			SetMsgHandled(TRUE); \
-			lResult = _transfunc(uMsg, wParam, lParam); \
-			if(IsMsgHandled()) \
-			return TRUE; \
-		} \
-	}
-
-#define MessageTranslater(_msg) \
-	VOID	Before##_msg(_msg& msg, WPARAM wParam, LPARAM lParam); \
-	VOID	End##_msg(_msg& msg);
-
-#define XMsgTranslater(_msg,_xmsg) \
-	case _msg: \
-	{ \
-		_xmsg msg; \
-		Before##_xmsg(msg,wParam,lParam); \
-		_SendXMessageToChildren(msg); \
-		End##_xmsg(msg); \
-		lResult = msg.msgRet; \
-		SetMsgHandled(msg.msgHandled); \
-	} \
-	break;
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef DISALLOW_COPY_AND_ASSIGN

@@ -10,7 +10,7 @@ class CXStatic : public CXElement
 		XProperty(TextColor)
 	XProperty_End;
 
-	virtual XResult RegisterXMLSupportProperty();
+	virtual XResult SetXMLProperty( CString name,CString value );
 
 	virtual XResult ProcessXMessage(CXMsg& msg);
 
@@ -57,10 +57,12 @@ XResult CXStatic::ProcessXMessage( CXMsg& msg )
 	return BaseClass::ProcessXMessage(msg);
 }
 
-XResult CXStatic::RegisterXMLSupportProperty()
+XResult CXStatic::SetXMLProperty( CString name,CString value )
 {
-	XMLConvert(Text);
-	XMLConvert(TextColor);
+	XMLConvert_Begin(name,value)
+		XMLConvert(Text)
+		XMLConvert(TextColor)
+	XMLConvert_End
 
-	return BaseClass::RegisterXMLSupportProperty();
+	return BaseClass::SetXMLProperty(name,value);
 }

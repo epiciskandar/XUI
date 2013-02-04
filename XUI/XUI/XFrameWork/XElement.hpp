@@ -27,17 +27,32 @@ public: \
 	XProperty_Get(_name) \
 	XProperty_Set(_name)
 
+#define XFakeProperty(_name) \
+	virtual XResult Get##_name (Property::_name##Type& value); \
+	virtual XResult Set##_name (Property::_name##Type param);
+
 #define XProperty_End
 
 // define XML converters
-#define XMLConvert_Begin
+#define XMLConvert_Begin(_name,_value) \
+{ \
+	CString& propName = _name; \
+	CString& propVaule = _value;
 #define XMLConvert(_name) \
-	m_XMLConverterMap[L# _name] = [this](CString value)->XResult \
+	if (Property::_name == propName) \
 	{ \
-		Property::_name##XMLConverter converter(m_property); \
-		return converter.Convert(L# _name,value); \
-	};
-#define XMLConvert_End
+		m_property.SetProperty(propName,Property::_name##XMLConverter::ConvertToValue(propVaule)); \
+		CXMsg_PropertyChanged msg; \
+		msg.name = propName; \
+		ProcessXMessage(msg); \
+	}else
+#define XMLFakeConvert(_name) \
+	if (Property::_name == propName) \
+	{ \
+		return Set##_name(Property::_name##XMLConverter::ConvertToValue(propVaule)); \
+	}else
+#define XMLConvert_End	{} \
+}
 
 // define XMsg router
 #define BEGIN_XMSG_MAP(_msg) \
@@ -71,15 +86,14 @@ public:
 
 	XProperty_Begin
 		XProperty(Rect)
-		XProperty(Position)
-		XProperty(Size)
+		XFakeProperty(Position)
+		XFakeProperty(Size)
 	XProperty_End;
 
 	// XMsg的接收入口函数
 	virtual XResult ProcessXMessage(CXMsg& msg);
 
-	// 对string类型的属性值的解析支持，用于XML的实例化，可通过该函数注册的类型知道XML支持什么属性
-	virtual XResult RegisterXMLSupportProperty();
+	// 对string类型的属性值的解析支持，用于XML的实例化，可通过该函数知道XML支持什么属性
 	virtual XResult SetXMLProperty(CString name,CString value);
 
 	CXProperty& GetPrpertyRef()	{return m_property;};
@@ -90,8 +104,6 @@ protected:
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 protected:
 	CXProperty m_property;
-	typedef std::map<CString,std::function<XResult(CString)>> XMLConverterMap;
-	XMLConverterMap m_XMLConverterMap;
 };
 
 typedef XSmartPtr<CXElement> ElementRef;
@@ -110,12 +122,15 @@ CXElement::~CXElement()
 {
 }
 
-XResult CXElement::RegisterXMLSupportProperty()
+XResult CXElement::SetXMLProperty( CString name,CString value )
 {
-	XMLConvert(Rect);
-	XMLConvert(Position);
-	XMLConvert(Size);
-	return XResult_OK;
+	XMLConvert_Begin(name,value)
+		XMLConvert(Rect)
+		XMLFakeConvert(Position)
+		XMLFakeConvert(Size)
+	XMLConvert_End
+
+	return XResult_NotSupport;
 }
 
 VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
@@ -127,44 +142,17 @@ VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
 	}
 }
 
-XResult CXElement::SetXMLProperty( CString name,CString value )
-{
-	auto i = m_XMLConverterMap.find(name);
-	if (i != m_XMLConverterMap.end())
-	{
-		XResult result = i->second(value);
-		if (XSUCCEEDED(result))
-		{
-			CXMsg_PropertyChanged msg;
-			msg.name = name;
-			ProcessXMessage(msg);
-		}
-		return result;
-	}
-	return XResult_NotSupport;
-}
-
 VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
 {
-	if (arg.name == Property::Position)
+	if (arg.name = Property::Size)
 	{
-		CPoint pos;
-		GetPosition(pos);
+		CXMsg_SizeChanged msg;
+		msg.node = this;
+		msg.sizeType = SizeType_Restored;
 
-		CRect rect;
-		GetRect(rect);
-		rect.OffsetRect(pos);
-		SetRect(rect);
-	}
-	else if (arg.name == Property::Size)
-	{
-		CSize size;
-		GetSize(size);
+		ProcessXMessage(msg);
 
-		CRect rect;
-		GetRect(rect);
-		rect.BottomRight().Offset(size);
-		SetRect(rect);
+		msg.msgHandled = TRUE;
 	}
 	return;
 }
@@ -174,5 +162,43 @@ XResult CXElement::ProcessXMessage( CXMsg& msg )
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_PropertyChanged)
 	END_XMSG_MAP;
-	return XResult_NotHandled;
+	if (!msg.msgHandled)
+	{
+		_SendXMessageToChildren(msg);
+	}
+	return XResult_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+XResult CXElement::GetPosition(Property::PositionType& value)
+{
+	CRect rect;
+	GetRect(rect);
+	value = rect.TopLeft();
+	return XResult_OK;
+}
+
+XResult CXElement::SetPosition(Property::PositionType param)
+{
+	CRect rect;
+	GetRect(rect);
+	rect.TopLeft() = param;
+	return SetRect(rect);
+}
+
+XResult CXElement::GetSize(Property::SizeType& value)
+{
+	CRect rect;
+	GetRect(rect);
+	value = rect.BottomRight();
+	return XResult_OK;
+}
+
+XResult CXElement::SetSize(Property::SizeType param)
+{
+	CRect rect;
+	GetRect(rect);
+	rect.BottomRight() = param;
+	return SetRect(rect);
 }

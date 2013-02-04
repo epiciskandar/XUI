@@ -123,7 +123,6 @@
     <ClInclude Include="XUI\WTL\atluser.h" />
     <ClInclude Include="XUI\WTL\atlwince.h" />
     <ClInclude Include="XUI\WTL\atlwinx.h" />
-    <ClInclude Include="XUI\XFrameWork\Utils\XMLConverter.hpp" />
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
     <ClInclude Include="xui\XFrameWork\XCtrls\XStatic.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
