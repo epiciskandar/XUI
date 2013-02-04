@@ -35,21 +35,25 @@
 
 class CXProperty
 {
-	XClass;
+	XClass(VOID);
 public:
- 	SupportType(m_propertyMap,PropertyValue<CString>);
- 	SupportType(m_propertyMap,PropertyValue<DWORD>);
- 	SupportType(m_propertyMap,PropertyValue<NodeRef>);
- 	SupportType(m_propertyMap,PropertyValue<CRect>);
- 	SupportType(m_propertyMap,PropertyValue<CPoint>);
+ 	SupportType(m_propertyMap,CPropertyValue<CString>);
+	SupportType(m_propertyMap,CPropertyValue<DWORD>);
+	SupportType(m_propertyMap,CPropertyValue<INT>);
+ 	SupportType(m_propertyMap,CPropertyValue<NodeRef>);
+ 	SupportType(m_propertyMap,CPropertyValue<CRect>);
+	SupportType(m_propertyMap,CPropertyValue<CPoint>);
+	SupportType(m_propertyMap,CPropertyValue<CSize>);
+	SupportType(m_propertyMap,CPropertyValue<HWND>);
+	SupportType(m_propertyMap,CPropertyValue<LayoutType>);
+
+	BOOL IsChanged(CString key);
+	VOID ChangeRestore(CString key/*empty means all*/);
 
 	CXProperty& operator=(const CXProperty& rhs);
 	XResult	Switch(CXProperty& rhs);
-	XResult MarkSupportedProperty(CString key);
-	XResult IsSupported(CString key);
 protected:
 	std::map<CString,CBuffer>	m_propertyMap;
-	std::set<CString>			m_supportedProps;
 };
 
 MyNameIs(CXProperty)
@@ -59,15 +63,61 @@ End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
-
-XResult CXProperty::MarkSupportedProperty( CString key )
+BOOL CXProperty::IsChanged( CString key )
 {
-	m_supportedProps.insert(key);
-	return XResult_OK;
+	auto i = m_propertyMap.find(key);
+	if (i != m_propertyMap.end())
+	{
+		CBuffer& buffer = i->second;
+		CChangable* changable = static_cast<CChangable*>((VOID*)buffer.GetBuffer());
+		return changable->IsChanged();
+	}
+	return FALSE;
 }
 
-XResult CXProperty::IsSupported( CString key )
+VOID CXProperty::ChangeRestore( CString key )
 {
-	bool bFound = m_supportedProps.find(key) != m_supportedProps.end();
-	return bFound? XResult_OK: XResult_NotSupport;
+	if (key.GetLength() != 0)
+	{
+		auto i = m_propertyMap.find(key);
+		if (i != m_propertyMap.end())
+		{
+			CBuffer& buffer = i->second;
+			CChangable* changable = static_cast<CChangable*>((VOID*)buffer.GetBuffer());
+			changable->Restore();
+		}
+	}
+	else
+	{
+		for (auto i=m_propertyMap.begin(); i!=m_propertyMap.end(); ++i)
+		{
+			CBuffer& buffer = i->second;
+			CChangable* changable = static_cast<CChangable*>((VOID*)buffer.GetBuffer());
+			changable->Restore();
+		}
+	}
 }
+
+#include "Utils/XMLConverter.hpp"
+
+// contains each properties definition
+namespace Property
+{
+#define DefineProperty(_name,_type,_defaultValue)	\
+	static LPCTSTR _name = _T(#_name); \
+	static _type _name##DefaultValue = _defaultValue; \
+	typedef _type _name##Type; \
+	typedef CXMLConverter_##_type _name##XMLConverter; \
+
+	DefineProperty(Rect		,CRect,		CRect());
+	DefineProperty(Position	,CPoint,	CPoint());
+	DefineProperty(Size		,CSize,		CSize());
+	DefineProperty(Text		,CString,	_T(""));
+	DefineProperty(Title	,CString,	_T(""));
+	DefineProperty(Color	,COLORREF,	0);
+	DefineProperty(TextColor,COLORREF,	0);
+	DefineProperty(Style	,DWORD,		WS_OVERLAPPEDWINDOW|WS_VISIBLE);
+	DefineProperty(ExStyle	,DWORD,		0);
+	DefineProperty(HWnd		,HWND,		0);
+	DefineProperty(ShowState,BOOL,		FALSE);
+};

@@ -19,3 +19,11 @@
 /*.sdf
 /*.suo
 /XUI/*.user
+/XUI/Release/*.tlog
+/XUI/Release/*.obj
+/XUI/Release/*.pdb
+/XUI/Release/*.lastbuildstate
+/XUI/Release/*.cache
+/XUI/*.suo
+/XUI/ipch/xui-edc54a9/*.ipch
+/XUI/Release/*.log
