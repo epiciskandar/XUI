@@ -3,6 +3,7 @@
 #include "XTree.hpp"
 #include "XMsg.hpp"
 #include "XProperty.hpp"
+#include "../WTL/atlctrls.h"
 
 //////////////////////////////////////////////////////////////////////////
 

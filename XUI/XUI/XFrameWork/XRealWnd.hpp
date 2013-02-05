@@ -70,6 +70,7 @@ protected:
 typedef XSmartPtr<CXRealWnd> CXRealWndRef;
 
 MyNameIs(CXRealWnd)
+	I_Provide("将windows消息转换为内部消息，并提供真窗口的一些基本维护，暴漏WTL::CWindow对外")
 End_Description;
 
 //////////////////////////////////////////////////////////////////////////
