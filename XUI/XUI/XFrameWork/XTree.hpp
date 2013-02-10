@@ -4,24 +4,9 @@
 class CXTreeNode;
 typedef XSmartPtr<CXTreeNode> NodeRef;
 
-class CXTreeNode
+class CXTreeNode : public Util::Class::CRefCountImpl
 {
 	XClass(VOID);
-
-	virtual ULONG STDMETHODCALLTYPE AddRef()
-	{
-		return InterlockedIncrement(&m_refCount);
-	}
-	virtual ULONG STDMETHODCALLTYPE Release()
-	{
-		unsigned long ul = 0;
-		if ((ul = InterlockedDecrement(&m_refCount)) == 0)
-		{
-			delete this;
-		}
-		return ul;
-	}
-	unsigned long m_refCount;
 public:
 	CXTreeNode();
 	virtual ~CXTreeNode();
@@ -64,7 +49,6 @@ End_Description;
 
 CXTreeNode::CXTreeNode()
 : m_father(NodeRef())
-, m_refCount(0)
 {}
 
 CXTreeNode::~CXTreeNode()
@@ -150,4 +134,32 @@ XResult CXTreeNode::GetChild( CString id,NodeRef& pChild )
 		}
 	}
 	return XResult_NotFound;
+}
+
+XResult CXTreeNode::GetSibling( NodeRef pBefore,NodeRef pAfter )
+{
+	pBefore = nullptr;
+	pAfter = nullptr;
+	if (m_father)
+	{
+		auto i = m_father->_GetNodeIter(this);
+		if ( i != m_father->m_children.end())
+		{
+			if (i != m_father->m_children.begin())
+			{
+				auto iprev = i;
+				--iprev;
+				pBefore = *iprev;
+			}
+			{
+				auto inext = i;
+				++inext;
+				if (inext != m_father->m_children.end())
+				{
+					pAfter = *inext;
+				}
+			}
+		}
+	}
+	return XResult_OK;
 }

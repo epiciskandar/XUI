@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--位置排版属性应当与style分离-->
 <XUI version="1" >
-  <XRealWnd ID="10086" Title="Test" Style="349110272" ExStyle="256" Size="300,250" LayoutType="Layout_Block">
-    <XStatic Text="Hello World!" Size="100,20" HCenter="TRUE" VCenter="TRUE" />
+  <XRealWnd ID="10086" Title="Test" Style="349110272" ExStyle="256" Size="300,250" ELayoutType="Layout_Block" LayoutDirection="horizon">
+    <XStatic Text="Hello World!" Size="100,20" Align="left"/>
+    <XStatic Text="Hello World!" Size="100,20" Align="left" />
   </XRealWnd>
 </XUI>

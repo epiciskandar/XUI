@@ -48,9 +48,15 @@ class CXMsg_SizeChanged : public CXMsg
 	XMessage(CXMsg_SizeChanged);
 public:
 	NodeRef node;
-	SizeType sizeType;
+	ESizeType sizeType;
 
 	CXMsg_SizeChanged():sizeType(SizeType_Restored){}
+};
+
+class CXMsg_Layout : public CXMsg
+{
+	XMessage(CXMsg_Layout);
+public:
 };
 
 //////////////////////////////////////////////////////////////////////////

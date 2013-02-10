@@ -80,28 +80,53 @@ class XSmartPtr
 {
 public:
 	typedef T*			PointerType;
-	typedef T* const	ConstPointerType;
-	typedef const T&	ConstRefType;
+	typedef T&			RefType;
 
 	XSmartPtr() : m_ptr(NULL){};
-	XSmartPtr(PointerType const rhs) : m_ptr(rhs){if(m_ptr){m_ptr->AddRef();}};
-	XSmartPtr(const XSmartPtr& rhs) : m_ptr(NULL)
+	XSmartPtr(const PointerType rhs) : m_ptr(rhs){if(m_ptr){m_ptr->AddRef();}};
+
+	XSmartPtr(const XSmartPtr& rhs)
 	{
-		m_ptr = rhs._GetPointer();
+		m_ptr = dynamic_cast<const PointerType>(rhs.GetPointer());
 		if (m_ptr)
 		{
 			m_ptr->AddRef();
 		}
-	};
-	XSmartPtr(ConstRefType rhs) : m_ptr(rhs){};
+	}
+
+	template <typename T2>
+	XSmartPtr(const XSmartPtr<T2>& rhs)
+	{
+		m_ptr = dynamic_cast<const PointerType>(rhs.GetPointer());
+		if (m_ptr)
+		{
+			m_ptr->AddRef();
+		}
+	}
 	virtual ~XSmartPtr(){if(m_ptr){m_ptr->Release();}}
+
 	XSmartPtr operator=(const XSmartPtr& rhs)
 	{
 		if (m_ptr)
 		{
 			m_ptr->Release();
 		}
-		m_ptr = rhs._GetPointer();
+		m_ptr = dynamic_cast<PointerType>(rhs.GetPointer());
+		if (m_ptr)
+		{
+			m_ptr->AddRef();
+		}
+		return *this;
+	}
+
+	template <typename T2>
+	XSmartPtr operator=(const XSmartPtr<T2>& rhs)
+	{
+		if (m_ptr)
+		{
+			m_ptr->Release();
+		}
+		m_ptr = dynamic_cast<PointerType>(rhs.GetPointer());
 		if (m_ptr)
 		{
 			m_ptr->AddRef();
@@ -113,7 +138,7 @@ public:
 	{
 		return (m_ptr==NULL)? false: true;
 	}
-	ConstPointerType operator ->() const
+	const PointerType operator ->() const
 	{
 		return m_ptr;
 	}
@@ -121,26 +146,17 @@ public:
 	{
 		return m_ptr;
 	}
-protected:
-	PointerType _GetPointer() const
+
+	PointerType GetPointer() const
 	{
 		return m_ptr;
 	}
-
-	template <class DestTypeRef,class SrcTypeRef>
-	friend DestTypeRef TransformNode(SrcTypeRef& rhs);
 
 protected:
 	T* m_ptr;
 };
 
-template <class DestTypeRef,class SrcTypeRef>
-DestTypeRef TransformNode(SrcTypeRef& rhs)
-{
-	SrcTypeRef::PointerType ptr = rhs._GetPointer();
-	DestTypeRef newref(dynamic_cast<DestTypeRef::PointerType>(ptr));
-	return newref;
-}
+typedef XSmartPtr<CXBase> BaseRef;
 
 //////////////////////////////////////////////////////////////////////////
 

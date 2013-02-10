@@ -28,8 +28,8 @@
     <Filter Include="Header Files\Others">
       <UniqueIdentifier>{bfd782b2-f658-4c31-8499-7caa66484a3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Utils">
-      <UniqueIdentifier>{99626314-f240-4630-8637-6dd05e878a48}</UniqueIdentifier>
+    <Filter Include="Header Files\Layouter">
+      <UniqueIdentifier>{36d0f95a-05bc-4f78-ae88-54e554381a08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +175,18 @@
     </ClInclude>
     <ClInclude Include="xui\Others\CBuffer.h">
       <Filter>Header Files\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XLayouter\Block.hpp">
+      <Filter>Header Files\Layouter</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XLayouter\Offset.hpp">
+      <Filter>Header Files\Layouter</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XLayouter\LayouterBase.hpp">
+      <Filter>Header Files\Layouter</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XLayouter\Layouter.hpp">
+      <Filter>Header Files\Layouter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

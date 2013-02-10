@@ -17,13 +17,7 @@ enum XResult
 	XResult_NotSupport,
 };
 
-enum LayoutType
-{
-	Layout_Offset,
-	Layout_Block
-};
-
-enum SizeType	// see WM_SIZE on MSDN
+enum ESizeType	// see WM_SIZE on MSDN
 {
 	SizeType_Restored	= 0,
 	SizeType_MiniMized	= 1,

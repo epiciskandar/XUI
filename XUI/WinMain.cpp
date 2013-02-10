@@ -28,13 +28,13 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	CXResPool::GetInstance().TranslateResPath(xmlPath);
 	NodeRef xmlNode = xui.GetGaia().CreateFromXML(xmlPath);
 
-	CXRealWndRef wnd = TransformNode<CXRealWndRef>(xmlNode);
+	CXRealWndRef wnd = xmlNode;
 	wnd->Create(0);
 	wnd->ShowWindow(SW_SHOW);
 	NodeRef textNode;
 	xmlNode->GetFirstChild(textNode);
-	CXStaticRef textRef = TransformNode<CXStaticRef>(textNode);
-	CXRealWndRef wndRef = TransformNode<CXRealWndRef>(xmlNode);
+	CXStaticRef textRef = textNode;
+	CXRealWndRef wndRef = xmlNode;
 	CRect rect;
 
 	xui.Work();

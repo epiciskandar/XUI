@@ -130,6 +130,10 @@
     <ClInclude Include="xui\XFrameWork\XElement.hpp" />
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
     <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XLayouter\Block.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XLayouter\Layouter.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XLayouter\LayouterBase.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XLayouter\Offset.hpp" />
     <ClInclude Include="XUI\XFrameWork\XMsg.hpp" />
     <ClInclude Include="xui\XFrameWork\XProperty.hpp" />
     <ClInclude Include="XUI\XFrameWork\XPropertyValue.hpp" />
@@ -140,7 +144,9 @@
     <ClInclude Include="XUI\XUI.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resource\Test.xml" />
+    <None Include="..\Resource\Test.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

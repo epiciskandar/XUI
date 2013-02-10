@@ -157,7 +157,7 @@ LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
 	{
 		CXMsg_SizeChanged msg;
 		msg.node = this;
-		msg.sizeType = (SizeType)wParam;
+		msg.sizeType = (ESizeType)wParam;
 
 		ProcessXMessage(msg);
 

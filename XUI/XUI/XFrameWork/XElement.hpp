@@ -3,7 +3,6 @@
 #include "XTree.hpp"
 #include "XMsg.hpp"
 #include "XProperty.hpp"
-#include "../WTL/atlctrls.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -89,6 +88,13 @@ public:
 		XProperty(Rect)
 		XFakeProperty(Position)
 		XFakeProperty(Size)
+		XProperty(LayoutType)
+		XProperty(LayoutInvalid)
+		XProperty(Align)
+		XProperty(AutoWidth)
+		XProperty(AutoHeight)
+		XProperty(ExpandWidth)
+		XProperty(ExpandHeight)
 	XProperty_End;
 
 	// XMsg的接收入口函数
@@ -97,14 +103,17 @@ public:
 	// 对string类型的属性值的解析支持，用于XML的实例化，可通过该函数知道XML支持什么属性
 	virtual XResult SetXMLProperty(CString name,CString value);
 
-	CXProperty& GetPrpertyRef()	{return m_property;};
+	Property::CXProperty& GetPrpertyRef()	{return m_property;};
 
 protected:
 	VOID _SendXMessageToChildren(CXMsg& pMsg);
 
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
+	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);
+	VOID On_CXMsg_Layout(CXMsg_Layout& arg);
+	VOID On_CXMsg_Paint(CXMsg_Paint& arg);
 protected:
-	CXProperty m_property;
+	Property::CXProperty m_property;
 };
 
 typedef XSmartPtr<CXElement> ElementRef;
@@ -114,6 +123,7 @@ MyNameIs(CXElement)
 End_Description;
 
 //////////////////////////////////////////////////////////////////////////
+#include "XLayouter/Layouter.hpp"
 
 CXElement::CXElement()
 {
@@ -138,30 +148,18 @@ VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
 {
 	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
 	{
-		XSmartPtr<CXElement> pElement = TransformNode<XSmartPtr<CXElement>>(*i);
+		XSmartPtr<CXElement> pElement = *i;
 		pElement->ProcessXMessage( pMsg );
 	}
-}
-
-VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
-{
-	if (arg.name = Property::Size)
-	{
-		CXMsg_SizeChanged msg;
-		msg.node = this;
-		msg.sizeType = SizeType_Restored;
-
-		ProcessXMessage(msg);
-
-		msg.msgHandled = TRUE;
-	}
-	return;
 }
 
 XResult CXElement::ProcessXMessage( CXMsg& msg )
 {
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_PropertyChanged)
+		OnXMsg(CXMsg_SizeChanged)
+		OnXMsg(CXMsg_Layout)
+		OnXMsg(CXMsg_Paint)
 	END_XMSG_MAP;
 	if (!msg.msgHandled)
 	{
@@ -202,4 +200,52 @@ XResult CXElement::SetSize(Property::SizeType param)
 	GetRect(rect);
 	rect.BottomRight() = param;
 	return SetRect(rect);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
+{
+	if (arg.name = Property::Size)
+	{
+		CXMsg_SizeChanged msg;
+		msg.node = this;
+		msg.sizeType = SizeType_Restored;
+
+		ProcessXMessage(msg);
+
+		msg.msgHandled = TRUE;
+	}
+	return;
+}
+
+VOID CXElement::On_CXMsg_SizeChanged( CXMsg_SizeChanged& arg )
+{
+	URP(arg);
+}
+
+VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
+{
+	URP(arg);
+	_SendXMessageToChildren(arg);
+	Layouter::LayouterRef layouter;
+	Property::ELayoutType type;
+	GetLayoutType(type);
+	Layouter::GetLayouter(type,layouter);
+	if (layouter)
+	{
+		layouter->Layout(this);
+	}
+}
+
+VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
+{
+	URP(arg);
+	BOOL layoutInvalid = TRUE;
+	GetLayoutInvalid(layoutInvalid);
+	if (layoutInvalid)
+	{
+		CXMsg_Layout msg;
+		ProcessXMessage(msg);
+	}
 }

@@ -133,7 +133,7 @@ XResult CXGaia::_CheckAndSkipXMLRoot( TiXmlElement* pRoot )
 XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElement )
 {
 	CheckParam(node && pElement);
-	ElementRef element = TransformNode<ElementRef>(node);
+	ElementRef element = node;
 	if (element)
 	{
 		const TiXmlAttribute* attr = pElement->FirstAttribute();

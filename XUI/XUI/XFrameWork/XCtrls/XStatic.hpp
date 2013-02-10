@@ -50,11 +50,13 @@ VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 
 XResult CXStatic::ProcessXMessage( CXMsg& msg )
 {
+	BaseClass::ProcessXMessage(msg);
+	
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_Paint);
 	END_XMSG_MAP;
 
-	return BaseClass::ProcessXMessage(msg);
+	return XResult_OK;
 }
 
 XResult CXStatic::SetXMLProperty( CString name,CString value )
