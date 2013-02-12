@@ -90,11 +90,13 @@ public:
 		XFakeProperty(Size)
 		XProperty(LayoutType)
 		XProperty(LayoutInvalid)
+		XProperty(LayoutDirection)
 		XProperty(Align)
 		XProperty(AutoWidth)
 		XProperty(AutoHeight)
 		XProperty(ExpandWidth)
 		XProperty(ExpandHeight)
+		XProperty(Color)
 	XProperty_End;
 
 	// XMsg的接收入口函数
@@ -139,6 +141,7 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLConvert(Rect)
 		XMLFakeConvert(Position)
 		XMLFakeConvert(Size)
+		XMLFakeConvert(ID)
 	XMLConvert_End
 
 	return XResult_NotSupport;
@@ -182,7 +185,10 @@ XResult CXElement::SetPosition(Property::PositionType param)
 {
 	CRect rect;
 	GetRect(rect);
+	CSize size = rect.Size();
 	rect.TopLeft() = param;
+	rect.right = rect.left + size.cx;
+	rect.bottom = rect.top + size.cy;
 	return SetRect(rect);
 }
 
@@ -198,7 +204,7 @@ XResult CXElement::SetSize(Property::SizeType param)
 {
 	CRect rect;
 	GetRect(rect);
-	rect.BottomRight() = param;
+	rect.BottomRight() = rect.TopLeft() + param;
 	return SetRect(rect);
 }
 

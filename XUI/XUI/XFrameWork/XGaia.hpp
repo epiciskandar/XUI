@@ -39,6 +39,7 @@ End_Description;
 
 CXGaia::CXGaia()
 {
+	RecordXClass(CXElement);
 	RecordXClass(CXRealWnd);
 	RecordXClass(CXStatic);
 }
@@ -96,7 +97,7 @@ NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 	}
 	ParseAndSetParams(node,pElement);
 	TiXmlNode* pChild = pElement->FirstChild();
-	if (pChild)
+	while (pChild)
 	{
 		TiXmlElement* pChildElement = pChild->ToElement();
 		if (pChildElement)
@@ -107,6 +108,7 @@ NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 				node->AppendChild(childNode);
 			}
 		}
+		pChild = pChild->NextSiblingElement();
 	}
 	return node;
 }

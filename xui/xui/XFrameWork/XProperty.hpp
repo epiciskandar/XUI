@@ -42,7 +42,7 @@ enum class EAlignType
 	Bottom,
 	Center,
 	HCenter,
-	VCentet,
+	VCenter,
 	//Element,
 };
 
@@ -99,6 +99,7 @@ public:
 	SupportType(m_propertyMap,CPropertyValue<CSize>);
 	SupportType(m_propertyMap,CPropertyValue<HWND>);
 	SupportType(m_propertyMap,CPropertyValue<ELayoutType>);
+	SupportType(m_propertyMap,CPropertyValue<ELayoutDirection>);
 	SupportType(m_propertyMap,CPropertyValue<EAlignType>);
 
 	BOOL IsChanged(CString key);
@@ -305,7 +306,7 @@ public:
 		}
 		else if (value == AlignTypeString::Align_VCenterString)
 		{
-			type = EAlignType::VCentet;
+			type = EAlignType::VCenter;
 		}
 		else
 		{
@@ -339,6 +340,7 @@ public:
 	typedef _type _name##Type; \
 	typedef CXMLConverter_##_type _name##XMLConverter; \
 
+DefineProperty(ID,				CString,			_T(""));
 DefineProperty(Rect,			CRect,				CRect());
 DefineProperty(Position,		CPoint,				CPoint());
 DefineProperty(Size,			CSize,				CSize());

@@ -35,6 +35,7 @@ class CXRealWnd :
 	XClass(CXElement);
 public:
 	CXRealWnd();
+	~CXRealWnd(){};
 
 	BEGIN_MSG_MAP_EX(CXRealWnd)
 		MSG_WM_DESTROY(OnDestroy)

@@ -17,8 +17,9 @@ public:
 	XResult InsertBefore(NodeRef pChild,NodeRef pAfterMe);
 	XResult GetFirstChild(NodeRef& pChild);
 	XResult GetChild(CString id,NodeRef& pChild);
+	XResult SearchChild(CString id,NodeRef& pChild);	// search tree
 	XResult	SwapNode(NodeRef pNode1,NodeRef pNode2);
-	XResult	GetSibling(NodeRef pBefore,NodeRef pAfter);
+	XResult	GetSibling(NodeRef& pBefore,NodeRef& pAfter);
 	XResult RemoveChild(NodeRef pChild);
 	NodeRef GetFather();
 	XResult RIPMySelf();
@@ -132,11 +133,12 @@ XResult CXTreeNode::GetChild( CString id,NodeRef& pChild )
 			pChild = *i;
 			return XResult_OK;
 		}
+		++i;
 	}
 	return XResult_NotFound;
 }
 
-XResult CXTreeNode::GetSibling( NodeRef pBefore,NodeRef pAfter )
+XResult CXTreeNode::GetSibling( NodeRef& pBefore,NodeRef& pAfter )
 {
 	pBefore = nullptr;
 	pAfter = nullptr;
@@ -162,4 +164,23 @@ XResult CXTreeNode::GetSibling( NodeRef pBefore,NodeRef pAfter )
 		}
 	}
 	return XResult_OK;
+}
+
+XResult CXTreeNode::SearchChild( CString id,NodeRef& pChild )
+{
+	pChild = nullptr;
+	GetChild(id,pChild);
+	if (!pChild)
+	{
+		for (auto& i:m_children)
+		{
+			NodeRef childNode = i;
+			childNode->SearchChild(id,pChild);
+			if (pChild)
+			{
+				return XResult_OK;
+			}
+		}
+	}
+	return XResult_NotFound;
 }

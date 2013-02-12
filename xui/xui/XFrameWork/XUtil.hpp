@@ -103,6 +103,7 @@ namespace Util
 				return ul;
 			}
 			unsigned long m_refCount;
+			CRefCountImpl():m_refCount(0){}
 		};
 	}
 }
