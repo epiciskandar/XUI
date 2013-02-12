@@ -1,4 +1,4 @@
-#include "VisualLeakDetector/include/vld.h"
+//#include "VisualLeakDetector/include/vld.h"
 #define _CRTDBG_MAP_ALLOC
 #include "XUI/XUI.h"
 
@@ -29,16 +29,18 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	NodeRef xmlNode = xui.GetGaia().CreateFromXML(xmlPath);
 
 	CXRealWndRef wnd = xmlNode;
-	wnd->Create(0);
-	wnd->ShowWindow(SW_SHOW);
-	NodeRef textNode;
-	xmlNode->SearchChild(_T("anotherText"),textNode);
-	CXStaticRef textRef = textNode;
-	//textRef->SetPosition(CPoint(100,100));
-	CXRealWndRef wndRef = xmlNode;
-	CRect rect;
+	if (wnd)
+	{
+		wnd->Create(0);
+		wnd->ShowWindow(SW_SHOW);
+		NodeRef textNode;
+		xmlNode->SearchChild(_T("anotherText"),textNode);
+		//CXStaticRef textRef = textNode;
+		//textRef->SetPosition(CPoint(100,100));
+		//CXRealWndRef wndRef = xmlNode;
 
-	xui.Work();
+		xui.Work();
+	}
 
 	xui.Finalize();
 	

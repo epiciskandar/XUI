@@ -89,11 +89,11 @@ namespace Util
 		class CRefCountImpl
 		{
 		public:
-			virtual ULONG STDMETHODCALLTYPE AddRef()
+			ULONG STDMETHODCALLTYPE AddRef()
 			{
 				return InterlockedIncrement(&m_refCount);
 			}
-			virtual ULONG STDMETHODCALLTYPE Release()
+			ULONG STDMETHODCALLTYPE Release()
 			{
 				unsigned long ul = 0;
 				if ((ul = InterlockedDecrement(&m_refCount)) == 0)
@@ -104,6 +104,7 @@ namespace Util
 			}
 			unsigned long m_refCount;
 			CRefCountImpl():m_refCount(0){}
+			virtual ~CRefCountImpl(){}
 		};
 	}
 }
