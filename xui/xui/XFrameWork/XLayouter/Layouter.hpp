@@ -10,14 +10,22 @@ namespace Layouter
 		{
 		case Property::ELayoutType::Offset:
 			{
-				static COffsetLayouter staticLayouter;
-				layouter = &staticLayouter;
+				static LayouterRef keeper;
+				if (!keeper)
+				{
+					keeper = new COffsetLayouter;
+				}
+				layouter = keeper;
 			}
 			break;
 		case Property::ELayoutType::Block:
 			{
-				static CBlockLayouter staticLayouter;
-				layouter = &staticLayouter;
+				static LayouterRef keeper;
+				if (!keeper)
+				{
+					keeper = new CBlockLayouter;
+				}
+				layouter = keeper;
 			}
 			break;
 		default:

@@ -104,7 +104,7 @@ namespace Util
 			}
 			unsigned long m_refCount;
 			CRefCountImpl():m_refCount(0){}
-			virtual ~CRefCountImpl(){}
+			virtual ~CRefCountImpl(){};
 		};
 	}
 }

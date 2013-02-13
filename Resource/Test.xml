@@ -2,7 +2,7 @@
 <!--位置排版属性应当与style分离-->
 <XUI version="1" >
   <XRealWnd ID="10086" Title="Test" Style="349110272" ExStyle="256" Size="300,250" LayoutType="block" LayoutDirection="horizon">
-    <XElement Color="255,0,0" AutoWidth="true" AutoHeight="true">
+    <XElement Color="255,0,0" AutoWidth="true" AutoHeight="true" Size="50,50">
       <XStatic Text="Hello World!" Size="100,20" Align="left" />
       <XStatic ID="anotherText" Text="Hello World!" Position="100,100" Size="100,20" Align="left" />
     </XElement>

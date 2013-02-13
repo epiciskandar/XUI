@@ -142,6 +142,7 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLFakeConvert(Position)
 		XMLFakeConvert(Size)
 		XMLFakeConvert(ID)
+		XMLConvert(Color)
 	XMLConvert_End
 
 	return XResult_NotSupport;
@@ -235,7 +236,7 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 	URP(arg);
 	_SendXMessageToChildren(arg);
 	Layouter::LayouterRef layouter;
-	Property::ELayoutType type;
+	Property::ELayoutType type = Property::LayoutTypeDefaultValue;
 	GetLayoutType(type);
 	Layouter::GetLayouter(type,layouter);
 	if (layouter)
@@ -253,5 +254,19 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	{
 		CXMsg_Layout msg;
 		ProcessXMessage(msg);
+	}
+
+	COLORREF color;
+	if (XSUCCEEDED(GetColor(color)))
+	{
+		CRect rect;
+		GetRect(rect);
+		LOGBRUSH brushLog;
+		brushLog.lbColor = color;
+		brushLog.lbStyle = BS_SOLID;
+		brushLog.lbHatch = 0;
+		HBRUSH brush = CreateBrushIndirect(&brushLog);
+		FillRect(arg.drawDevice.dc,rect,brush);
+		DeleteObject(brush);
 	}
 }
