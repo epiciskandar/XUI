@@ -39,3 +39,11 @@ enum ESizeType	// see WM_SIZE on MSDN
 #define SplitChar(_slashtype)	(_slashtype? Slash: BackSlash)
 
 #define RGBA(r,g,b,a)	((COLORREF)RGB(r,g,b)|a<<24)
+
+#ifndef MAX
+#define MAX(_a,_b) (_a>=_b?_a:_b)
+#endif
+
+#ifndef MIN
+#define MIN(_a,_b) (_a<=_b?_a:_b)
+#endif

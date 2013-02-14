@@ -22,18 +22,6 @@ namespace LayoutTypeString
 	LPCTSTR Layout_BlockString = _T("block");
 }
 
-enum class ELayoutDirection
-{
-	Horizon,
-	Vertical,
-};
-
-namespace LayoutDirectionSting
-{
-	LPCTSTR LayoutDirection_HorizonString = _T("horizon");
-	LPCTSTR LayoutDirection_VerticalString = _T("vertical");
-}
-
 enum class EAlignType
 {
 	Left,
@@ -41,8 +29,8 @@ enum class EAlignType
 	Right,
 	Bottom,
 	Center,
-	HCenter,
-	VCenter,
+	//HCenter,
+	//VCenter,
 	//Element,
 };
 
@@ -99,7 +87,6 @@ public:
 	SupportType(m_propertyMap,CPropertyValue<CSize>);
 	SupportType(m_propertyMap,CPropertyValue<HWND>);
 	SupportType(m_propertyMap,CPropertyValue<ELayoutType>);
-	SupportType(m_propertyMap,CPropertyValue<ELayoutDirection>);
 	SupportType(m_propertyMap,CPropertyValue<EAlignType>);
 
 	BOOL IsChanged(CString key);
@@ -207,7 +194,7 @@ public:
 	static COLORREF ConvertToValue(CString value)
 	{
 		BOOL boolValue = FALSE;
-		if (value == _T("TRUE"))
+		if (value == _T("true"))
 		{
 			boolValue = TRUE;
 		}
@@ -300,36 +287,10 @@ public:
 		{
 			type = EAlignType::Center;
 		}
-		else if (value == AlignTypeString::Align_HCenterString)
-		{
-			type = EAlignType::HCenter;
-		}
-		else if (value == AlignTypeString::Align_VCenterString)
-		{
-			type = EAlignType::VCenter;
-		}
 		else
 		{
 			ATLASSERT(FALSE && "invalid align type");
 		}
-	}
-};
-
-class CXMLConverter_ELayoutDirection
-{
-public:
-	static ELayoutDirection ConvertToValue(CString value)
-	{
-		ELayoutDirection directionValue = ELayoutDirection::Horizon;
-		if (value == LayoutDirectionSting::LayoutDirection_HorizonString)
-		{
-			directionValue = ELayoutDirection::Horizon;
-		}
-		else if (value == LayoutDirectionSting::LayoutDirection_VerticalString)
-		{
-			directionValue = ELayoutDirection::Vertical;
-		}
-		return directionValue;
 	}
 };
 
@@ -354,7 +315,6 @@ DefineProperty(HWnd,			HWND,				0);
 DefineProperty(ShowState,		BOOL,				FALSE);
 DefineProperty(LayoutType,		ELayoutType,		ELayoutType::Block);
 DefineProperty(LayoutInvalid,	BOOL,				FALSE);
-DefineProperty(LayoutDirection,	ELayoutDirection,	ELayoutDirection::Horizon)
 DefineProperty(Align,			EAlignType,			EAlignType::Left);
 DefineProperty(AutoWidth,		BOOL,				FALSE);
 DefineProperty(AutoHeight,		BOOL,				FALSE);

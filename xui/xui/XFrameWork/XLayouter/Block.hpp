@@ -3,6 +3,68 @@
 
 namespace Layouter
 {
+	// helper
+	class CBlockStack
+	{
+	public:
+		VOID Push(ElementRef element,BOOL horizon)
+		{
+			CSize size;
+			element->GetSize(size);
+			if (horizon)
+			{
+				m_totalSize.cx += size.cx;
+				m_totalSize.cy = MAX(m_totalSize.cy,size.cy);
+			}
+			else
+			{
+				m_totalSize.cy += size.cy;
+				m_totalSize.cx = MAX(m_totalSize.cx,size.cx);
+			}
+			m_elements.push_back(element);
+		}
+		CSize GetSize()
+		{
+			return m_totalSize;
+		}
+		VOID Calculate(CPoint offset,Property::EAlignType alignType)
+		{
+			CRect rect;
+			rect.TopLeft() = offset;
+			rect.BottomRight() = rect.TopLeft();
+
+			for(auto& i:m_elements)
+			{
+				CSize elementSize;
+				i->GetSize(elementSize);
+				CPoint calculatingPos;
+				switch (alignType)
+				{
+				case Property::EAlignType::Left:
+					{
+						calculatingPos = rect.BottomRight();
+						calculatingPos.y = rect.top;
+					}
+					break;
+				case Property::EAlignType::Top:
+					break;
+				case Property::EAlignType::Right:
+					break;
+				case Property::EAlignType::Bottom:
+					break;
+				default:
+					break;
+				}
+				i->SetPosition(calculatingPos);
+			}
+		}
+	protected:
+		CSize m_totalSize;
+		std::list<ElementRef> m_elements;
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+
 	class CBlockLayouter : public CLayouter
 	{
 	public:
@@ -13,7 +75,7 @@ namespace Layouter
 
 		virtual XResult Layout(ElementRef element)
 		{
-			Property::ELayoutType layoutType;
+			Property::ELayoutType layoutType = MyType();
 			element->GetLayoutType(layoutType);
 			if (layoutType != MyType())
 			{
@@ -27,82 +89,110 @@ namespace Layouter
 			CSize elementSize;
 			element->GetSize(elementSize);
 
+			CRect childrenContainRect;
+
 			//////////////////////////////////////////////////////////////////////////
 			// position children
 
 			{
-				Property::ELayoutDirection direction;
-				element->GetLayoutDirection(direction);
-
-				CRect containerRect;
-				CRect lefttopRect;
-				CRect middleRect;
-				CRect rightbottomRect;
+				CBlockStack leftStack;
+				CBlockStack rightStack;
+				CBlockStack topStack;
+				CBlockStack bottomStack;
+				ElementRef centerElement;
 
 				NodeRef childNode;
 				element->GetFirstChild(childNode);
+
+				// push into stack
 				while(childNode)
 				{
 					ElementRef childElement = childNode;
-					CRect rect;
-					childElement->GetRect(rect);
-					Property::EAlignType alignType;
-					childElement->GetAlign(alignType);
-					if (direction == Property::ELayoutDirection::Horizon)
+					Property::EAlignType align = Property::EAlignType::Left;
+					childElement->GetAlign(align);
+					switch (align)
 					{
-						if (alignType == Property::EAlignType::Top
-							|| alignType == Property::EAlignType::Bottom
-							|| alignType == Property::EAlignType::VCenter)
+					case Property::EAlignType::Left:
+						leftStack.Push(childElement,TRUE);
+						break;
+					case Property::EAlignType::Top:
+						topStack.Push(childElement,FALSE);
+						break;
+					case Property::EAlignType::Right:
+						rightStack.Push(childElement,TRUE);
+						break;
+					case Property::EAlignType::Bottom:
+						bottomStack.Push(childElement,FALSE);
+						break;
+					case Property::EAlignType::Center:
 						{
-							alignType = Property::EAlignType::Left;
-						}
-						switch (alignType)
-						{
-						case Property::EAlignType::Left:
+							if (centerElement)
 							{
-								CRect calculatingRect;
-								calculatingRect = lefttopRect;
-								CSize childSize;
-								childElement->GetSize(childSize);
-								calculatingRect.left = calculatingRect.right;
-								calculatingRect.right = calculatingRect.left + childSize.cx;
-								calculatingRect.bottom = calculatingRect.top + childSize.cy;
-								calculatingRect.NormalizeRect();
-								childElement->SetRect(calculatingRect);
-								lefttopRect.UnionRect(lefttopRect,calculatingRect);
+								leftStack.Push(childElement,TRUE);
 							}
-							break;
-						case Property::EAlignType::Right:
-							break;
-						case Property::EAlignType::Center:
-						case Property::EAlignType::HCenter:
-							break;
-						default:
-							break;
+							centerElement = childElement;
 						}
+						break;
+					default:
+						ATLASSERT(FALSE && "WTF!?");
+						break;
 					}
-					else if (direction == Property::ELayoutDirection::Vertical)
-					{
-						if (alignType == Property::EAlignType::Left
-							|| alignType == Property::EAlignType::Right
-							|| alignType == Property::EAlignType::HCenter)
-						{
-							alignType = Property::EAlignType::Top;
-						}
-						switch (alignType)
-						{
-						case Property::EAlignType::Top:
-							break;
-						case Property::EAlignType::Bottom:
-							break;
-						case Property::EAlignType::Center:
-						case Property::EAlignType::VCenter:
-							break;
-						default:
-							break;
-						}
-					}
+					childNode->GetSibling(NodeRef(),childNode);
 				}
+
+				// calculating
+				CSize leftSize = leftStack.GetSize();
+				CSize rightSize = rightStack.GetSize();
+				CSize topSize = topStack.GetSize();
+				CSize bottomSize = bottomStack.GetSize();
+				CSize centerSize;
+				if (centerElement)
+				{
+					centerElement->GetSize(centerSize);
+				}
+				CSize maxMiddleSize;
+				maxMiddleSize.cx = MAX(MAX(topSize.cx,bottomSize.cx),centerSize.cx);
+				maxMiddleSize.cy = MAX(MAX(leftSize.cy,rightSize.cy),centerSize.cy);
+
+				CPoint leftOffset;
+				leftOffset.y = topSize.cy;
+				CPoint rightOffset;
+				rightOffset.y = topSize.cy;
+				rightOffset.x = leftSize.cx+maxMiddleSize.cx;
+				CPoint topOffset;
+				topOffset.x = leftSize.cx;
+				CPoint bottomOffset;
+				bottomOffset.x = leftSize.cx;
+				bottomOffset.y = topSize.cy + maxMiddleSize.cy;
+
+				// position
+				leftStack.Calculate(leftOffset,Property::EAlignType::Left);
+				rightStack.Calculate(rightOffset,Property::EAlignType::Right);
+				topStack.Calculate(topOffset,Property::EAlignType::Top);
+				bottomStack.Calculate(bottomOffset,Property::EAlignType::Bottom);
+				if (centerElement)
+				{
+					centerElement->SetPosition(CPoint(leftSize.cx,topSize.cy));
+				}
+
+				if (autoWidth || autoHeight)
+				{
+					childrenContainRect.right = leftSize.cx + maxMiddleSize.cx + rightSize.cx;
+					childrenContainRect.bottom = topSize.cy + maxMiddleSize.cy + bottomSize.cy;
+				}
+			}
+
+			if (autoWidth)
+			{
+				elementSize.cx = childrenContainRect.Width();
+			}
+			if (autoHeight)
+			{
+				elementSize.cy = childrenContainRect.Height();
+			}
+			if (autoWidth || autoHeight)
+			{
+				element->SetSize(elementSize);
 			}
 
 			return XResult_OK;

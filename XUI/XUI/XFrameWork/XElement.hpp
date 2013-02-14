@@ -90,7 +90,6 @@ public:
 		XFakeProperty(Size)
 		XProperty(LayoutType)
 		XProperty(LayoutInvalid)
-		XProperty(LayoutDirection)
 		XProperty(Align)
 		XProperty(AutoWidth)
 		XProperty(AutoHeight)
@@ -143,6 +142,8 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLFakeConvert(Size)
 		XMLFakeConvert(ID)
 		XMLConvert(Color)
+		XMLConvert(AutoWidth)
+		XMLConvert(AutoHeight)
 	XMLConvert_End
 
 	return XResult_NotSupport;
