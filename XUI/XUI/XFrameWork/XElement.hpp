@@ -144,6 +144,7 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLConvert(Color)
 		XMLConvert(AutoWidth)
 		XMLConvert(AutoHeight)
+		XMLConvert(Align)
 	XMLConvert_End
 
 	return XResult_NotSupport;

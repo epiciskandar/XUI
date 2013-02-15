@@ -291,6 +291,7 @@ public:
 		{
 			ATLASSERT(FALSE && "invalid align type");
 		}
+		return type;
 	}
 };
 

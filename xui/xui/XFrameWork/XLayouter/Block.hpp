@@ -32,6 +32,22 @@ namespace Layouter
 			CRect rect;
 			rect.TopLeft() = offset;
 			rect.BottomRight() = rect.TopLeft();
+			switch (alignType)
+			{
+			case Property::EAlignType::Left:
+				break;
+			case Property::EAlignType::Top:
+				break;
+			case Property::EAlignType::Right:
+				rect.left += m_totalSize.cx;
+				rect.right = rect.left;
+				break;
+			case Property::EAlignType::Bottom:
+				break;
+			default:
+				ATLASSERT(FALSE && "WTF!?");
+				break;
+			}
 
 			for(auto& i:m_elements)
 			{
