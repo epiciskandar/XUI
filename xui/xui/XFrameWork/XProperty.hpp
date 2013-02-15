@@ -49,29 +49,29 @@ namespace AlignTypeString
 
 #define SupportType(_prop,_type) \
 	XResult SetProperty(CString key,const _type::ValueType& value) \
-{ \
-	CBuffer &buffer = _prop[key]; \
-	_type *propValue = (_type*)buffer.GetBuffer(); \
-	if (propValue == nullptr) \
-{ \
-	buffer.Alloc(sizeof(_type)); \
-	propValue = new(buffer.GetBuffer()) _type(value); \
-	} \
-	*propValue = value; \
-	return XResult_OK; \
+	{ \
+		CBuffer &buffer = _prop[key]; \
+		_type *propValue = (_type*)buffer.GetBuffer(); \
+		if (propValue == nullptr) \
+		{ \
+			buffer.Alloc(sizeof(_type)); \
+			propValue = new(buffer.GetBuffer()) _type(value); \
+		} \
+		*propValue = value; \
+		return XResult_OK; \
 	} \
 	XResult GetProperty(CString key,_type::ValueType& value) const \
-{ \
-	auto i = _prop.find(key); \
-	if (i == _prop.end()) \
-{ \
-	return XResult_NotFound; \
-	} \
-	const CBuffer &buffer = i->second; \
-	const _type *propValue = nullptr; \
-	propValue = (const _type*)buffer.GetBuffer(); \
-	value = propValue->m_value; \
-	return XResult_OK; \
+	{ \
+		auto i = _prop.find(key); \
+		if (i == _prop.end()) \
+		{ \
+			return XResult_NotFound; \
+		} \
+		const CBuffer &buffer = i->second; \
+		const _type *propValue = nullptr; \
+		propValue = (const _type*)buffer.GetBuffer(); \
+		value = propValue->m_value; \
+		return XResult_OK; \
 	}
 
 class CXProperty
@@ -302,6 +302,8 @@ public:
 	typedef _type _name##Type; \
 	typedef CXMLConverter_##_type _name##XMLConverter; \
 
+#define SetDefPropertyValue(_name,_var) _var = Property::_name##DefaultValue;
+
 DefineProperty(ID,				CString,			_T(""));
 DefineProperty(Rect,			CRect,				CRect());
 DefineProperty(Position,		CPoint,				CPoint());
@@ -310,9 +312,10 @@ DefineProperty(Text,			CString,			_T(""));
 DefineProperty(Title,			CString,			_T(""));
 DefineProperty(Color,			COLORREF,			0);
 DefineProperty(TextColor,		COLORREF,			0);
-DefineProperty(Style,			DWORD,				WS_OVERLAPPEDWINDOW|WS_VISIBLE);
-DefineProperty(ExStyle,			DWORD,				0);
+DefineProperty(WinStyle,		DWORD,				WS_OVERLAPPEDWINDOW|WS_VISIBLE);
+DefineProperty(WinExStyle,		DWORD,				0);
 DefineProperty(HWnd,			HWND,				0);
+DefineProperty(CenterWindow,	BOOL,				TRUE);
 DefineProperty(ShowState,		BOOL,				FALSE);
 DefineProperty(LayoutType,		ELayoutType,		ELayoutType::Block);
 DefineProperty(LayoutInvalid,	BOOL,				FALSE);

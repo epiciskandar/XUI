@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--位置排版属性应当与style分离-->
 <XUI version="1" >
-  <XRealWnd ID="10086" Title="Test" Style="349110272" ExStyle="256" Size="300,250" LayoutType="block" LayoutDirection="horizon">
-    <XElement Color="255,0,0" AutoWidth="true" AutoHeight="true" Size="50,50">
+  <XRealWnd ID="10086" Title="Test" WinStyle="349110272" WinExStyle="256" AutoWidth="true" AutoHeight="true">
+    <XElement Color="255,0,0" AutoWidth="true" AutoHeight="true">
       <XStatic ID="1" Text="1" Size="100,20" Align="right" />
       <XStatic ID="2" Text="2" Size="100,20" Align="right" />
       <XStatic ID="3" Text="3" Size="100,20" Align="right" />

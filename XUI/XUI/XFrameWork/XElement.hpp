@@ -11,6 +11,7 @@
 #define XProperty_Get(_name) \
 	virtual XResult Get##_name (Property::_name##Type& value) \
 	{ \
+		value = Property::_name##DefaultValue; \
 		return m_property.GetProperty(L#_name,value); \
 	}
 #define XProperty_Set(_name) \
@@ -115,6 +116,7 @@ protected:
 	VOID On_CXMsg_Paint(CXMsg_Paint& arg);
 protected:
 	Property::CXProperty m_property;
+	BOOL m_isLayouting;
 };
 
 typedef XSmartPtr<CXElement> ElementRef;
@@ -127,6 +129,7 @@ End_Description;
 #include "XLayouter/Layouter.hpp"
 
 CXElement::CXElement()
+	: m_isLayouting(FALSE)
 {
 }
 
@@ -236,6 +239,13 @@ VOID CXElement::On_CXMsg_SizeChanged( CXMsg_SizeChanged& arg )
 VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 {
 	URP(arg);
+
+	if (m_isLayouting)
+	{
+		return;
+	}
+	m_isLayouting = TRUE;
+
 	_SendXMessageToChildren(arg);
 	Layouter::LayouterRef layouter;
 	Property::ELayoutType type = Property::LayoutTypeDefaultValue;
@@ -245,6 +255,8 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 	{
 		layouter->Layout(this);
 	}
+
+	m_isLayouting = FALSE;
 }
 
 VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )

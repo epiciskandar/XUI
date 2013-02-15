@@ -49,9 +49,10 @@ public:
 
 	XProperty_Begin
 		XProperty(Title)
-		XProperty(Style)
-		XProperty(ExStyle)
+		XProperty(WinStyle)
+		XProperty(WinExStyle)
 		XProperty(HWnd)
+		XProperty(CenterWindow)
 	XProperty_End;
 
 	virtual XResult SetXMLProperty( CString name,CString value );
@@ -66,6 +67,8 @@ protected:
 	LRESULT _Translate_WM_Size(WPARAM wParam,LPARAM lParam);
 
 	//--------------------------------//
+
+	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 };
 
 typedef XSmartPtr<CXRealWnd> CXRealWndRef;
@@ -99,13 +102,49 @@ LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam
 
 XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 {
+	BOOL autoWidth;
+	GetAutoWidth(autoWidth);
+	BOOL autoHeight;
+	GetAutoHeight(autoHeight);
+	if ( autoWidth || autoHeight)
+	{
+		CXMsg_Layout msg;
+		ProcessXMessage(msg);
+	}
 	CString title;
 	GetTitle(title);
-	DWORD style=0;
-	GetStyle(style);
+	DWORD style;
+	GetWinStyle(style);
 	DWORD ExStyle=0;
-	GetExStyle(ExStyle);
-	HWND hWnd = CWindowImpl::Create(hwndParent,NULL,title,style,ExStyle);
+	GetWinExStyle(ExStyle);
+	CRect rect;
+	GetRect(rect);
+
+	BOOL centerWindow;
+	GetCenterWindow(centerWindow);
+	if (centerWindow)
+	{
+		HWND hWnd = GetDesktopWindow();
+		CRect desktopRect;
+		::GetWindowRect(hWnd,desktopRect);
+		CSize windowSize = rect.Size();
+		CSize desktopSize = desktopRect.Size();
+		desktopSize -= windowSize;
+		if (desktopSize.cx < 0)
+		{
+			desktopSize.cx = 0;
+		}
+		if (desktopSize.cy < 0)
+		{
+			desktopSize.cy = 0;
+		}
+		rect.left = desktopSize.cx/2;
+		rect.top = desktopSize.cy/2;
+		rect.right = rect.left + windowSize.cx;
+		rect.bottom = rect.top + windowSize.cy;
+	}
+	AdjustWindowRectEx(rect,style,FALSE,ExStyle);
+	HWND hWnd = CWindowImpl::Create(hwndParent,rect,title,style,ExStyle);
 	SetHWnd(hWnd);
 	if (hWnd)
 	{
@@ -116,7 +155,12 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 
 XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 {
-	return BaseClass::ProcessXMessage(msg);
+	BaseClass::ProcessXMessage(msg);
+
+	BEGIN_XMSG_MAP(msg)
+		OnXMsg(CXMsg_PropertyChanged);
+	END_XMSG_MAP;
+	return XResult_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -178,9 +222,45 @@ XResult CXRealWnd::SetXMLProperty( CString name,CString value )
 	XMLConvert_Begin(name,value)
 		XMLConvert(Title)
 		XMLConvert(ShowState)
-		XMLConvert(Style)
-		XMLConvert(ExStyle)
+		XMLConvert(WinStyle)
+		XMLConvert(WinExStyle)
+		XMLConvert(CenterWindow)
 	XMLConvert_End
 
 	return BaseClass::SetXMLProperty(name,value);
+}
+
+VOID CXRealWnd::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
+{
+	if (arg.name == Property::Rect)
+	{
+		HWND hWnd=0;
+		GetHWnd(hWnd);
+		if (hWnd)
+		{
+			CRect rect;
+			GetRect(rect);
+			SetWindowPos(0,rect,SWP_NOZORDER);
+		}
+	}
+	else if (arg.name == Property::Size)
+	{
+		HWND hWnd=0;
+		GetHWnd(hWnd);
+		if (hWnd)
+		{
+			CRect clientRect;
+			GetClientRect(clientRect);
+			CRect windowRect;
+			GetWindowRect(windowRect);
+			windowRect.right -= clientRect.Width();
+			windowRect.bottom -= clientRect.Height();
+			
+			CSize size;
+			GetSize(size);
+			size.cx += windowRect.Width();
+			size.cy += windowRect.Height();
+			SetWindowPos(0,0,0,size.cx,size.cy,SWP_NOZORDER|SWP_NOMOVE);
+		}
+	}
 }
