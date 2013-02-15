@@ -198,7 +198,7 @@ XResult CXElement::GetSize(Property::SizeType& value)
 {
 	CRect rect;
 	GetRect(rect);
-	value = rect.BottomRight();
+	value = rect.BottomRight() - rect.TopLeft();
 	return XResult_OK;
 }
 

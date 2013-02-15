@@ -138,6 +138,10 @@ public:
 	{
 		return (m_ptr==NULL)? false: true;
 	}
+	bool operator==(const XSmartPtr& rhs)
+	{
+		return GetPointer() == rhs.GetPointer();
+	}
 	const PointerType operator ->() const
 	{
 		return m_ptr;

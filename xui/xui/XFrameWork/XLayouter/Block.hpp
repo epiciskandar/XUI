@@ -44,6 +44,7 @@ namespace Layouter
 					{
 						calculatingPos = rect.BottomRight();
 						calculatingPos.y = rect.top;
+						rect.right += elementSize.cx;
 					}
 					break;
 				case Property::EAlignType::Top:

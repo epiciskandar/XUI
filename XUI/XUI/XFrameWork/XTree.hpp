@@ -70,7 +70,12 @@ CString CXTreeNode::GetID() const
 
 XResult CXTreeNode::AppendChild( NodeRef pChild )
 {
+	if (!pChild)
+	{
+		return XResult_InvalidArg;
+	}
 	m_children.push_back(pChild);
+	pChild->m_father = this;
 	return XResult_OK;
 }
 
