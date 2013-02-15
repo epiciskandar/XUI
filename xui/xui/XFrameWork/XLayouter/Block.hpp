@@ -50,6 +50,10 @@ namespace Layouter
 				case Property::EAlignType::Top:
 					break;
 				case Property::EAlignType::Right:
+					{
+						rect.left -= elementSize.cx;
+						calculatingPos = rect.TopLeft();
+					}
 					break;
 				case Property::EAlignType::Bottom:
 					break;
@@ -138,7 +142,7 @@ namespace Layouter
 						ATLASSERT(FALSE && "WTF!?");
 						break;
 					}
-					childNode->GetSibling(NodeRef(),childNode);
+					childNode->GetRSibling(childNode);
 				}
 
 				// calculating

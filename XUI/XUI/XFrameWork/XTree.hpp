@@ -20,8 +20,11 @@ public:
 	XResult SearchChild(CString id,NodeRef& pChild);	// search tree
 	XResult	SwapNode(NodeRef pNode1,NodeRef pNode2);
 	XResult	GetSibling(NodeRef& pBefore,NodeRef& pAfter);
+	XResult	GetLSibling(NodeRef& pSibling);
+	XResult	GetRSibling(NodeRef& pSibling);
 	XResult RemoveChild(NodeRef pChild);
 	NodeRef GetFather();
+	XResult RemoveFromTree(); // pick it out from father node
 	XResult RIPMySelf();
 
 	XResult IncreaseZOrder();
@@ -34,7 +37,7 @@ protected:
 	XNodeList::iterator _GetNodeIter(NodeRef pNode);
 protected:
 	CString m_ID;
-	NodeRef m_father;
+	CXTreeNode* m_father;
 	XNodeList m_children;
 };
 
@@ -49,7 +52,7 @@ End_Description;
 //////////////////////////////////////////////////////////////////////////
 
 CXTreeNode::CXTreeNode()
-: m_father(NodeRef())
+: m_father(nullptr)
 {}
 
 CXTreeNode::~CXTreeNode()
@@ -85,6 +88,7 @@ XResult CXTreeNode::RemoveChild( NodeRef pChild )
 	if (i != m_children.end())
 	{
 		m_children.erase(i);
+		pChild->m_father = NULL;
 		return XResult_OK;
 	}
 	return XResult_Fail;
@@ -99,10 +103,13 @@ XResult CXTreeNode::RIPMySelf()
 {
 	if (m_father)
 	{
-		m_father->RemoveChild(NodeRef(this));
-		return XResult_OK;
+		m_father->RemoveChild(this);
 	}
-	return XResult_Fail;
+	for (auto& i:m_children)
+	{
+		i->m_father = nullptr;
+	}
+	return XResult_OK;
 }
 
 CXTreeNode::XNodeList::iterator CXTreeNode::_GetNodeIter( NodeRef pNode )
@@ -171,6 +178,46 @@ XResult CXTreeNode::GetSibling( NodeRef& pBefore,NodeRef& pAfter )
 	return XResult_OK;
 }
 
+XResult CXTreeNode::GetLSibling(NodeRef& pSibling)
+{
+	pSibling = nullptr;
+	if (!m_father)
+	{
+		return XResult_Fail;
+	}
+	auto i = m_father->_GetNodeIter(this);
+	if (i != m_father->m_children.end())
+	{
+		if (i != m_father->m_children.begin())
+		{
+			--i;
+			pSibling = *i;
+			return XResult_OK;
+		}
+	}
+	return XResult_Fail;
+}
+
+XResult CXTreeNode::GetRSibling(NodeRef& pSibling)
+{
+	pSibling = nullptr;
+	if (!m_father)
+	{
+		return XResult_Fail;
+	}
+	auto i = m_father->_GetNodeIter(this);
+	if (i != m_father->m_children.end())
+	{
+		++i;
+		if (i != m_father->m_children.end())
+		{
+			pSibling = *i;
+			return XResult_OK;
+		}
+	}
+	return XResult_Fail;
+}
+
 XResult CXTreeNode::SearchChild( CString id,NodeRef& pChild )
 {
 	pChild = nullptr;
@@ -188,4 +235,13 @@ XResult CXTreeNode::SearchChild( CString id,NodeRef& pChild )
 		}
 	}
 	return XResult_NotFound;
+}
+
+XResult CXTreeNode::RemoveFromTree()
+{
+	if (m_father)
+	{
+		m_father->RemoveChild(this);
+	}
+	return XResult_OK;
 }

@@ -4,7 +4,7 @@
 enum XResult
 {
 	XResult_OK = 0,
-	XResult_FALSE = 1,
+	XResult_FineButSomethingStrange = 1,
 
 	XResult_Handled = 16,
 	XResult_NotHandled,

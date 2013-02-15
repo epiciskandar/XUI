@@ -40,6 +40,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 		//CXRealWndRef wndRef = xmlNode;
 
 		xui.Work();
+
+		wnd->RIPMySelf();
 	}
 
 	xui.Finalize();
