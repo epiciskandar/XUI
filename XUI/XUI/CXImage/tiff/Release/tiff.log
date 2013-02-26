@@ -1,0 +1,43 @@
+﻿Build started 2013/2/24 11:22:49.
+     1>Project "W:\Projects\XXXUI\XUI\XUI\CXImage\tiff\tiff.vcxproj" on node 5 (Build target(s)).
+     1>Lib:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"W:\Projects\XXXUI\XUI\XUI\CXImage\Release\tiff.lib" /NOLOGO /LTCG Release\tif_aux.obj
+         Release\tif_close.obj
+         Release\tif_codec.obj
+         Release\tif_color.obj
+         Release\tif_compress.obj
+         Release\tif_dir.obj
+         Release\tif_dirinfo.obj
+         Release\tif_dirread.obj
+         Release\tif_dirwrite.obj
+         Release\tif_dumpmode.obj
+         Release\tif_error.obj
+         Release\tif_fax3.obj
+         Release\tif_fax3sm.obj
+         Release\tif_flush.obj
+         Release\tif_getimage.obj
+         Release\tif_jpeg.obj
+         Release\tif_luv.obj
+         Release\tif_lzw.obj
+         Release\tif_next.obj
+         Release\tif_ojpeg.obj
+         Release\tif_open.obj
+         Release\tif_packbits.obj
+         Release\tif_pixarlog.obj
+         Release\tif_predict.obj
+         Release\tif_print.obj
+         Release\tif_read.obj
+         Release\tif_strip.obj
+         Release\tif_swab.obj
+         Release\tif_thunder.obj
+         Release\tif_tile.obj
+         Release\tif_version.obj
+         Release\tif_warning.obj
+         Release\tif_write.obj
+         Release\tif_zip.obj
+         tiff.vcxproj -> W:\Projects\XXXUI\XUI\XUI\CXImage\Release\tiff.lib
+     1>Done Building Project "W:\Projects\XXXUI\XUI\XUI\CXImage\tiff\tiff.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.20

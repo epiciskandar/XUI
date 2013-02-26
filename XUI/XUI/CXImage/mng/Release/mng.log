@@ -1,0 +1,28 @@
+﻿Build started 2013/2/24 11:22:49.
+     1>Project "W:\Projects\XXXUI\XUI\XUI\CXImage\mng\mng.vcxproj" on node 3 (Build target(s)).
+     1>Lib:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"W:\Projects\XXXUI\XUI\XUI\CXImage\Release\mng.lib" /NOLOGO /LTCG Release\libmng_callback_xs.obj
+         Release\libmng_chunk_descr.obj
+         Release\libmng_chunk_io.obj
+         Release\libmng_chunk_prc.obj
+         Release\libmng_chunk_xs.obj
+         Release\libmng_cms.obj
+         Release\libmng_display.obj
+         Release\libmng_dither.obj
+         Release\libmng_error.obj
+         Release\libmng_filter.obj
+         Release\libmng_hlapi.obj
+         Release\libmng_jpeg.obj
+         Release\libmng_object_prc.obj
+         Release\libmng_pixels.obj
+         Release\libmng_prop_xs.obj
+         Release\libmng_read.obj
+         Release\libmng_trace.obj
+         Release\libmng_write.obj
+         Release\libmng_zlib.obj
+         mng.vcxproj -> W:\Projects\XXXUI\XUI\XUI\CXImage\Release\mng.lib
+     1>Done Building Project "W:\Projects\XXXUI\XUI\XUI\CXImage\mng\mng.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.18

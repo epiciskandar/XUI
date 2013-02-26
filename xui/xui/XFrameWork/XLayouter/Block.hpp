@@ -96,6 +96,8 @@ namespace Layouter
 
 		virtual XResult Layout(ElementRef element)
 		{
+			CString id;
+			id = element->GetID();
 			Property::ELayoutType layoutType = MyType();
 			element->GetLayoutType(layoutType);
 			if (layoutType != MyType())

@@ -1,0 +1,42 @@
+﻿Build started 2013/2/24 11:22:28.
+     1>Project "W:\Projects\XXXUI\XUI\XUI\CXImage\png\png.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\zlib /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _CRT_SECURE_NO_DEPRECATE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt png.c pngerror.c pngget.c pngmem.c pngpread.c pngread.c pngrio.c pngrtran.c pngrutil.c pngset.c pngtrans.c pngwio.c pngwrite.c pngwtran.c pngwutil.c
+         pngwutil.c
+         pngwtran.c
+         pngwrite.c
+         pngwio.c
+         pngtrans.c
+         pngset.c
+         pngrutil.c
+         pngrtran.c
+         pngrio.c
+         pngread.c
+         pngpread.c
+         pngmem.c
+         pngget.c
+         pngerror.c
+         png.c
+         Generating Code...
+       Lib:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"W:\Projects\XXXUI\XUI\XUI\CXImage\Debug\png.lib" /NOLOGO Debug\png.obj
+         Debug\pngerror.obj
+         Debug\pngget.obj
+         Debug\pngmem.obj
+         Debug\pngpread.obj
+         Debug\pngread.obj
+         Debug\pngrio.obj
+         Debug\pngrtran.obj
+         Debug\pngrutil.obj
+         Debug\pngset.obj
+         Debug\pngtrans.obj
+         Debug\pngwio.obj
+         Debug\pngwrite.obj
+         Debug\pngwtran.obj
+         Debug\pngwutil.obj
+         png.vcxproj -> W:\Projects\XXXUI\XUI\XUI\CXImage\Debug\png.lib
+     1>Done Building Project "W:\Projects\XXXUI\XUI\XUI\CXImage\png\png.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:06.04

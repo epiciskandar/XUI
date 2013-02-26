@@ -188,6 +188,9 @@
     <ClInclude Include="XUI\XFrameWork\XLayouter\Layouter.hpp">
       <Filter>Header Files\Layouter</Filter>
     </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XCtrls\XImage.hpp">
+      <Filter>Header Files\Ctrl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resource\Test.xml">

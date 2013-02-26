@@ -1,29 +1,10 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-/ipch
-/Debug
-/XUI/Debug
-/*.suo
-/*.opensdf
-/*.sdf
-/*.suo
-/XUI/*.user
-/XUI/Release/*.tlog
-/XUI/Release/*.obj
-/XUI/Release/*.pdb
-/XUI/Release/*.lastbuildstate
-/XUI/Release/*.cache
-/XUI/*.suo
-/XUI/ipch/xui-edc54a9/*.ipch
-/XUI/Release/*.log
+*ipch
+*.suo
+*.opensdf
+*.sdf
+*.user
+*Debug*
+*Release*
+!/XUI/XUI/cximage/*
+/XUI/XUI/CXImage/CxImageFull_vc10.sdf
+/XUI/XUI/CXImage/CxImageFull_vc10.v11.suo

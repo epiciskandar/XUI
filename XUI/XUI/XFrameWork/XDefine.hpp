@@ -15,6 +15,7 @@ enum XResult
 	XResult_Fail,
 	XResult_NotFound,
 	XResult_NotSupport,
+	XResult_Forbidden,
 };
 
 enum ESizeType	// see WM_SIZE on MSDN
@@ -47,3 +48,5 @@ enum ESizeType	// see WM_SIZE on MSDN
 #ifndef MIN
 #define MIN(_a,_b) (_a<=_b?_a:_b)
 #endif
+
+#define WTF ATLASSERT(FALSE && "WTF!?");

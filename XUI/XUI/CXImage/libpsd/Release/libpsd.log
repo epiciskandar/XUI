@@ -1,0 +1,59 @@
+﻿Build started 2013/2/24 11:22:49.
+     1>Project "W:\Projects\XXXUI\XUI\XUI\CXImage\libpsd\libpsd.vcxproj" on node 3 (Build target(s)).
+     1>Lib:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"W:\Projects\XXXUI\XUI\XUI\CXImage\Release\libpsd.lib" /NOLOGO /LTCG Release\adjustment.obj
+         Release\bevel_emboss.obj
+         Release\bitmap.obj
+         Release\blend.obj
+         Release\boundary.obj
+         Release\brightness_contrast.obj
+         Release\channel_image.obj
+         Release\channel_mixer.obj
+         Release\color.obj
+         Release\color_balance.obj
+         Release\color_mode.obj
+         Release\color_overlay.obj
+         Release\curves.obj
+         Release\descriptor.obj
+         Release\drop_shadow.obj
+         Release\effects.obj
+         Release\file_header.obj
+         Release\fixed.obj
+         Release\gaussian_blur.obj
+         Release\gradient_blend.obj
+         Release\gradient_fill.obj
+         Release\gradient_map.obj
+         Release\gradient_overlay.obj
+         Release\hue_saturation.obj
+         Release\image_data.obj
+         Release\image_resource.obj
+         Release\inner_glow.obj
+         Release\inner_shadow.obj
+         Release\invert.obj
+         Release\layer_mask.obj
+         Release\levels.obj
+         Release\outer_glow.obj
+         Release\path.obj
+         Release\pattern.obj
+         Release\pattern_fill.obj
+         Release\pattern_overlay.obj
+         Release\photo_filter.obj
+         Release\posterize.obj
+         Release\psd.obj
+         Release\psd_system.obj
+         Release\psd_zip.obj
+         Release\rect.obj
+         Release\satin.obj
+         Release\selective_color.obj
+         Release\solid_color.obj
+         Release\stream.obj
+         Release\stroke.obj
+         Release\threshold.obj
+         Release\thumbnail.obj
+         Release\type_tool.obj
+         libpsd.vcxproj -> W:\Projects\XXXUI\XUI\XUI\CXImage\Release\libpsd.lib
+     1>Done Building Project "W:\Projects\XXXUI\XUI\XUI\CXImage\libpsd\libpsd.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.17

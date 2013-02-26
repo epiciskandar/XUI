@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <LibraryPath>VisualLeakDetector\lib\Win32\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>VisualLeakDetector\lib\Win32\;W:\Projects\XXXUI\XUI\XUI\CXImage;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -124,6 +124,7 @@
     <ClInclude Include="XUI\WTL\atlwince.h" />
     <ClInclude Include="XUI\WTL\atlwinx.h" />
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XCtrls\XImage.hpp" />
     <ClInclude Include="xui\XFrameWork\XCtrls\XStatic.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp" />

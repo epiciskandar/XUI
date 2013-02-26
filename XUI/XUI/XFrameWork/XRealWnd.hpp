@@ -51,7 +51,7 @@ public:
 		XProperty(Title)
 		XProperty(WinStyle)
 		XProperty(WinExStyle)
-		XProperty(HWnd)
+		XFakeProperty_Get(HWnd)
 		XProperty(CenterWindow)
 	XProperty_End;
 
@@ -69,6 +69,9 @@ protected:
 	//--------------------------------//
 
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
+
+protected:
+	BOOL m_ignorePropertyChange;
 };
 
 typedef XSmartPtr<CXRealWnd> CXRealWndRef;
@@ -80,6 +83,7 @@ End_Description;
 //////////////////////////////////////////////////////////////////////////
 
 CXRealWnd::CXRealWnd() : CWindowImpl()
+	, m_ignorePropertyChange(FALSE)
 {
 
 }
@@ -98,6 +102,12 @@ LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam
 	}
 
 	return 0;
+}
+
+XResult CXRealWnd::GetHWnd(Property::HWndType& value)
+{
+	value = m_hWnd;
+	return XResult_OK;
 }
 
 XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
@@ -145,9 +155,15 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 	}
 	AdjustWindowRectEx(rect,style,FALSE,ExStyle);
 	HWND hWnd = CWindowImpl::Create(hwndParent,rect,title,style,ExStyle);
-	SetHWnd(hWnd);
+	SetWindowLong(GWL_STYLE,style);
+	SetWindowLong(GWL_EXSTYLE,ExStyle);
 	if (hWnd)
 	{
+		CRect wndRect;
+		GetWindowRect(wndRect);
+		m_ignorePropertyChange = TRUE;
+		SetRect(wndRect);
+		m_ignorePropertyChange = FALSE;
 		return XResult_OK;
 	}
 	return XResult_Fail;
@@ -175,6 +191,9 @@ LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
 	BeginPaint(&ps);
 	msg.drawDevice.invalidRect = CRect(ps.rcPaint);
 	msg.drawDevice.dc = ps.hdc;
+	msg.drawDevice.dc.SelectBrush(GetStockBrush(NULL_BRUSH));
+	msg.drawDevice.dc.SelectPen(GetStockPen(NULL_PEN));
+	msg.drawDevice.dc.SetBkMode(TRANSPARENT);
 
 	ProcessXMessage(msg);
 
@@ -212,13 +231,17 @@ LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
 	CSize size;
 	size.cx = LOWORD(lParam);
 	size.cy = HIWORD(lParam);
+	m_ignorePropertyChange = TRUE;
 	SetSize(size);
+	m_ignorePropertyChange = FALSE;
 
 	return 0;
 }
 
 XResult CXRealWnd::SetXMLProperty( CString name,CString value )
 {
+	BaseClass::SetXMLProperty(name,value);
+	
 	XMLConvert_Begin(name,value)
 		XMLConvert(Title)
 		XMLConvert(ShowState)
@@ -227,11 +250,16 @@ XResult CXRealWnd::SetXMLProperty( CString name,CString value )
 		XMLConvert(CenterWindow)
 	XMLConvert_End
 
-	return BaseClass::SetXMLProperty(name,value);
+	return XResult_OK;
 }
 
 VOID CXRealWnd::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 {
+	if (m_ignorePropertyChange)
+	{
+		return;
+	}
+
 	if (arg.name == Property::Rect)
 	{
 		HWND hWnd=0;

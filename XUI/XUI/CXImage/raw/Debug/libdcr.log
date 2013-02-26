@@ -1,0 +1,13 @@
+﻿Build started 2013/2/24 11:22:31.
+     1>Project "W:\Projects\XXXUI\XUI\XUI\CXImage\raw\libdcr.vcxproj" on node 5 (Build target(s)).
+     1>ClCompile:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _CRT_SECURE_NO_DEPRECATE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt libdcr.c
+         libdcr.c
+       Lib:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"W:\Projects\XXXUI\XUI\XUI\CXImage\Debug\libdcr.lib" /NOLOGO Debug\libdcr.obj
+         libdcr.vcxproj -> W:\Projects\XXXUI\XUI\XUI\CXImage\Debug\libdcr.lib
+     1>Done Building Project "W:\Projects\XXXUI\XUI\XUI\CXImage\raw\libdcr.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.64

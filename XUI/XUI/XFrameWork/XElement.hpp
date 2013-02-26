@@ -28,9 +28,13 @@ public: \
 	XProperty_Get(_name) \
 	XProperty_Set(_name)
 
-#define XFakeProperty(_name) \
-	virtual XResult Get##_name (Property::_name##Type& value); \
+#define XFakeProperty_Get(_name) \
+	virtual XResult Get##_name (Property::_name##Type& value);
+#define XFakeProperty_Set(_name) \
 	virtual XResult Set##_name (Property::_name##Type param);
+#define XFakeProperty(_name) \
+	XFakeProperty_Get(_name); \
+	XFakeProperty_Set(_name);
 
 #define XProperty_End
 
@@ -97,6 +101,8 @@ public:
 		XProperty(ExpandWidth)
 		XProperty(ExpandHeight)
 		XProperty(Color)
+		XProperty(BorderColor)
+		XProperty(BorderWidth)
 	XProperty_End;
 
 	// XMsg的接收入口函数
@@ -148,6 +154,8 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLConvert(AutoWidth)
 		XMLConvert(AutoHeight)
 		XMLConvert(Align)
+		XMLConvert(BorderColor)
+		XMLConvert(BorderWidth)
 	XMLConvert_End
 
 	return XResult_NotSupport;
@@ -190,7 +198,11 @@ XResult CXElement::GetPosition(Property::PositionType& value)
 XResult CXElement::SetPosition(Property::PositionType param)
 {
 	CRect rect;
-	GetRect(rect);
+	XResult result = GetRect(rect);
+	if (XFAILED(result))
+	{
+		return result;
+	}
 	CSize size = rect.Size();
 	rect.TopLeft() = param;
 	rect.right = rect.left + size.cx;
@@ -200,8 +212,14 @@ XResult CXElement::SetPosition(Property::PositionType param)
 
 XResult CXElement::GetSize(Property::SizeType& value)
 {
+	SetDefPropertyValue(Size,value);
+
 	CRect rect;
-	GetRect(rect);
+	XResult result = GetRect(rect);
+	if (XFAILED(result))
+	{
+		return result;
+	}
 	value = rect.BottomRight() - rect.TopLeft();
 	return XResult_OK;
 }
@@ -218,7 +236,7 @@ XResult CXElement::SetSize(Property::SizeType param)
 
 VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
 {
-	if (arg.name = Property::Size)
+	if (arg.name == Property::Size)
 	{
 		CXMsg_SizeChanged msg;
 		msg.node = this;
@@ -244,17 +262,28 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 	{
 		return;
 	}
+	_SendXMessageToChildren(arg);
+
 	m_isLayouting = TRUE;
 
-	_SendXMessageToChildren(arg);
-	Layouter::LayouterRef layouter;
-	Property::ELayoutType type = Property::LayoutTypeDefaultValue;
-	GetLayoutType(type);
-	Layouter::GetLayouter(type,layouter);
-	if (layouter)
+	BOOL layoutinvalid;
+	GetLayoutInvalid(layoutinvalid);
+	if (layoutinvalid)
 	{
-		layouter->Layout(this);
+		Layouter::LayouterRef layouter;
+		Property::ELayoutType type = Property::LayoutTypeDefaultValue;
+		GetLayoutType(type);
+		Layouter::GetLayouter(type,layouter);
+		if (layouter)
+		{
+			layouter->Layout(this);
+		}
+		else
+		{
+			WTF;
+		}
 	}
+	SetLayoutInvalid(FALSE);
 
 	m_isLayouting = FALSE;
 }
@@ -269,12 +298,12 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 		CXMsg_Layout msg;
 		ProcessXMessage(msg);
 	}
+	CRect rect;
+	GetRect(rect);
 
 	COLORREF color;
 	if (XSUCCEEDED(GetColor(color)))
 	{
-		CRect rect;
-		GetRect(rect);
 		LOGBRUSH brushLog;
 		brushLog.lbColor = color;
 		brushLog.lbStyle = BS_SOLID;
@@ -283,4 +312,16 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 		FillRect(arg.drawDevice.dc,rect,brush);
 		DeleteObject(brush);
 	}
+
+	COLORREF borderColor;
+	if(XSUCCEEDED(GetBorderColor(borderColor)))
+	{
+		DWORD borderWidth;
+		GetBorderWidth(borderWidth);
+		HPEN pen = CreatePen(PS_SOLID,borderWidth,borderColor);
+		CGDIHandleSwitcher handleSwitcher(arg.drawDevice.dc,pen);
+		arg.drawDevice.dc.Rectangle(rect);
+	}
+
+	arg.msgHandled = FALSE;
 }

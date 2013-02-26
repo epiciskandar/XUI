@@ -6,6 +6,7 @@
 #include "XFrameWork/XFrame.hpp"
 #include "XFrameWork/XRealWnd.hpp"
 #include "XFrameWork/XCtrls/XStatic.hpp"
+#include "XFrameWork/XCtrls/XImage.hpp"
 
 #include "../TinyXML/tinyxml.h"
 
@@ -42,6 +43,7 @@ CXGaia::CXGaia()
 	RecordXClass(CXElement);
 	RecordXClass(CXRealWnd);
 	RecordXClass(CXStatic);
+	RecordXClass(CXImage);
 }
 
 NodeRef CXGaia::Create( CString className )

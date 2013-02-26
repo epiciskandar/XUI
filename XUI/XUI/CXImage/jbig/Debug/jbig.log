@@ -1,0 +1,16 @@
+﻿Build started 2013/2/24 11:22:29.
+     1>Project "W:\Projects\XXXUI\XUI\XUI\CXImage\jbig\jbig.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _CRT_SECURE_NO_DEPRECATE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt jbig.c jbig_tab.c
+         jbig_tab.c
+         jbig.c
+         Generating Code...
+       Lib:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"W:\Projects\XXXUI\XUI\XUI\CXImage\Debug\jbig.lib" /NOLOGO Debug\jbig.obj
+         Debug\jbig_tab.obj
+         jbig.vcxproj -> W:\Projects\XXXUI\XUI\XUI\CXImage\Debug\jbig.lib
+     1>Done Building Project "W:\Projects\XXXUI\XUI\XUI\CXImage\jbig\jbig.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.25

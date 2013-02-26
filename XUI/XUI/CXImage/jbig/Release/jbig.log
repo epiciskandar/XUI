@@ -1,0 +1,11 @@
+﻿Build started 2013/2/24 11:22:49.
+     1>Project "W:\Projects\XXXUI\XUI\XUI\CXImage\jbig\jbig.vcxproj" on node 2 (Build target(s)).
+     1>Lib:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"W:\Projects\XXXUI\XUI\XUI\CXImage\Release\jbig.lib" /NOLOGO /LTCG Release\jbig.obj
+         Release\jbig_tab.obj
+         jbig.vcxproj -> W:\Projects\XXXUI\XUI\XUI\CXImage\Release\jbig.lib
+     1>Done Building Project "W:\Projects\XXXUI\XUI\XUI\CXImage\jbig\jbig.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.12

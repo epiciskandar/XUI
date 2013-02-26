@@ -41,6 +41,7 @@ class CXMsg_Paint : public CXMsg
 	XMessage(CXMsg_Paint);
 public:
 	CXDrawDevice	drawDevice;
+	CRect			parentRect;
 };
 
 class CXMsg_SizeChanged : public CXMsg

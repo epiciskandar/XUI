@@ -1,0 +1,78 @@
+﻿Build started 2013/2/24 10:40:26.
+     1>Project "W:\Projects\XXXUI\XUI\XUI\CXImage\CxImage\cximage.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\jpeg /I..\png /I..\zlib /I..\mng /I..\tiff /I..\j2k /I..\jasper\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D JAS_WIN_MSVC_BUILD /D _CRT_SECURE_NO_DEPRECATE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt tif_xfile.cpp ximabmp.cpp ximadsp.cpp ximaenc.cpp ximaexif.cpp ximage.cpp ximagif.cpp ximahist.cpp ximaico.cpp ximainfo.cpp ximaint.cpp ximajas.cpp ximajbg.cpp ximajpg.cpp ximalpha.cpp ximalyr.cpp ximamng.cpp ximapal.cpp ximapcx.cpp ximapng.cpp ximapsd.cpp ximaraw.cpp ximasel.cpp ximaska.cpp ximatga.cpp ximath.cpp ximatif.cpp ximatran.cpp ximawbmp.cpp ximawmf.cpp ximawnd.cpp xmemfile.cpp
+         tif_xfile.cpp
+         ximabmp.cpp
+         ximadsp.cpp
+     1>ximadsp.cpp(2910): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         ximaenc.cpp
+         ximaexif.cpp
+         ximage.cpp
+         ximagif.cpp
+         ximahist.cpp
+         ximaico.cpp
+         ximainfo.cpp
+         ximaint.cpp
+         ximajas.cpp
+         ximajbg.cpp
+         ximajpg.cpp
+         ximalpha.cpp
+         ximalyr.cpp
+         ximamng.cpp
+         ximapal.cpp
+         ximapcx.cpp
+         ximapng.cpp
+         Compiling...
+         ximapsd.cpp
+     1>ximapsd.cpp : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         ximaraw.cpp
+         ximasel.cpp
+         ximaska.cpp
+         ximatga.cpp
+         ximath.cpp
+         ximatif.cpp
+         ximatran.cpp
+         ximawbmp.cpp
+         ximawmf.cpp
+         ximawnd.cpp
+         xmemfile.cpp
+       Lib:
+         W:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"W:\Projects\XXXUI\XUI\XUI\CXImage\Release\cximage.lib" /NOLOGO /LTCG Release\tif_xfile.obj
+         Release\ximabmp.obj
+         Release\ximadsp.obj
+         Release\ximaenc.obj
+         Release\ximaexif.obj
+         Release\ximage.obj
+         Release\ximagif.obj
+         Release\ximahist.obj
+         Release\ximaico.obj
+         Release\ximainfo.obj
+         Release\ximaint.obj
+         Release\ximajas.obj
+         Release\ximajbg.obj
+         Release\ximajpg.obj
+         Release\ximalpha.obj
+         Release\ximalyr.obj
+         Release\ximamng.obj
+         Release\ximapal.obj
+         Release\ximapcx.obj
+         Release\ximapng.obj
+         Release\ximapsd.obj
+         Release\ximaraw.obj
+         Release\ximasel.obj
+         Release\ximaska.obj
+         Release\ximatga.obj
+         Release\ximath.obj
+         Release\ximatif.obj
+         Release\ximatran.obj
+         Release\ximawbmp.obj
+         Release\ximawmf.obj
+         Release\ximawnd.obj
+         Release\xmemfile.obj
+         cximage.vcxproj -> W:\Projects\XXXUI\XUI\XUI\CXImage\Release\cximage.lib
+     1>Done Building Project "W:\Projects\XXXUI\XUI\XUI\CXImage\CxImage\cximage.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:15.59

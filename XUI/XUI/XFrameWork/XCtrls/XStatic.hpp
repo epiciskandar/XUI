@@ -28,6 +28,8 @@ End_Description;
 
 VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
+	BaseClass::On_CXMsg_Paint(msg);
+
 	CRect rect;
 	GetRect(rect);
 	CString text;
@@ -37,7 +39,7 @@ VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 		DRAWTEXTPARAMS params;
 		ZeroMemory(&params,sizeof(params));
 		params.cbSize = sizeof(params);
-		DrawTextEx(msg.drawDevice.dc,
+		msg.drawDevice.dc.DrawTextEx(
 			text.GetBuffer(text.GetLength()),
 			text.GetLength(),
 			rect,DT_CENTER | DT_SINGLELINE | DT_VCENTER,

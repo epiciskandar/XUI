@@ -304,6 +304,7 @@ public:
 
 #define SetDefPropertyValue(_name,_var) _var = Property::_name##DefaultValue;
 
+//				Name			Type				DefaultValue
 DefineProperty(ID,				CString,			_T(""));
 DefineProperty(Rect,			CRect,				CRect());
 DefineProperty(Position,		CPoint,				CPoint());
@@ -312,18 +313,21 @@ DefineProperty(Text,			CString,			_T(""));
 DefineProperty(Title,			CString,			_T(""));
 DefineProperty(Color,			COLORREF,			0);
 DefineProperty(TextColor,		COLORREF,			0);
+DefineProperty(BorderColor,		COLORREF,			RGB(0,0,0));
+DefineProperty(BorderWidth,		DWORD,				1);
 DefineProperty(WinStyle,		DWORD,				WS_OVERLAPPEDWINDOW|WS_VISIBLE);
 DefineProperty(WinExStyle,		DWORD,				0);
 DefineProperty(HWnd,			HWND,				0);
 DefineProperty(CenterWindow,	BOOL,				TRUE);
 DefineProperty(ShowState,		BOOL,				FALSE);
 DefineProperty(LayoutType,		ELayoutType,		ELayoutType::Block);
-DefineProperty(LayoutInvalid,	BOOL,				FALSE);
+DefineProperty(LayoutInvalid,	BOOL,				TRUE);
 DefineProperty(Align,			EAlignType,			EAlignType::Left);
 DefineProperty(AutoWidth,		BOOL,				FALSE);
 DefineProperty(AutoHeight,		BOOL,				FALSE);
 DefineProperty(ExpandWidth,		BOOL,				FALSE);
 DefineProperty(ExpandHeight,	BOOL,				FALSE);
 DefineProperty(BorderFix,		BOOL,				FALSE);
+DefineProperty(File,			CString,			_T(""));
 
 };

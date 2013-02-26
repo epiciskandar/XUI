@@ -4,6 +4,28 @@
 #include "XFrameWork/XGaia.hpp"
 #include "XFrameWork/XResPool.hpp"
 
+#ifdef DEBUG
+#pragma comment(lib,"debug/cximage.lib")
+#pragma comment(lib,"debug/jpeg.lib")
+#pragma comment(lib,"debug/jbig.lib")
+#pragma comment(lib,"debug/png.lib")
+#pragma comment(lib,"debug/libdcr.lib")
+#pragma comment(lib,"debug/libpsd.lib")
+#pragma comment(lib,"debug/jasper.lib")
+#pragma comment(lib,"debug/mng.lib")
+#pragma comment(lib,"debug/zlib.lib")
+#else
+#pragma comment(lib,"release/cximage.lib")
+#pragma comment(lib,"release/jpeg.lib")
+#pragma comment(lib,"release/jbig.lib")
+#pragma comment(lib,"release/png.lib")
+#pragma comment(lib,"release/libdcr.lib")
+#pragma comment(lib,"release/libpsd.lib")
+#pragma comment(lib,"release/jasper.lib")
+#pragma comment(lib,"release/mng.lib")
+#pragma comment(lib,"release/zlib.lib")
+#endif
+
 class CXUI
 {
 	XSingleton(CXUI);
