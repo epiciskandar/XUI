@@ -11,7 +11,7 @@ namespace Layouter
 			return Property::ELayoutType::Offset;
 		}
 
-		virtual XResult Layout(ElementRef element)
+		virtual XResult Layout(XSmartPtr<CXElement> element)
 		{
 			return XResult_NotImpl;
 		}

@@ -22,13 +22,25 @@ namespace LayoutTypeString
 	LPCTSTR Layout_BlockString = _T("block");
 }
 
+enum class ELayoutDirection
+{
+	Horizon,
+	Vertical
+};
+
+namespace LayoutDirectionString
+{
+	LPCTSTR LayoutDirecting_HorizonString = _T("horizon");
+	LPCTSTR LayoutDirection_VerticalString = _T("vertical");
+}
+
 enum class EAlignType
 {
 	Left,
 	Top,
 	Right,
 	Bottom,
-	Center,
+	//Center,
 	//HCenter,
 	//VCenter,
 	//Element,
@@ -40,9 +52,6 @@ namespace AlignTypeString
 	LPCTSTR Align_TopString = _T("top");
 	LPCTSTR Align_RightString = _T("right");
 	LPCTSTR Align_BottomString = _T("bottom");
-	LPCTSTR Align_CenterString = _T("center");
-	LPCTSTR Align_HCenterString = _T("hcenter");
-	LPCTSTR Align_VCenterString = _T("vcenter");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,6 +97,7 @@ public:
 	SupportType(m_propertyMap,CPropertyValue<HWND>);
 	SupportType(m_propertyMap,CPropertyValue<ELayoutType>);
 	SupportType(m_propertyMap,CPropertyValue<EAlignType>);
+	SupportType(m_propertyMap,CPropertyValue<ELayoutDirection>)
 
 	BOOL IsChanged(CString key);
 	VOID ChangeRestore(CString key/*empty means all*/);
@@ -261,6 +271,24 @@ public:
 	}
 };
 
+class CXMLConverter_ELayoutDirection
+{
+public:
+	static ELayoutDirection ConvertToValue(CString value)
+	{
+		ELayoutDirection directionValue = ELayoutDirection::Horizon;
+		if (value.CompareNoCase(LayoutDirectionString::LayoutDirecting_HorizonString) == 0)
+		{
+			directionValue = ELayoutDirection::Horizon;
+		}
+		else if (value.CompareNoCase(LayoutDirectionString::LayoutDirection_VerticalString) == 0)
+		{
+			directionValue = ELayoutDirection::Vertical;
+		}
+		return directionValue;
+	}
+};
+
 class CXMLConverter_EAlignType
 {
 public:
@@ -282,10 +310,6 @@ public:
 		else if (value == AlignTypeString::Align_BottomString)
 		{
 			type = EAlignType::Bottom;
-		}
-		else if (value == AlignTypeString::Align_CenterString)
-		{
-			type = EAlignType::Center;
 		}
 		else
 		{
@@ -322,12 +346,19 @@ DefineProperty(CenterWindow,	BOOL,				TRUE);
 DefineProperty(ShowState,		BOOL,				FALSE);
 DefineProperty(LayoutType,		ELayoutType,		ELayoutType::Block);
 DefineProperty(LayoutInvalid,	BOOL,				TRUE);
+DefineProperty(LayoutDirection,	ELayoutDirection,	ELayoutDirection::Horizon);
+DefineProperty(LayoutRect,		CRect,				CRect());
 DefineProperty(Align,			EAlignType,			EAlignType::Left);
 DefineProperty(AutoWidth,		BOOL,				FALSE);
 DefineProperty(AutoHeight,		BOOL,				FALSE);
 DefineProperty(ExpandWidth,		BOOL,				FALSE);
 DefineProperty(ExpandHeight,	BOOL,				FALSE);
+DefineProperty(SizeLimit,		CRect,				CRect(-1,-1,-1,-1));
 DefineProperty(BorderFix,		BOOL,				FALSE);
 DefineProperty(File,			CString,			_T(""));
+DefineProperty(ImageWidth,		DWORD,				0);
+DefineProperty(HitTest,			DWORD,				HTCLIENT);
+DefineProperty(Margin,			CRect,				CRect());
+DefineProperty(Padding,			CRect,				CRect());
 
 };

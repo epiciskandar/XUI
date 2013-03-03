@@ -160,6 +160,7 @@ protected:
 	T* m_ptr;
 };
 
+#define XPtr XSmartPtr
 typedef XSmartPtr<CXBase> BaseRef;
 
 //////////////////////////////////////////////////////////////////////////

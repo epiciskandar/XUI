@@ -28,11 +28,17 @@
 
 //////////////////////////////////////////////////////////////////////////
 
+typedef CWinTraits<WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN |
+	WS_CLIPSIBLINGS,
+	WS_EX_APPWINDOW | WS_EX_WINDOWEDGE>
+	CRealWndWinTraits;
+
 class CXRealWnd :
 	public CXElement,
 	public CWindowImpl<CXRealWnd>
 {
 	XClass(CXElement);
+	//DECLARE_WND_CLASS_EX(_T("XUIWnd1"),CS_HREDRAW|CS_VREDRAW|CS_DROPSHADOW, COLOR_WINDOW);
 public:
 	CXRealWnd();
 	~CXRealWnd(){};
@@ -42,6 +48,7 @@ public:
 		TranslateToXMessage( MessageTranslateFunc 
 		, WM_PAINT
 		, WM_SIZE
+		, WM_NCHITTEST
 		)
 	END_MSG_MAP();
 
@@ -65,6 +72,7 @@ protected:
 
 	LRESULT _Translate_WM_PAINT(WPARAM wParam,LPARAM lParam);
 	LRESULT _Translate_WM_Size(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_NCHITTEST(WPARAM wParam,LPARAM lParam);
 
 	//--------------------------------//
 
@@ -85,7 +93,6 @@ End_Description;
 CXRealWnd::CXRealWnd() : CWindowImpl()
 	, m_ignorePropertyChange(FALSE)
 {
-
 }
 
 VOID CXRealWnd::OnDestroy()
@@ -99,6 +106,7 @@ LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam
 	{
 		XMsgTranslater(WM_PAINT,_Translate_WM_PAINT);
 		XMsgTranslater(WM_SIZE,_Translate_WM_Size);
+		XMsgTranslater(WM_NCHITTEST,_Translate_WM_NCHITTEST);
 	}
 
 	return 0;
@@ -154,13 +162,15 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 		rect.bottom = rect.top + windowSize.cy;
 	}
 	AdjustWindowRectEx(rect,style,FALSE,ExStyle);
-	HWND hWnd = CWindowImpl::Create(hwndParent,rect,title,style,ExStyle);
+	HWND hWnd = CWindowImpl::Create(hwndParent,rect,title,WS_POPUP|WS_MAXIMIZEBOX|WS_SIZEBOX,ExStyle);
 	SetWindowLong(GWL_STYLE,style);
 	SetWindowLong(GWL_EXSTYLE,ExStyle);
 	if (hWnd)
 	{
 		CRect wndRect;
 		GetWindowRect(wndRect);
+		wndRect.BottomRight() -= wndRect.TopLeft();
+		wndRect.TopLeft() = CPoint(0,0);
 		m_ignorePropertyChange = TRUE;
 		SetRect(wndRect);
 		m_ignorePropertyChange = FALSE;
@@ -228,6 +238,8 @@ LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
 		return msg.msgRet;
 	}
 
+	CRect rect;
+	GetWindowRect(&rect);
 	CSize size;
 	size.cx = LOWORD(lParam);
 	size.cy = HIWORD(lParam);
@@ -290,5 +302,25 @@ VOID CXRealWnd::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 			size.cy += windowRect.Height();
 			SetWindowPos(0,0,0,size.cx,size.cy,SWP_NOZORDER|SWP_NOMOVE);
 		}
+	}
+}
+
+LRESULT CXRealWnd::_Translate_WM_NCHITTEST( WPARAM wParam,LPARAM lParam )
+{
+	URP(wParam);
+	POINTS points = MAKEPOINTS(lParam);
+	CPoint pt(points.x,points.y);
+	ScreenToClient(&pt);
+	ElementRef currHoverElement;
+	ElementUtil::GetElementByPoint(pt,this,currHoverElement);
+	if (currHoverElement)
+	{
+		DWORD dwHitTestResult;
+		currHoverElement->GetHitTest(dwHitTestResult);
+		return dwHitTestResult;
+	}
+	else
+	{
+		return HTNOWHERE;
 	}
 }

@@ -1,16 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--位置排版属性应当与style分离-->
 <XUI version="1">
-  <XRealWnd ID="10086" Title="Test" WinStyle="2155872256" WinExStyle="0" AutoWidth="true" AutoHeight="true">
-    <XElement Color="30,30,30" Size="300,260">
-      <XStatic ID="1" Text="1" Size="100,20" Align="right" />
-      <XStatic ID="2" Text="2" Size="100,20" Align="right" />
-      <XStatic ID="3" Text="3" Size="100,20" Align="right" BorderColor="0,255,0"/>
-      <XImage File="res:image.jpg" Size="20,20"/>
-      <XElement  ID="inner" Color="0,255,255" AutoWidth="true" AutoHeight="true">
-        <XStatic ID="4" Text="4" Size="100,20" Align="left" />
-        <XStatic ID="5" Text="5" Size="100,20" Align="right" />
-        <XStatic ID="6" Text="6" Size="100,20" Align="right" />
+  <XRealWnd ID="10086" Title="Test" WinStyle="0" WinExStyle="0" AutoWidth="true" AutoHeight="true">
+    <XElement ID="WindowBkg" Color="30,30,30" BorderColor="0,121,203" Size="300,260" Padding="1,1,1,1" HitTest="2">
+      <XElement ID="TitleArea" Size="200,20" Color="176,203,241" ExpandWidth="true" Align="top">
+        <XElement ID="Close" Size="20,20" Align="right" Margin="0,0,5,0" Color="255,0,0"/>
       </XElement>
     </XElement>
   </XRealWnd>

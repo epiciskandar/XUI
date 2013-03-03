@@ -90,11 +90,14 @@ public:
 	~CXElement();
 
 	XProperty_Begin
-		XProperty(Rect)
 		XFakeProperty(Position)
 		XFakeProperty(Size)
+		XFakeProperty(LayoutRect)
+		XProperty(Rect)
 		XProperty(LayoutType)
 		XProperty(LayoutInvalid)
+		XProperty(LayoutDirection)
+		XProperty(Padding)
 		XProperty(Align)
 		XProperty(AutoWidth)
 		XProperty(AutoHeight)
@@ -103,6 +106,7 @@ public:
 		XProperty(Color)
 		XProperty(BorderColor)
 		XProperty(BorderWidth)
+		XProperty(HitTest)
 	XProperty_End;
 
 	// XMsg的接收入口函数
@@ -126,6 +130,8 @@ protected:
 };
 
 typedef XSmartPtr<CXElement> ElementRef;
+
+#include "XElementUtil.hpp"
 
 MyNameIs(CXElement)
 	I_Provide("可绘制元素的基本属性及X消息路由,对xml创建ui元素做了属性上的支持")
@@ -153,21 +159,18 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLConvert(Color)
 		XMLConvert(AutoWidth)
 		XMLConvert(AutoHeight)
+		XMLConvert(ExpandWidth)
+		XMLConvert(ExpandHeight)
+		XMLConvert(LayoutType)
+		XMLConvert(LayoutDirection)
 		XMLConvert(Align)
 		XMLConvert(BorderColor)
 		XMLConvert(BorderWidth)
+		XMLConvert(HitTest)
+		XMLConvert(Padding)
 	XMLConvert_End
 
 	return XResult_NotSupport;
-}
-
-VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
-{
-	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
-	{
-		XSmartPtr<CXElement> pElement = *i;
-		pElement->ProcessXMessage( pMsg );
-	}
 }
 
 XResult CXElement::ProcessXMessage( CXMsg& msg )
@@ -183,6 +186,17 @@ XResult CXElement::ProcessXMessage( CXMsg& msg )
 		_SendXMessageToChildren(msg);
 	}
 	return XResult_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
+{
+	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+	{
+		XSmartPtr<CXElement> pElement = *i;
+		pElement->ProcessXMessage( pMsg );
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -232,20 +246,34 @@ XResult CXElement::SetSize(Property::SizeType param)
 	return SetRect(rect);
 }
 
+XResult CXElement::GetLayoutRect(Property::LayoutRectType& value)
+{
+	GetRect(value);
+	CRect padding;
+	GetPadding(padding);
+	value.left += padding.left;
+	value.right -= padding.right;
+	value.top += padding.top;
+	value.bottom -= padding.bottom;
+	return XResult_OK;
+}
+
+XResult CXElement::SetLayoutRect(Property::LayoutRectType param)
+{
+	CRect padding;
+	GetPadding(padding);
+	param.left -= padding.left;
+	param.right += padding.right;
+	param.top -= padding.top;
+	param.bottom += padding.bottom;
+	return SetSize(param.Size());
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
 {
-	if (arg.name == Property::Size)
-	{
-		CXMsg_SizeChanged msg;
-		msg.node = this;
-		msg.sizeType = SizeType_Restored;
-
-		ProcessXMessage(msg);
-
-		msg.msgHandled = TRUE;
-	}
+	URP(arg);
 	return;
 }
 
@@ -262,14 +290,31 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 	{
 		return;
 	}
-	_SendXMessageToChildren(arg);
 
-	m_isLayouting = TRUE;
 
 	BOOL layoutinvalid;
 	GetLayoutInvalid(layoutinvalid);
 	if (layoutinvalid)
 	{
+		std::list<ElementRef> needExpandElements;
+		for (auto& i:m_children)
+		{
+			ElementRef childElement(i);
+			BOOL expandWidth;
+			childElement->GetExpandWidth(expandWidth);
+			BOOL expandHeight;
+			childElement->GetExpandHeight(expandHeight);
+			if (expandWidth || expandHeight)
+			{
+				needExpandElements.push_back(childElement);
+			}
+			else
+			{
+				childElement->ProcessXMessage(arg);
+			}
+		}
+
+		m_isLayouting = TRUE;
 		Layouter::LayouterRef layouter;
 		Property::ELayoutType type = Property::LayoutTypeDefaultValue;
 		GetLayoutType(type);
@@ -282,10 +327,14 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 		{
 			WTF;
 		}
-	}
-	SetLayoutInvalid(FALSE);
+		m_isLayouting = FALSE;
+		SetLayoutInvalid(FALSE);
 
-	m_isLayouting = FALSE;
+		for (auto i:needExpandElements)
+		{
+			i->ProcessXMessage(arg);
+		}
+	}
 }
 
 VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )

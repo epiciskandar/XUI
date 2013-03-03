@@ -7,7 +7,7 @@ namespace Layouter
 		XClass(CLayouter);
 	public:
 		virtual Property::ELayoutType MyType() = 0;
-		virtual XResult Layout(ElementRef element) = 0;
+		virtual XResult Layout(XSmartPtr<CXElement> element) = 0;
 	};
 
 	typedef XSmartPtr<CLayouter>	LayouterRef;

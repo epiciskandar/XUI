@@ -191,6 +191,9 @@
     <ClInclude Include="XUI\XFrameWork\XCtrls\XImage.hpp">
       <Filter>Header Files\Ctrl</Filter>
     </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resource\Test.xml">
