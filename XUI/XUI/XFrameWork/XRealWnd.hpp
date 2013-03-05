@@ -231,7 +231,6 @@ LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
 	msg.drawDevice.invalidRect = CRect(ps.rcPaint);
 	msg.drawDevice.dc = ps.hdc;
 
-	HDC hDC = msg.drawDevice.dc;
 	ProcessXMessage(msg);
 
 	ZeroMemory(&ps,sizeof(ps));

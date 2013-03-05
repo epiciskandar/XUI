@@ -395,7 +395,6 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	if (m_memDC && 
 		testRect.IntersectRect(arg.drawDevice.invalidRect,rect))
 	{
-		HDC hDC = m_memDC->m_hDC;
 		CPoint srcPoint = testRect.TopLeft();
 		srcPoint -= rect.TopLeft();
 		arg.drawDevice.dc.BitBlt(testRect.left,testRect.top,testRect.Width(),testRect.Height(),

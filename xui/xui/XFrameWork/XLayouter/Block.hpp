@@ -212,6 +212,8 @@ namespace Layouter
 			{
 				elementRect.bottom = elementRect.top;
 			}
+			CRect padding;
+			element->GetPadding(padding);
 			Property::ELayoutDirection direction;
 			direction = _GetElementLayoutDirection(element);
 
@@ -244,7 +246,7 @@ namespace Layouter
 				childNode->GetRSibling(childNode);
 			}
 
-			childContainSize = placer->Place(elementRect.TopLeft());
+			childContainSize = placer->Place(padding.TopLeft());
 			delete placer;
 			//////////////////////////////////////////////////////////////////////////
 
