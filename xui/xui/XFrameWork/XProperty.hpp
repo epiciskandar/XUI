@@ -191,7 +191,10 @@ public:
 	static COLORREF ConvertToValue(CString value)
 	{
 		COLORREF dwValue;
-		DWORD r,g,b,a;
+		DWORD r = 0;
+		DWORD g = 0;
+		DWORD b = 0;
+		DWORD a = 0;
 		_stscanf_s(value,_T("%u,%u,%u,%u"),&r,&g,&b,&a);
 		dwValue = RGBA(r,g,b,a);
 		return dwValue;
@@ -360,5 +363,7 @@ DefineProperty(ImageWidth,		DWORD,				0);
 DefineProperty(HitTest,			DWORD,				HTCLIENT);
 DefineProperty(Margin,			CRect,				CRect());
 DefineProperty(Padding,			CRect,				CRect());
+DefineProperty(Ghost,			BOOL,				FALSE);
+DefineProperty(ToolTip,			CString,			_T(""));
 
 };

@@ -49,6 +49,8 @@ public:
 		, WM_PAINT
 		, WM_SIZE
 		, WM_NCHITTEST
+		, WM_MOUSEMOVE
+		//, WM_CREATE
 		)
 	END_MSG_MAP();
 
@@ -73,13 +75,18 @@ protected:
 	LRESULT _Translate_WM_PAINT(WPARAM wParam,LPARAM lParam);
 	LRESULT _Translate_WM_Size(WPARAM wParam,LPARAM lParam);
 	LRESULT _Translate_WM_NCHITTEST(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_MOUSEMOVE(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_CREATE(WPARAM wParam,LPARAM lParam);
 
 	//--------------------------------//
 
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
+	VOID On_CXMsg_AppendElement(CXMsg_AppendElement& arg);
 
 protected:
 	BOOL m_ignorePropertyChange;
+	BOOL m_firstPaint;
+	ElementRef	m_currFocusElement;
 };
 
 typedef XSmartPtr<CXRealWnd> CXRealWndRef;
@@ -92,6 +99,7 @@ End_Description;
 
 CXRealWnd::CXRealWnd() : CWindowImpl()
 	, m_ignorePropertyChange(FALSE)
+	, m_firstPaint(TRUE)
 {
 }
 
@@ -104,9 +112,11 @@ LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam
 {
 	switch(uMsg)
 	{
-		XMsgTranslater(WM_PAINT,_Translate_WM_PAINT);
-		XMsgTranslater(WM_SIZE,_Translate_WM_Size);
-		XMsgTranslater(WM_NCHITTEST,_Translate_WM_NCHITTEST);
+		XMsgTranslater(WM_PAINT,		_Translate_WM_PAINT);
+		XMsgTranslater(WM_SIZE,			_Translate_WM_Size);
+		XMsgTranslater(WM_NCHITTEST,	_Translate_WM_NCHITTEST);
+		XMsgTranslater(WM_MOUSEMOVE,	_Translate_WM_MOUSEMOVE);
+		XMsgTranslater(WM_CREATE,		_Translate_WM_CREATE);
 	}
 
 	return 0;
@@ -165,6 +175,7 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 	HWND hWnd = CWindowImpl::Create(hwndParent,rect,title,WS_POPUP|WS_MAXIMIZEBOX|WS_SIZEBOX,ExStyle);
 	SetWindowLong(GWL_STYLE,style);
 	SetWindowLong(GWL_EXSTYLE,ExStyle);
+
 	if (hWnd)
 	{
 		CRect wndRect;
@@ -174,6 +185,7 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 		m_ignorePropertyChange = TRUE;
 		SetRect(wndRect);
 		m_ignorePropertyChange = FALSE;
+
 		return XResult_OK;
 	}
 	return XResult_Fail;
@@ -185,6 +197,7 @@ XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_PropertyChanged);
+		OnXMsg(CXMsg_AppendElement);
 	END_XMSG_MAP;
 	return XResult_OK;
 }
@@ -192,30 +205,34 @@ XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 //////////////////////////////////////////////////////////////////////////
 // message translate
 
+LRESULT CXRealWnd::_Translate_WM_CREATE(WPARAM wParam,LPARAM lParam)
+{
+	URP(wParam,lParam);
+	return 0;
+}
+
 LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
 {
 	URP(wParam,lParam);
+	if (m_firstPaint)
+	{
+		m_firstPaint = FALSE;
+		URP(wParam,lParam);
+		CXMsg_AttachDC msg;
+		msg.hostWnd = m_hWnd;
+		msg.hostDC = GetDC();
+		_SendXMessageToChildren(msg);
+	}
+
 	CXMsg_Paint msg;
 	msg.msgRet = 0;
 	PAINTSTRUCT ps;
 	BeginPaint(&ps);
 	msg.drawDevice.invalidRect = CRect(ps.rcPaint);
 	msg.drawDevice.dc = ps.hdc;
-	msg.drawDevice.dc.SelectBrush(GetStockBrush(NULL_BRUSH));
-	msg.drawDevice.dc.SelectPen(GetStockPen(NULL_PEN));
-	msg.drawDevice.dc.SetBkMode(TRANSPARENT);
 
+	HDC hDC = msg.drawDevice.dc;
 	ProcessXMessage(msg);
-
-	BitBlt(msg.drawDevice.dc,
-		msg.drawDevice.invalidRect.left,
-		msg.drawDevice.invalidRect.top,
-		msg.drawDevice.invalidRect.Width(),
-		msg.drawDevice.invalidRect.Height(),
-		msg.drawDevice.dc,
-		0, 0,
-		SRCCOPY
-		);
 
 	ZeroMemory(&ps,sizeof(ps));
 	ps.hdc = msg.drawDevice.dc;
@@ -305,6 +322,18 @@ VOID CXRealWnd::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 	}
 }
 
+VOID CXRealWnd::On_CXMsg_AppendElement(CXMsg_AppendElement& arg)
+{
+	if (arg.element && m_hWnd)
+	{
+		CXMsg_AttachDC msg;
+		msg.hostWnd = m_hWnd;
+		msg.hostDC = GetDC();
+
+		ElementRef(arg.element)->ProcessXMessage(msg);
+	}
+}
+
 LRESULT CXRealWnd::_Translate_WM_NCHITTEST( WPARAM wParam,LPARAM lParam )
 {
 	URP(wParam);
@@ -323,4 +352,37 @@ LRESULT CXRealWnd::_Translate_WM_NCHITTEST( WPARAM wParam,LPARAM lParam )
 	{
 		return HTNOWHERE;
 	}
+}
+
+LRESULT CXRealWnd::_Translate_WM_MOUSEMOVE( WPARAM wParam,LPARAM lParam )
+{
+	URP(wParam);
+	CPoint pos(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+	ScreenToClient(&pos);
+	ElementRef currHoverElement;
+	ElementUtil::GetElementByPoint(pos,this,currHoverElement);
+	if (currHoverElement != m_currFocusElement)
+	{
+		if (m_currFocusElement)
+		{
+			CXMsg_MouseLeave leaveMsg;
+			leaveMsg.newFocusNode = currHoverElement;
+			m_currFocusElement->ProcessXMessage(leaveMsg);
+		}
+		if (currHoverElement)
+		{
+			CXMsg_MouseEnter enterMsg;
+			enterMsg.prevFocusNode = m_currFocusElement;
+			currHoverElement->ProcessXMessage(enterMsg);
+		}
+		m_currFocusElement = currHoverElement;
+		if (m_currFocusElement)
+		{
+			CXMsg_MouseMove moveMsg;
+			// TODO: calculate mouse pos
+			m_currFocusElement->ProcessXMessage(moveMsg);
+		}
+	}
+	//Invalidate();
+	return 0;
 }

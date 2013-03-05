@@ -8,6 +8,7 @@ public:
 	static VOID TranslatePointToChildCoord(CPoint& pt,CRect childRect);
 	static VOID TranslatePointToChildCoord(CPoint& pt,NodeRef child);
 	static XResult GetElementByPoint(CPoint pt,ElementRef root,ElementRef& element);
+	static CRect GetElementRectInClientCoord(ElementRef element);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -71,4 +72,23 @@ XResult ElementUtil::GetElementByPoint( CPoint pt,ElementRef root,ElementRef& el
 	{
 		return XResult_NotFound;
 	}
+}
+
+CRect ElementUtil::GetElementRectInClientCoord( ElementRef element )
+{
+	CRect rect;
+	if (element)
+	{
+		element->GetRect(rect);
+		element = element->GetFather();
+		while (element)
+		{
+			CPoint position;
+			element->GetPosition(position);
+			rect.OffsetRect(position);
+			element = element->GetFather();
+		}
+	}
+
+	return rect;
 }

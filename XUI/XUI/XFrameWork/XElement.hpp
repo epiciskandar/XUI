@@ -3,6 +3,7 @@
 #include "XTree.hpp"
 #include "XMsg.hpp"
 #include "XProperty.hpp"
+#include "../WTL/atlctrls.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -107,6 +108,8 @@ public:
 		XProperty(BorderColor)
 		XProperty(BorderWidth)
 		XProperty(HitTest)
+		XProperty(ToolTip)
+		XProperty(Ghost)
 	XProperty_End;
 
 	// XMsg的接收入口函数
@@ -119,14 +122,21 @@ public:
 
 protected:
 	VOID _SendXMessageToChildren(CXMsg& pMsg);
+	VOID _RaiseXMessageUp(CXMsg& msg);
 
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);
 	VOID On_CXMsg_Layout(CXMsg_Layout& arg);
 	VOID On_CXMsg_Paint(CXMsg_Paint& arg);
+	VOID On_CXMsg_PaintElement(CXMsg_PaintElement& arg);
+	VOID On_CXMsg_MouseEnter(CXMsg_MouseEnter& arg);
+	VOID On_CXMsg_MouseLeave(CXMsg_MouseLeave& arg);
+	VOID On_CXMsg_AttachDC(CXMsg_AttachDC& arg);
 protected:
-	Property::CXProperty m_property;
-	BOOL m_isLayouting;
+	Property::CXProperty	m_property;
+	BOOL	m_isLayouting;
+	CToolTipCtrl	m_toolTip;
+	XPtr<CGDIMemDC>	m_memDC;
 };
 
 typedef XSmartPtr<CXElement> ElementRef;
@@ -142,11 +152,16 @@ End_Description;
 
 CXElement::CXElement()
 	: m_isLayouting(FALSE)
+	, m_memDC(nullptr)
 {
 }
 
 CXElement::~CXElement()
 {
+	if (m_memDC)
+	{
+		m_memDC = nullptr;
+	}
 }
 
 XResult CXElement::SetXMLProperty( CString name,CString value )
@@ -168,6 +183,8 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLConvert(BorderWidth)
 		XMLConvert(HitTest)
 		XMLConvert(Padding)
+		XMLConvert(ToolTip)
+		XMLConvert(Ghost)
 	XMLConvert_End
 
 	return XResult_NotSupport;
@@ -180,6 +197,10 @@ XResult CXElement::ProcessXMessage( CXMsg& msg )
 		OnXMsg(CXMsg_SizeChanged)
 		OnXMsg(CXMsg_Layout)
 		OnXMsg(CXMsg_Paint)
+		OnXMsg(CXMsg_MouseEnter)
+		OnXMsg(CXMsg_MouseLeave)
+		OnXMsg(CXMsg_PaintElement)
+		OnXMsg(CXMsg_AttachDC)
 	END_XMSG_MAP;
 	if (!msg.msgHandled)
 	{
@@ -196,6 +217,20 @@ VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
 	{
 		XSmartPtr<CXElement> pElement = *i;
 		pElement->ProcessXMessage( pMsg );
+		if (pMsg.msgHandled)
+		{
+			return;
+		}
+	}
+}
+
+VOID CXElement::_RaiseXMessageUp(CXMsg& msg)
+{
+	ElementRef fatherElement;
+	fatherElement = GetFather();
+	while (fatherElement && !msg.msgHandled)
+	{
+		fatherElement->ProcessXMessage(msg);
 	}
 }
 
@@ -274,6 +309,12 @@ XResult CXElement::SetLayoutRect(Property::LayoutRectType param)
 VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
 {
 	URP(arg);
+	if (arg.name == Property::Size)
+	{
+		CXMsg_PaintElement msg;
+		msg.paintChildren = FALSE;
+		ProcessXMessage(msg);
+	}
 	return;
 }
 
@@ -290,7 +331,6 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 	{
 		return;
 	}
-
 
 	BOOL layoutinvalid;
 	GetLayoutInvalid(layoutinvalid);
@@ -349,6 +389,40 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	}
 	CRect rect;
 	GetRect(rect);
+	rect.OffsetRect(arg.offsetFix);
+
+	CRect testRect;
+	if (m_memDC && 
+		testRect.IntersectRect(arg.drawDevice.invalidRect,rect))
+	{
+		HDC hDC = m_memDC->m_hDC;
+		CPoint srcPoint = testRect.TopLeft();
+		srcPoint -= rect.TopLeft();
+		arg.drawDevice.dc.BitBlt(testRect.left,testRect.top,testRect.Width(),testRect.Height(),
+			m_memDC->m_hDC,srcPoint.x,srcPoint.y,SRCCOPY);
+	}
+
+	CPoint point;
+	GetPosition(point);
+	CPoint oriOffset = arg.offsetFix;
+	arg.offsetFix += point;
+
+	_SendXMessageToChildren(arg);
+	arg.offsetFix = oriOffset;
+
+	arg.msgHandled = TRUE;
+}
+
+VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
+{
+	arg.msgHandled = TRUE;
+	if (!m_memDC)
+	{
+		return;
+	}
+	CRect rect;
+	GetRect(rect);
+	rect.OffsetRect(-rect.left,-rect.top);
 
 	COLORREF color;
 	if (XSUCCEEDED(GetColor(color)))
@@ -358,7 +432,7 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 		brushLog.lbStyle = BS_SOLID;
 		brushLog.lbHatch = 0;
 		HBRUSH brush = CreateBrushIndirect(&brushLog);
-		FillRect(arg.drawDevice.dc,rect,brush);
+		m_memDC->FillRect(rect,brush);
 		DeleteObject(brush);
 	}
 
@@ -368,9 +442,54 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 		DWORD borderWidth;
 		GetBorderWidth(borderWidth);
 		HPEN pen = CreatePen(PS_SOLID,borderWidth,borderColor);
-		CGDIHandleSwitcher handleSwitcher(arg.drawDevice.dc,pen);
-		arg.drawDevice.dc.Rectangle(rect);
+		CGDIHandleSwitcher handleSwitcher(m_memDC->m_hDC,pen);
+		m_memDC->Rectangle(rect);
 	}
 
+	if (arg.paintChildren)
+	{
+		_SendXMessageToChildren(arg);
+	}
+}
+
+VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
+{
+	if (arg.hostDC)
+	{
+		if (m_memDC)
+		{
+			m_memDC = nullptr;
+		}
+		CRect rect;
+		GetRect(rect);
+		rect.OffsetRect(-rect.left,-rect.top);
+		m_memDC = new CGDIMemDC(arg.hostDC,rect);
+		if (! m_memDC)
+		{
+			WTF;
+		}
+		m_memDC->ClearDrawDevice();
+		
+		CXMsg_PaintElement msg;
+		msg.paintChildren = FALSE;
+		ProcessXMessage(msg);
+	}
+	else
+	{
+		if (m_memDC)
+		{
+			m_memDC = nullptr;
+		}
+	}
 	arg.msgHandled = FALSE;
+}
+
+VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
+{
+	//SetBorderWidth(3);
+}
+
+VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
+{
+	//SetBorderWidth(1);
 }

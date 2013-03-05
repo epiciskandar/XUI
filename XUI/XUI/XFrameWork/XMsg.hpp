@@ -1,5 +1,5 @@
 #pragma once
-#include "XBase.hpp"
+#include "XTree.hpp"
 #include "XDrawDevice.hpp"
 
 #include <list>
@@ -41,7 +41,33 @@ class CXMsg_Paint : public CXMsg
 	XMessage(CXMsg_Paint);
 public:
 	CXDrawDevice	drawDevice;
-	CRect			parentRect;
+	CPoint			offsetFix;
+};
+
+class CXMsg_PaintElement : public CXMsg
+{
+	XMessage(CXMsg_PaintElement);
+public:
+	BOOL	paintChildren;
+
+	CXMsg_PaintElement():paintChildren(FALSE){}
+};
+
+class CXMsg_AttachDC : public CXMsg
+{
+	XMessage(CXMsg_AttachDC);
+public:
+	HWND hostWnd;
+	HDC  hostDC;
+
+	CXMsg_AttachDC():hostWnd(0),hostDC(0){}
+};
+
+class CXMsg_AppendElement : public CXMsg
+{
+	XMessage(CXMsg_AppendElement);
+public:
+	NodeRef element;
 };
 
 class CXMsg_SizeChanged : public CXMsg
@@ -58,6 +84,26 @@ class CXMsg_Layout : public CXMsg
 {
 	XMessage(CXMsg_Layout);
 public:
+};
+
+class CXMsg_MouseMove : public CXMsg
+{
+	XMessage(CXMsg_MouseMove);
+public:
+	CPoint pt;
+};
+
+class CXMsg_MouseEnter : public CXMsg
+{
+	XMessage(CXMsg_MouseEnter);
+public:
+	NodeRef prevFocusNode;
+};
+
+class CXMsg_MouseLeave : public CXMsg
+{
+	XMessage(CXMsg_MouseLeave);
+	NodeRef newFocusNode;
 };
 
 //////////////////////////////////////////////////////////////////////////
