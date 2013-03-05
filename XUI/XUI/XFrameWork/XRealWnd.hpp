@@ -50,6 +50,7 @@ public:
 		, WM_SIZE
 		, WM_NCHITTEST
 		, WM_MOUSEMOVE
+		, WM_NCMOUSEMOVE
 		//, WM_CREATE
 		)
 	END_MSG_MAP();
@@ -76,12 +77,15 @@ protected:
 	LRESULT _Translate_WM_Size(WPARAM wParam,LPARAM lParam);
 	LRESULT _Translate_WM_NCHITTEST(WPARAM wParam,LPARAM lParam);
 	LRESULT _Translate_WM_MOUSEMOVE(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_NCMOUSEMOVE(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_MOUSEMOVE_MSG(WPARAM wParam,CPoint pointInClient);
 	LRESULT _Translate_WM_CREATE(WPARAM wParam,LPARAM lParam);
 
 	//--------------------------------//
 
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_AppendElement(CXMsg_AppendElement& arg);
+	VOID On_CXMsg_Invalidate(CXMsg_Invalidate& arg);
 
 protected:
 	BOOL m_ignorePropertyChange;
@@ -116,6 +120,7 @@ LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam
 		XMsgTranslater(WM_SIZE,			_Translate_WM_Size);
 		XMsgTranslater(WM_NCHITTEST,	_Translate_WM_NCHITTEST);
 		XMsgTranslater(WM_MOUSEMOVE,	_Translate_WM_MOUSEMOVE);
+		XMsgTranslater(WM_NCMOUSEMOVE,	_Translate_WM_NCMOUSEMOVE);
 		XMsgTranslater(WM_CREATE,		_Translate_WM_CREATE);
 	}
 
@@ -198,6 +203,7 @@ XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_PropertyChanged);
 		OnXMsg(CXMsg_AppendElement);
+		OnXMsg(CXMsg_Invalidate);
 	END_XMSG_MAP;
 	return XResult_OK;
 }
@@ -355,11 +361,22 @@ LRESULT CXRealWnd::_Translate_WM_NCHITTEST( WPARAM wParam,LPARAM lParam )
 
 LRESULT CXRealWnd::_Translate_WM_MOUSEMOVE( WPARAM wParam,LPARAM lParam )
 {
-	URP(wParam);
+	CPoint pos(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+	return _Translate_MOUSEMOVE_MSG(wParam,pos);
+}
+
+LRESULT CXRealWnd::_Translate_WM_NCMOUSEMOVE( WPARAM wParam,LPARAM lParam )
+{
 	CPoint pos(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
 	ScreenToClient(&pos);
+	return _Translate_MOUSEMOVE_MSG(wParam,pos);
+}
+
+LRESULT CXRealWnd::_Translate_MOUSEMOVE_MSG( WPARAM wParam,CPoint pointInClient )
+{
+	URP(wParam);
 	ElementRef currHoverElement;
-	ElementUtil::GetElementByPoint(pos,this,currHoverElement);
+	ElementUtil::GetElementByPoint(pointInClient,this,currHoverElement);
 	if (currHoverElement != m_currFocusElement)
 	{
 		if (m_currFocusElement)
@@ -384,4 +401,9 @@ LRESULT CXRealWnd::_Translate_WM_MOUSEMOVE( WPARAM wParam,LPARAM lParam )
 	}
 	//Invalidate();
 	return 0;
+}
+
+VOID CXRealWnd::On_CXMsg_Invalidate( CXMsg_Invalidate& arg )
+{
+	InvalidateRect(arg.invalidRect,FALSE);
 }

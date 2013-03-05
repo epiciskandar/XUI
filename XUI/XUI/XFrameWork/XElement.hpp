@@ -217,10 +217,6 @@ VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
 	{
 		XSmartPtr<CXElement> pElement = *i;
 		pElement->ProcessXMessage( pMsg );
-		if (pMsg.msgHandled)
-		{
-			return;
-		}
 	}
 }
 
@@ -231,6 +227,7 @@ VOID CXElement::_RaiseXMessageUp(CXMsg& msg)
 	while (fatherElement && !msg.msgHandled)
 	{
 		fatherElement->ProcessXMessage(msg);
+		fatherElement = fatherElement->GetFather();
 	}
 }
 
@@ -419,6 +416,9 @@ VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 	{
 		return;
 	}
+
+	BOOL updated = FALSE;
+
 	CRect rect;
 	GetRect(rect);
 	rect.OffsetRect(-rect.left,-rect.top);
@@ -433,6 +433,7 @@ VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 		HBRUSH brush = CreateBrushIndirect(&brushLog);
 		m_memDC->FillRect(rect,brush);
 		DeleteObject(brush);
+		updated = TRUE;
 	}
 
 	COLORREF borderColor;
@@ -443,11 +444,19 @@ VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 		HPEN pen = CreatePen(PS_SOLID,borderWidth,borderColor);
 		CGDIHandleSwitcher handleSwitcher(m_memDC->m_hDC,pen);
 		m_memDC->Rectangle(rect);
+		updated = TRUE;
 	}
 
 	if (arg.paintChildren)
 	{
 		_SendXMessageToChildren(arg);
+	}
+
+	if (updated)
+	{
+		CXMsg_Invalidate msg;
+		msg.invalidRect = ElementUtil::GetElementRectInClientCoord(this);
+		_RaiseXMessageUp(msg);
 	}
 }
 
@@ -485,10 +494,16 @@ VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 
 VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 {
-	//SetBorderWidth(3);
+	SetBorderWidth(3);
+	CXMsg_PaintElement msg;
+	ProcessXMessage(msg);
+	arg.msgHandled = TRUE;
 }
 
 VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
 {
-	//SetBorderWidth(1);
+	SetBorderWidth(1);
+	CXMsg_PaintElement msg;
+	ProcessXMessage(msg);
+	arg.msgHandled = TRUE;
 }

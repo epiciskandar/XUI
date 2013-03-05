@@ -51,13 +51,13 @@ XResult ElementUtil::GetElementByPoint( CPoint pt,ElementRef root,ElementRef& el
 	root->GetRect(rect);
 	if (rect.PtInRect(pt))
 	{
+		CPoint testPoint(pt);
+		TranslatePointToChildCoord(testPoint,root);
 		NodeRef childNode;
 		root->GetFirstChild(childNode);
 		while (childNode)
 		{
 			element = nullptr;
-			CPoint testPoint(pt);
-			TranslatePointToChildCoord(testPoint,childNode);
 			GetElementByPoint(testPoint,childNode,element);
 			if (element)
 			{

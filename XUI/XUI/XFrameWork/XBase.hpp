@@ -142,6 +142,21 @@ public:
 	{
 		return GetPointer() == rhs.GetPointer();
 	}
+	bool operator!=(const XSmartPtr& rhs)
+	{
+		return GetPointer() != rhs.GetPointer();
+	}
+
+	template <typename T2>
+	bool operator==(const XSmartPtr<T2>& rhs)
+	{
+		return GetPointer() == rhs.GetPointer();
+	}
+	template <typename T2>
+	bool operator!=(const XSmartPtr<T2>& rhs)
+	{
+		return GetPointer() != rhs.GetPointer();
+	}
 	const PointerType operator ->() const
 	{
 		return m_ptr;

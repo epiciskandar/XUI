@@ -44,6 +44,13 @@ public:
 	CPoint			offsetFix;
 };
 
+class CXMsg_Invalidate : public CXMsg
+{
+	XMessage(CXMsg_Invalidate);
+public:
+	CRect	invalidRect;
+};
+
 class CXMsg_PaintElement : public CXMsg
 {
 	XMessage(CXMsg_PaintElement);
