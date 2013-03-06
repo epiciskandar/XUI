@@ -100,17 +100,26 @@ public:
 	CPoint pt;
 };
 
-class CXMsg_MouseEnter : public CXMsg
+class CXMsg_MouseEnter : public CXMsg_MouseMove
 {
 	XMessage(CXMsg_MouseEnter);
 public:
 	NodeRef prevFocusNode;
 };
 
-class CXMsg_MouseLeave : public CXMsg
+class CXMsg_MouseLeave : public CXMsg_MouseMove
 {
 	XMessage(CXMsg_MouseLeave);
 	NodeRef newFocusNode;
+};
+
+
+class CXMsg_GetHWnd : public CXMsg
+{
+	XMessage(CXMsg_GetHWnd);
+public:
+	HWND hWnd;
+	CXMsg_GetHWnd() : hWnd(0){}
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -144,7 +144,9 @@ XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElement )
 		while (attr)
 		{
 			CString key = attr->Name();
-			CString value = attr->Value();
+			CStringA valueA = attr->Value();
+			CString value;
+			Util::String::UTF8ToUnicode(valueA,value);
 			element->SetXMLProperty(key,value);
 			attr = attr->Next();
 		}

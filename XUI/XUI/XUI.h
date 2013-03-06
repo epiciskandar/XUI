@@ -26,6 +26,8 @@
 #pragma comment(lib,"release/zlib.lib")
 #endif
 
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 class CXUI
 {
 	XSingleton(CXUI);
@@ -50,6 +52,9 @@ BOOL CXUI::Initialize( HINSTANCE hInst )
 {
 	ATLASSERT(m_hInst==0);
 	m_hInst = hInst;
+	AtlInitCommonControls(ICC_ANIMATE_CLASS | 
+	ICC_TREEVIEW_CLASSES | 
+	ICC_STANDARD_CLASSES);
 	m_atlModule.Init(NULL,m_hInst);
 	return TRUE;
 }

@@ -12,6 +12,11 @@ namespace Util
 		XResult RemoveLastSplit(CString& path,BOOL slash=UseSlash);
 	}
 
+	namespace String
+	{
+		XResult UTF8ToUnicode(LPCSTR str,CString& outStr);
+		XResult UnicodeToUTF8(LPCTSTR str,CStringA& outStr);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,6 +82,21 @@ namespace Util
 			return XResult_OK;
 		}
 
+	}
+
+	namespace String
+	{
+		XResult UTF8ToUnicode( LPCSTR str,CString& outStr )
+		{
+			int targetLen = MultiByteToWideChar(CP_UTF8, 0, (LPCSTR)str, -1, NULL, 0);
+
+			TCHAR* pTargetData = outStr.GetBuffer(targetLen+1);
+			memset(pTargetData, 0, (targetLen+1) * sizeof(WCHAR));
+			MultiByteToWideChar(CP_UTF8, 0, (LPCSTR)str, -1, (WCHAR*)pTargetData, targetLen);
+
+			outStr.ReleaseBuffer();
+			return XResult_OK;  
+		}
 	}
 }
 

@@ -52,6 +52,8 @@ public:
 		, WM_MOUSEMOVE
 		, WM_NCMOUSEMOVE
 		//, WM_CREATE
+		, 0x00AE
+		, 0x00AF
 		)
 	END_MSG_MAP();
 
@@ -86,6 +88,7 @@ protected:
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_AppendElement(CXMsg_AppendElement& arg);
 	VOID On_CXMsg_Invalidate(CXMsg_Invalidate& arg);
+	VOID On_CXMsg_GetHWnd(CXMsg_GetHWnd& arg);
 
 protected:
 	BOOL m_ignorePropertyChange;
@@ -204,6 +207,7 @@ XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 		OnXMsg(CXMsg_PropertyChanged);
 		OnXMsg(CXMsg_AppendElement);
 		OnXMsg(CXMsg_Invalidate);
+		OnXMsg(CXMsg_GetHWnd);
 	END_XMSG_MAP;
 	return XResult_OK;
 }
@@ -406,4 +410,11 @@ LRESULT CXRealWnd::_Translate_MOUSEMOVE_MSG( WPARAM wParam,CPoint pointInClient 
 VOID CXRealWnd::On_CXMsg_Invalidate( CXMsg_Invalidate& arg )
 {
 	InvalidateRect(arg.invalidRect,FALSE);
+	arg.msgHandled = TRUE;
+}
+
+VOID CXRealWnd::On_CXMsg_GetHWnd( CXMsg_GetHWnd& arg )
+{
+	arg.hWnd = m_hWnd;
+	arg.msgHandled = TRUE;
 }

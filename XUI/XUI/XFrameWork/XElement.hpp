@@ -494,16 +494,43 @@ VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 
 VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 {
-	SetBorderWidth(3);
-	CXMsg_PaintElement msg;
-	ProcessXMessage(msg);
+	CString toolTip;
+	if (XSUCCEEDED(GetToolTip(toolTip)))
+	{
+		CXMsg_GetHWnd msg;
+		_RaiseXMessageUp(msg);
+		if (!m_toolTip.IsWindow())
+		{
+			m_toolTip.Create(msg.hWnd, NULL, NULL, TTS_ALWAYSTIP | TTS_NOPREFIX,WS_EX_TOPMOST);
+			if (!m_toolTip.IsWindow())
+			{
+				WTF;
+			}
+			m_toolTip.SetWindowLongPtr(GWLP_USERDATA,(LONG_PTR)msg.hWnd);
+
+			CSize size;
+			GetSize(size);
+			m_toolTip.SetMaxTipWidth(260);
+			m_toolTip.AddTool(msg.hWnd,_T(""));
+			m_toolTip.SetDelayTime( TTDT_AUTOPOP, static_cast<int>(GetDoubleClickTime() * 10) ) ;
+			m_toolTip.SetDelayTime( TTDT_RESHOW, static_cast<int>(GetDoubleClickTime() * 10) ) ;
+			m_toolTip.Activate(TRUE);
+		}
+		MSG mouseMsg = { msg.hWnd, WM_MOUSEMOVE, 0, MAKELONG (arg.pt.x,arg.pt.y)};
+		m_toolTip.RelayEvent(&mouseMsg);
+
+		m_toolTip.UpdateTipText((LPCTSTR)toolTip,msg.hWnd);
+	}
 	arg.msgHandled = TRUE;
 }
 
 VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
 {
-	SetBorderWidth(1);
-	CXMsg_PaintElement msg;
-	ProcessXMessage(msg);
+	if (m_toolTip.IsWindow())
+	{
+		HWND hParentWnd = (HWND)m_toolTip.GetWindowLongPtr(GWLP_USERDATA);
+		m_toolTip.UpdateTipText(_T(""),hParentWnd);
+		m_toolTip.DestroyWindow();
+	}
 	arg.msgHandled = TRUE;
 }
