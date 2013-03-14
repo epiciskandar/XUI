@@ -87,7 +87,9 @@
     <None Include="postbuild.bat" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\Resource\Test.xml" />
+    <Xml Include="..\Resource\Test.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />

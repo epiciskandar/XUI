@@ -1,5 +1,7 @@
 #pragma once
 
+#define XUI_TRACEMSG
+
 #include "XFrameWork/XBase.hpp"
 #include "XFrameWork/XGaia.hpp"
 #include "XFrameWork/XResPool.hpp"
