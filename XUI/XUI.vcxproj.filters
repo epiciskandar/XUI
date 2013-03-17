@@ -141,5 +141,8 @@
     <ClInclude Include="XUI\Others\CFile.hpp">
       <Filter>XUI\XFrameWork\3rd</Filter>
     </ClInclude>
+    <ClInclude Include="XUI\Others\BLog.hpp">
+      <Filter>XUI\XFrameWork\3rd</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

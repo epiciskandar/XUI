@@ -1,5 +1,6 @@
 #pragma once
 #include "XDefine.hpp"
+#include <shlobj.h>
 
 namespace Util
 { 
@@ -10,6 +11,7 @@ namespace Util
 		XResult Format(CString& path,BOOL slash=UseSlash);
 		XResult FormatDirPath(CString& path,BOOL slash=UseSlash);
 		XResult RemoveLastSplit(CString& path,BOOL slash=UseSlash);
+		XResult GetKnownPath(REFKNOWNFOLDERID id,CString& path);
 	}
 
 	namespace String
@@ -80,6 +82,18 @@ namespace Util
 				path.Delete(path.GetLength()-1,1);
 			}
 			return XResult_OK;
+		}
+
+		XResult GetKnownPath( REFKNOWNFOLDERID id,CString& path )
+		{
+			PWSTR answer;
+			if (SUCCEEDED(SHGetKnownFolderPath(id,KF_FLAG_NO_ALIAS,0,&answer)))
+			{
+				path = answer;
+				CoTaskMemFree(answer);
+				return XResult_OK;
+			}
+			return XResult_Fail;
 		}
 
 	}

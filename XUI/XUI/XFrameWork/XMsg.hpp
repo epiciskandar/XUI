@@ -34,7 +34,19 @@ public:
 	std::list<CString>	processStep;
 	~CXMsg()
 	{
-		// log output
+		if (!processStep.empty())
+		{
+			blog::CBLog& logger = blog::CBLog::GetInstance();
+			LPCTSTR test = GetMyMsgName();
+			logger.Logf(DeviceMask_All,_T("-------Msg : %s begin\n"),(LPCTSTR)GetMyMsgName());
+			logger.IncreaseIndent();
+			for (auto& i:processStep)
+			{
+				logger.Log(DeviceMask_All,(LPCTSTR)i);
+			}
+			logger.DecreaseIndent();
+			logger.Logf(DeviceMask_All,_T("========Msg : %s end\n"),(LPCTSTR)GetMyMsgName());
+		}
 	}
 #endif
 };

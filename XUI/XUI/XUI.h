@@ -41,6 +41,9 @@ public:
 private:
 	CAppModule m_atlModule;
 	HINSTANCE m_hInst;
+
+	blog::CLogDeviceFile	m_fileLogger;
+	blog::CLogDeviceConsole	m_consoleLogger;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,11 +61,31 @@ BOOL CXUI::Initialize( HINSTANCE hInst )
 	ICC_TREEVIEW_CLASSES | 
 	ICC_STANDARD_CLASSES);
 	m_atlModule.Init(NULL,m_hInst);
+
+	blog::CBLog& logger = blog::CBLog::GetInstance();
+	CString logFilePath;
+	Util::Path::GetKnownPath(FOLDERID_RoamingAppData,logFilePath);
+	if (!logFilePath.IsEmpty())
+	{
+		logFilePath += _T("/XUI");
+		CreateDirectory(logFilePath,NULL);
+		logFilePath += _T("/LogOut.txt");
+		m_fileLogger.Open(logFilePath);
+		logger.AddDevice(blog::BLOG_FILE,&m_fileLogger);
+	}
+	m_consoleLogger.Open();
+	logger.AddDevice(blog::BLOG_CONSOLE,&m_consoleLogger);
 	return TRUE;
 }
 
 VOID CXUI::Finalize()
 {
+	blog::CBLog& logger = blog::CBLog::GetInstance();
+	logger.RemoveDevice(blog::BLOG_CONSOLE);
+	logger.RemoveDevice(blog::BLOG_FILE);
+	m_consoleLogger.Close();
+	m_fileLogger.Close();
+	delete &logger;
 	m_atlModule.Term();
 }
 
