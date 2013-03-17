@@ -43,11 +43,11 @@ VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 		GetColor(color);
 		CPen pen;
 		pen.CreatePen(PS_SOLID,1,color);
-		CGDIHandleSwitcher switcher(m_memDC->m_hDC,pen,FALSE);
+		CGDIHandleSwitcher switcher(msg.drawDevice.dc,pen,FALSE);
 		DRAWTEXTPARAMS params;
 		ZeroMemory(&params,sizeof(params));
 		params.cbSize = sizeof(params);
-		m_memDC->DrawTextEx(
+		msg.drawDevice.dc.DrawTextEx(
 			text.GetBuffer(text.GetLength()),
 			text.GetLength(),
 			rect,DT_CENTER | DT_SINGLELINE | DT_VCENTER,
