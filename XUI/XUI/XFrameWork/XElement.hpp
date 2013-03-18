@@ -377,6 +377,13 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 {
 	URP(arg);
+	BOOL bGhost = FALSE;
+	GetGhost(bGhost);
+	if ( bGhost ) //设置了Ghost属性 跳过绘制
+	{
+		return;
+	}
+
 	BOOL layoutInvalid = TRUE;
 	GetLayoutInvalid(layoutInvalid);
 	if (layoutInvalid)
