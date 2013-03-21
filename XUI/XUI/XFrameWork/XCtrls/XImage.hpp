@@ -40,7 +40,7 @@ VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 	{
 		m_img.Draw(msg.drawDevice.dc,0,0,-1,-1,rect);
 
-		_SendXMessageToChildren(msg);
+		_SendXMsg(msg);
 	}
 	msg.msgHandled = TRUE;
 }

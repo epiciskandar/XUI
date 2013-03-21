@@ -121,8 +121,7 @@ public:
 	Property::CXProperty& GetPrpertyRef()	{return m_property;};
 
 protected:
-	VOID _SendXMessageToChildren(CXMsg& pMsg);
-	VOID _RaiseXMessageUp(CXMsg& msg);
+	VOID _SendXMsg(CXMsg& pMsg);
 
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);
@@ -202,32 +201,51 @@ XResult CXElement::ProcessXMessage( CXMsg& msg )
 		OnXMsg(CXMsg_PaintElement)
 		OnXMsg(CXMsg_AttachDC)
 	END_XMSG_MAP;
-	if (!msg.msgHandled)
-	{
-		_SendXMessageToChildren(msg);
-	}
+	_SendXMsg(msg);
 	return XResult_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
+VOID CXElement::_SendXMsg( CXMsg& pMsg )
 {
-	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+	if (pMsg.msgPolicy==MsgDispatchPolicy::Processor && pMsg.msgHandled)
 	{
-		XSmartPtr<CXElement> pElement = *i;
-		pElement->ProcessXMessage( pMsg );
+		return;
 	}
-}
 
-VOID CXElement::_RaiseXMessageUp(CXMsg& msg)
-{
-	ElementRef fatherElement;
-	fatherElement = GetFather();
-	while (fatherElement && !msg.msgHandled)
+	switch (pMsg.msgDirection)
 	{
-		fatherElement->ProcessXMessage(msg);
-		fatherElement = fatherElement->GetFather();
+	case MsgDirection::UpToRoot:
+	case MsgDirection::UpToRootThenDown:
+		if (m_father)
+		{
+			ElementRef(NodeRef(m_father))->ProcessXMessage(pMsg);
+		}
+		else
+		{
+			if (pMsg.msgDirection == MsgDirection::UpToRootThenDown)
+			{
+				pMsg.msgDirection = MsgDirection::Down;
+				_SendXMsg(pMsg);
+			}
+		}
+		break;
+		break;
+	case MsgDirection::Down:
+		for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+		{
+			if (pMsg.msgPolicy==MsgDispatchPolicy::Processor && pMsg.msgHandled)
+			{
+				return;
+			}
+			XSmartPtr<CXElement> pElement = *i;
+			pElement->ProcessXMessage( pMsg );
+		}
+		break;
+	default:
+		WTF;
+		break;
 	}
 }
 
@@ -403,7 +421,7 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	CPoint oriOffset = arg.offsetFix;
 	arg.offsetFix += point;
 
-	_SendXMessageToChildren(arg);
+	_SendXMsg(arg);
 	arg.offsetFix = oriOffset;
 
 	arg.msgHandled = TRUE;
@@ -449,14 +467,14 @@ VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 
 	if (arg.paintChildren)
 	{
-		_SendXMessageToChildren(arg);
+		_SendXMsg(arg);
 	}
 
 	if (updated)
 	{
 		CXMsg_Invalidate msg;
 		msg.invalidRect = ElementUtil::GetElementRectInClientCoord(this);
-		_RaiseXMessageUp(msg);
+		_SendXMsg(msg);
 	}
 }
 
@@ -498,7 +516,7 @@ VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 	if (XSUCCEEDED(GetToolTip(toolTip)))
 	{
 		CXMsg_GetHWnd msg;
-		_RaiseXMessageUp(msg);
+		_SendXMsg(msg);
 		if (!m_toolTip.IsWindow())
 		{
 			m_toolTip.Create(msg.hWnd, NULL, NULL, TTS_ALWAYSTIP | TTS_NOPREFIX,WS_EX_TOPMOST);

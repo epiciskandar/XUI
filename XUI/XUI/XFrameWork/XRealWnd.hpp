@@ -231,7 +231,7 @@ LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
 		CXMsg_AttachDC msg;
 		msg.hostWnd = m_hWnd;
 		msg.hostDC = GetDC();
-		_SendXMessageToChildren(msg);
+		_SendXMsg(msg);
 	}
 
 	CXMsg_Paint msg;
