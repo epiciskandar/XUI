@@ -6,7 +6,7 @@
 
 #define XMessage(_name) \
 public: \
-	static CString GetXMsgName(){return CString(#_name);} \
+	static CString GetXMsgName(){return CString(L#_name);} \
 	virtual CString GetMyMsgName() const {return GetXMsgName();}
 
 #ifdef XUI_TRACEMSG
@@ -59,7 +59,6 @@ public:
 		if (!processStep.empty())
 		{
 			blog::CBLog& logger = blog::CBLog::GetInstance();
-			LPCTSTR test = GetMyMsgName();
 			logger.Logf(DeviceMask_All,_T("-------Msg : %s begin\n"),(LPCTSTR)GetMyMsgName());
 			logger.IncreaseIndent();
 			for (auto& i:processStep)

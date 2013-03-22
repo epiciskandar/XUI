@@ -145,7 +145,7 @@ namespace blog
 		CString strFormat;
 		va_list vlist;
 		va_start(vlist,fmt);
-		strFormat.Format(fmt,vlist);
+		strFormat.FormatV(fmt,vlist);
 		va_end(vlist);
 		return Log(deviceMask,strFormat,TRUE,FALSE);
 	}
@@ -274,6 +274,7 @@ namespace blog
 			{
 				logFile = param;
 				errno_t err = _tfopen_s(&m_fp,logFile,_T("at+"));
+				err = err;
 				if (m_fp)
 				{
 					CTime currTime = CTime::GetCurrentTime();
@@ -311,7 +312,7 @@ namespace blog
 	class CLogDeviceDBGView:public CLogDeviceBase
 	{
 	public:
-		virtual BOOL Open(LPCTSTR param=NULL){return TRUE;};
+		virtual BOOL Open(LPCTSTR param=NULL){param;return TRUE;};
 		virtual void Close(){};
 		virtual void Write(LPCTSTR strLog)
 		{
@@ -323,7 +324,7 @@ namespace blog
 	class CLogDeviceMem : public CLogDeviceBase
 	{
 	public:
-		virtual BOOL Open(LPCTSTR param=NULL){return TRUE;};
+		virtual BOOL Open(LPCTSTR param=NULL){param;return TRUE;};
 		virtual void Close(){};
 		virtual void Write(LPCTSTR strLog)
 		{
@@ -350,6 +351,7 @@ namespace blog
 
 		virtual BOOL Open(LPCTSTR param=NULL)
 		{
+			param;
 			if (::AllocConsole())
 			{
 				m_free_console_on_close = true;
