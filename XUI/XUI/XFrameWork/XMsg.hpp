@@ -15,6 +15,7 @@ public: \
 		CString fmt; \
 		fmt.Format(_T("ID: %s \t Function:%s"),_id,__FUNCTIONW__); \
 		_msg.processStep.push_back(fmt); \
+		_msg.msgName = _msg.GetMyMsgName(); \
 	}
 #else
 #define XMsgTrace(_msg,_id) ;
@@ -53,20 +54,21 @@ public:
 	{};
 
 #ifdef XUI_TRACEMSG
+	CString msgName;
 	std::list<CString>	processStep;
 	~CXMsg()
 	{
 		if (!processStep.empty())
 		{
 			blog::CBLog& logger = blog::CBLog::GetInstance();
-			logger.Logf(DeviceMask_All,_T("-------Msg : %s begin\n"),(LPCTSTR)GetMyMsgName());
+			logger.Logf(DeviceMask_All,_T("-------Msg : %s begin\n"),msgName);
 			logger.IncreaseIndent();
 			for (auto& i:processStep)
 			{
 				logger.Log(DeviceMask_All,(LPCTSTR)i);
 			}
 			logger.DecreaseIndent();
-			logger.Logf(DeviceMask_All,_T("========Msg : %s end\n"),(LPCTSTR)GetMyMsgName());
+			logger.Logf(DeviceMask_All,_T("========Msg : %s end\n"),msgName);
 		}
 	}
 #endif
