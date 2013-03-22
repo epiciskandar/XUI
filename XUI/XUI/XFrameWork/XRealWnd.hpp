@@ -193,7 +193,6 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 		m_ignorePropertyChange = TRUE;
 		SetRect(wndRect);
 		m_ignorePropertyChange = FALSE;
-
 		return XResult_OK;
 	}
 	return XResult_Fail;
@@ -224,6 +223,8 @@ LRESULT CXRealWnd::_Translate_WM_CREATE(WPARAM wParam,LPARAM lParam)
 LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
 {
 	URP(wParam,lParam);
+
+
 	if (m_firstPaint)
 	{
 		m_firstPaint = FALSE;

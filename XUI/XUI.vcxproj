@@ -84,13 +84,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="postbuild.bat" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\Resource\Test.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="WinMain.cpp">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
+    </ClCompile>
     <ClCompile Include="XUI\Others\CBuffer.cpp" />
     <ClCompile Include="XUI\TinyXML\tinystr.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxml.cpp" />
