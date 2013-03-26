@@ -82,11 +82,11 @@ namespace blog
 
 	//////////////////////////////////////////////////////////////////////////
 	// 
-	CBLog::CBLog(void) : m_instance(0), m_indent(0)
+	inline CBLog::CBLog(void) : m_instance(0), m_indent(0)
 	{
 	}
 
-	CBLog::~CBLog(void)
+	inline CBLog::~CBLog(void)
 	{
 		LogDeviceListType::iterator i;
 		i = m_logDevice.begin();
@@ -98,7 +98,7 @@ namespace blog
 		}
 	}
 
-	void CBLog::AddDevice( BLOG_TYPE type,CLogDeviceBase* device )
+	inline void CBLog::AddDevice( BLOG_TYPE type,CLogDeviceBase* device )
 	{
 		m_cs.Enter();
 		if (m_logDevice.find(type) != m_logDevice.end())
@@ -109,7 +109,7 @@ namespace blog
 		m_cs.Leave();
 	}
 
-	void CBLog::Log( DWORD deviceMask,LPCTSTR strlog,BOOL info/*=TRUE*/,BOOL autoEndLine/*=TRUE*/ )
+	inline void CBLog::Log( DWORD deviceMask,LPCTSTR strlog,BOOL info/*=TRUE*/,BOOL autoEndLine/*=TRUE*/ )
 	{
 		CString logText;
 		if (info)
@@ -140,7 +140,7 @@ namespace blog
 		m_cs.Leave();
 	}
 
-	void CBLog::Logf( DWORD deviceMask,LPCTSTR fmt,... )
+	inline void CBLog::Logf( DWORD deviceMask,LPCTSTR fmt,... )
 	{
 		CString strFormat;
 		va_list vlist;
@@ -150,7 +150,7 @@ namespace blog
 		return Log(deviceMask,strFormat,TRUE,FALSE);
 	}
 
-	void CBLog::_AddIndent(CString &strLog)
+	inline void CBLog::_AddIndent(CString &strLog)
 	{
 		if (m_indent)
 		{
@@ -162,7 +162,7 @@ namespace blog
 		}
 	}
 
-	void CBLog::_AddInfo( CString &strLog )
+	inline void CBLog::_AddInfo( CString &strLog )
 	{
 		time_t ct = time(NULL);
 		tm otm;
@@ -186,7 +186,7 @@ namespace blog
 		}
 	}
 
-	void CBLog::_AddPrefix( CString &strLog )
+	inline void CBLog::_AddPrefix( CString &strLog )
 	{
 		PrefixVectorType::iterator i;
 		i = m_Prefix.begin();
@@ -205,7 +205,7 @@ namespace blog
 		//strLog += _T(" \t");
 	}
 
-	void CBLog::AddPrefix( LPCTSTR strPrefix )
+	inline void CBLog::AddPrefix( LPCTSTR strPrefix )
 	{
 		ATLASSERT(strPrefix);
 		if (strPrefix)
@@ -214,7 +214,7 @@ namespace blog
 		}
 	}
 
-	void CBLog::RemoveLastPrefix()
+	inline void CBLog::RemoveLastPrefix()
 	{
 		if (!m_Prefix.empty())
 		{
@@ -222,7 +222,7 @@ namespace blog
 		}
 	}
 
-	CLogDeviceBase* CBLog::GetDevice( BLOG_TYPE type )
+	inline CLogDeviceBase* CBLog::GetDevice( BLOG_TYPE type )
 	{
 		LogDeviceListType::iterator i;
 		i = m_logDevice.find(type);
@@ -233,7 +233,7 @@ namespace blog
 		return NULL;
 	}
 
-	CLogDeviceBase* CBLog::RemoveDevice( BLOG_TYPE type )
+	inline CLogDeviceBase* CBLog::RemoveDevice( BLOG_TYPE type )
 	{
 		LogDeviceListType::iterator i;
 		i = m_logDevice.find(type);
@@ -246,7 +246,7 @@ namespace blog
 		return NULL;
 	}
 
-	void CBLog::SetThreadName( DWORD threadID,LPCTSTR name )
+	inline void CBLog::SetThreadName( DWORD threadID,LPCTSTR name )
 	{
 		ThreadNameMap::iterator i;
 		i = m_threadNameMap.find(threadID);

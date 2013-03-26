@@ -38,7 +38,7 @@ End_Description;
 
 #define RecordXClass(xclass) m_record[xclass::GetMyClassName()] = []{return new xclass;};
 
-CXGaia::CXGaia()
+inline CXGaia::CXGaia()
 {
 	RecordXClass(CXElement);
 	RecordXClass(CXRealWnd);
@@ -46,7 +46,7 @@ CXGaia::CXGaia()
 	RecordXClass(CXImage);
 }
 
-NodeRef CXGaia::Create( CString className )
+inline NodeRef CXGaia::Create( CString className )
 {
 	auto i = m_record.find(className);
 	if (i != m_record.end())
@@ -56,7 +56,7 @@ NodeRef CXGaia::Create( CString className )
 	return nullptr;
 }
 
-NodeRef CXGaia::CreateFromXML( CString xmlFile )
+inline NodeRef CXGaia::CreateFromXML( CString xmlFile )
 {
 	CStringA xmlFileA(xmlFile);
 	TiXmlDocument doc;
@@ -86,7 +86,7 @@ NodeRef CXGaia::CreateFromXML( CString xmlFile )
 	return nullptr;
 }
 
-NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
+inline NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 {
 	CStringA strClass = pElement->Value();
 	NodeRef node;
@@ -115,7 +115,7 @@ NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 	return node;
 }
 
-XResult CXGaia::_CheckAndSkipXMLRoot( TiXmlElement* pRoot )
+inline XResult CXGaia::_CheckAndSkipXMLRoot( TiXmlElement* pRoot )
 {
 	CheckParam(pRoot);
 	CStringA nodeValue = pRoot->Value();
@@ -134,7 +134,7 @@ XResult CXGaia::_CheckAndSkipXMLRoot( TiXmlElement* pRoot )
 	return XResult_Error;
 }
 
-XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElement )
+inline XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElement )
 {
 	CheckParam(node && pElement);
 	XSmartPtr<CXElement> element = node;

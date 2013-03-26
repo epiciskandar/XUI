@@ -32,7 +32,7 @@ End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
-VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
+inline VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
 	CRect rect;
 	GetRect(rect);
@@ -45,7 +45,7 @@ VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 	msg.msgHandled = TRUE;
 }
 
-XResult CXImage::ProcessXMessage( CXMsg& msg )
+inline XResult CXImage::ProcessXMessage( CXMsg& msg )
 {
 	BaseClass::ProcessXMessage(msg);
 	
@@ -57,7 +57,7 @@ XResult CXImage::ProcessXMessage( CXMsg& msg )
 	return XResult_OK;
 }
 
-XResult CXImage::SetXMLProperty( CString name,CString value )
+inline XResult CXImage::SetXMLProperty( CString name,CString value )
 {
 	BaseClass::SetXMLProperty(name,value);
 
@@ -68,7 +68,7 @@ XResult CXImage::SetXMLProperty( CString name,CString value )
 	return XResult_OK;
 }
 
-VOID CXImage::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
+inline VOID CXImage::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 {
 	if (arg.name == Property::File)
 	{

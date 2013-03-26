@@ -34,11 +34,11 @@ public: \
 	typedef _baseclass BaseClass;
 
 #define MyNameIs(_className) \
-CString _className :: GetMyClassName() \
+inline CString _className :: GetMyClassName() \
 { \
 	return CString(_CRT_WIDE(#_className)); \
 } \
-CString _className :: GetDescription() \
+inline CString _className :: GetDescription() \
 { \
 	CString description; \
 	description.AppendFormat(_T("This is class %s.\n"),CString(_CRT_WIDE(#_className)));
