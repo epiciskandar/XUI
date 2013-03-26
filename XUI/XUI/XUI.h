@@ -1,6 +1,7 @@
 #pragma once
 
-#define XUI_TRACEMSG
+//#define XUI_TRACEMSG
+//#define XUI_DEBUGCONSOLE
 
 #include "XFrameWork/XBase.hpp"
 #include "XFrameWork/XGaia.hpp"
@@ -73,8 +74,10 @@ BOOL CXUI::Initialize( HINSTANCE hInst )
 		m_fileLogger.Open(logFilePath);
 		logger.AddDevice(blog::BLOG_FILE,&m_fileLogger);
 	}
+#ifdef XUI_DEBUGCONSOLE
 	m_consoleLogger.Open();
 	logger.AddDevice(blog::BLOG_CONSOLE,&m_consoleLogger);
+#endif
 	return TRUE;
 }
 
