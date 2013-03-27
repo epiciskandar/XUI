@@ -180,7 +180,7 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 		rect.bottom = rect.top + windowSize.cy;
 	}
 	AdjustWindowRectEx(rect,style,FALSE,ExStyle);
-	HWND hWnd = CWindowImpl::Create(hwndParent,rect,title,WS_POPUP|WS_MAXIMIZEBOX|WS_SIZEBOX,ExStyle);
+	HWND hWnd = CWindowImpl::Create(hwndParent,rect,title,WS_CLIPCHILDREN|WS_CLIPSIBLINGS|WS_POPUP,ExStyle);
 	SetWindowLong(GWL_STYLE,style);
 	SetWindowLong(GWL_EXSTYLE,ExStyle);
 

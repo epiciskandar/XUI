@@ -41,11 +41,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>XUI\CXImage\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>XUI\CXImage\;VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>XUI\CXImage\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>XUI\CXImage\;VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -88,7 +88,9 @@
     <None Include="postbuild.bat" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\Resource\Test.xml" />
+    <Xml Include="..\Resource\Test.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -101,6 +103,7 @@
     <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="XUI\Others\BLog.hpp" />
     <ClInclude Include="XUI\Others\CBuffer.h" />
     <ClInclude Include="XUI\Others\CFile.hpp" />
     <ClInclude Include="XUI\TinyXML\tinystr.h" />

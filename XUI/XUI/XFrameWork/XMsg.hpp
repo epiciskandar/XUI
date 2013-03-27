@@ -9,6 +9,19 @@ public: \
 	static CString GetXMsgName(){return CString(#_name);} \
 	virtual CString GetMyMsgName() const {return GetXMsgName();}
 
+#ifdef XUI_TRACEMSG
+#define XMsgTrace(_msg,_id) \
+	{ \
+		CString fmt; \
+		fmt.Format(_T("ID: %s \t Function:%s"),_id,__FUNCTIONW__); \
+		_msg.processStep.push_back(fmt); \
+	}
+#else
+#define XMsgTrace(_msg,_id) ;
+#endif
+
+#define XMsgTraceID(_msg)	XMsgTrace(_msg,GetID())
+
 class CXMsg
 {
 	XMessage(CXMsg);
@@ -16,6 +29,26 @@ public:
 	BOOL	msgHandled;
 	LRESULT	msgRet;
 	CXMsg() : msgHandled(FALSE),msgRet(0){};
+
+#ifdef XUI_TRACEMSG
+	std::list<CString>	processStep;
+	~CXMsg()
+	{
+		if (!processStep.empty())
+		{
+			blog::CBLog& logger = blog::CBLog::GetInstance();
+			LPCTSTR test = GetMyMsgName();
+			logger.Logf(DeviceMask_All,_T("-------Msg : %s begin\n"),(LPCTSTR)GetMyMsgName());
+			logger.IncreaseIndent();
+			for (auto& i:processStep)
+			{
+				logger.Log(DeviceMask_All,(LPCTSTR)i);
+			}
+			logger.DecreaseIndent();
+			logger.Logf(DeviceMask_All,_T("========Msg : %s end\n"),(LPCTSTR)GetMyMsgName());
+		}
+	}
+#endif
 };
 
 //////////////////////////////////////////////////////////////////////////

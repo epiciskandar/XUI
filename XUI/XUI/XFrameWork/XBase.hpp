@@ -16,6 +16,8 @@
 #include "../WTL/atlmisc.h"
 #include "Others/CFile.hpp"
 
+#include "Others/BLog.hpp"
+
 class CXBase
 {
 public:

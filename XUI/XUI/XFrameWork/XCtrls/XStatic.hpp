@@ -15,7 +15,7 @@ class CXStatic : public CXElement
 	virtual XResult ProcessXMessage(CXMsg& msg);
 
 public:
-	VOID On_CXMsg_PaintElement(CXMsg_PaintElement& msg);
+	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
 };
 
 typedef XSmartPtr<CXStatic> CXStaticRef;
@@ -26,26 +26,28 @@ End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
-VOID CXStatic::On_CXMsg_PaintElement(CXMsg_PaintElement& msg)
+VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
-	BaseClass::On_CXMsg_PaintElement(msg);
+	XMsgTraceID(msg);
+
+	BaseClass::On_CXMsg_Paint(msg);
 
 	CRect rect;
 	GetRect(rect);
-	rect.OffsetRect(-rect.left,-rect.top);
+	rect.OffsetRect(msg.offsetFix);
 	CString text;
 	GetText(text);
-	//if (msg.drawDevice.IsRectNeedRePaint(rect))
+	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
 		COLORREF color;
 		GetColor(color);
 		CPen pen;
 		pen.CreatePen(PS_SOLID,1,color);
-		CGDIHandleSwitcher switcher(m_memDC->m_hDC,pen,FALSE);
+		CGDIHandleSwitcher switcher(msg.drawDevice.dc,pen,FALSE);
 		DRAWTEXTPARAMS params;
 		ZeroMemory(&params,sizeof(params));
 		params.cbSize = sizeof(params);
-		m_memDC->DrawTextEx(
+		msg.drawDevice.dc.DrawTextEx(
 			text.GetBuffer(text.GetLength()),
 			text.GetLength(),
 			rect,DT_CENTER | DT_SINGLELINE | DT_VCENTER,
@@ -60,7 +62,7 @@ XResult CXStatic::ProcessXMessage( CXMsg& msg )
 	BaseClass::ProcessXMessage(msg);
 	
 	BEGIN_XMSG_MAP(msg)
-		OnXMsg(CXMsg_PaintElement);
+		OnXMsg(CXMsg_Paint);
 	END_XMSG_MAP;
 
 	return XResult_OK;
