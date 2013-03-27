@@ -32,6 +32,13 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 
 	BaseClass::On_CXMsg_Paint(msg);
 
+	BOOL bGhost = FALSE;
+	GetGhost (bGhost);
+	if (bGhost) //Ghost 属性为真 跳过绘制
+	{
+		return;
+	}
+
 	CRect rect;
 	GetRect(rect);
 	rect.OffsetRect(msg.offsetFix);
