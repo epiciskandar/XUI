@@ -8,6 +8,7 @@ class CXStatic : public CXElement
 	XProperty_Begin
 		XProperty(Text)
 		XProperty(TextColor)
+        XProperty(FontName)
 	XProperty_End;
 
 	virtual XResult SetXMLProperty( CString name,CString value );
@@ -32,17 +33,44 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 
 	BaseClass::On_CXMsg_Paint(msg);
 
+	BOOL bGhost = FALSE;
+	GetGhost (bGhost);
+	if (bGhost) //Ghost 属性为真 跳过绘制
+	{
+		return;
+	}
+
 	CRect rect;
 	GetRect(rect);
 	rect.OffsetRect(msg.offsetFix);
 	CString text;
 	GetText(text);
+    CString fontName;
+    GetFontName (fontName);
+
 	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
 		COLORREF color;
 		GetColor(color);
 		CPen pen;
-		pen.CreatePen(PS_SOLID,1,color);
+        pen.CreatePen(PS_SOLID,1,color);
+        
+        if (fontName != _T(""))
+        {
+            /* 修改字体 */
+            LOGFONT lf = {0};
+            CFont font(msg.drawDevice.dc.GetCurrentFont());
+            CFont newFont;
+            font.GetLogFont (&lf);
+            lf.lfCharSet = 134;
+            lf.lfHeight = -150;
+            lf.lfWidth = 0;
+            lstrcpy (lf.lfFaceName, fontName);
+            newFont.CreateFontIndirect (&lf);
+            msg.drawDevice.dc.SelectFont (newFont.m_hFont);
+         }
+
+
 		CGDIHandleSwitcher switcher(msg.drawDevice.dc,pen,FALSE);
 		DRAWTEXTPARAMS params;
 		ZeroMemory(&params,sizeof(params));
