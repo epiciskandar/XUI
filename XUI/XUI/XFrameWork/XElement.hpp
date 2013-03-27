@@ -395,6 +395,12 @@ inline VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 inline VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 {
 	URP(arg);
+	BOOL bGhost = FALSE;
+	GetGhost (bGhost);
+	if (bGhost) //Ghost 属性为真 跳过绘制
+	{
+		return;
+	}
 	BOOL layoutInvalid = TRUE;
 	GetLayoutInvalid(layoutInvalid);
 	if (layoutInvalid)
@@ -429,6 +435,7 @@ inline VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 
 inline VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 {
+
 	arg.msgHandled = TRUE;
 	if (!m_memDC)
 	{
