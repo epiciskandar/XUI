@@ -7,15 +7,7 @@
         <XElement ID="Close" Size="20,20" ToolTip="关闭？Alt+F4就关掉了" Align="right" Margin="0,0,5,0" Color="255,0,0"/>
       </XElement>
       <XElement ID="Foot" Size="1,20" Color="176,103,241" BorderColor="220,30,30" ExpandWidth="true" Align="bottom">
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <XStatic Text="test" Size="50,1" Color="127,127,127" ExpandHeight="true" ToolTip="test" Ghost="true"/>
-=======
-        <XStatic Text="test" ToolTip="看毛" Size="50,1" Color="127,127,127" ExpandHeight="true"/>
->>>>>>> aff2cbdc073ac25a24a121d9ec8c071d3a41e7ad
-=======
         <XStatic ID="testStatic" Text="test" ToolTip="看毛" Size="50,1" Color="127,127,127" ExpandHeight="true"/>
->>>>>>> 018b2c836ffde983ef0797405ca438bc4eb93867
       </XElement>
     </XElement>
   </XRealWnd>

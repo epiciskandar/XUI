@@ -85,7 +85,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="postbuild.bat" />
   </ItemGroup>
   <ItemGroup>
@@ -94,14 +93,8 @@
     </Xml>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <ClCompile Include="WinMain.cpp">
-      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
-    </ClCompile>
-=======
     <ClCompile Include="uiResponse.cpp" />
     <ClCompile Include="WinMain.cpp" />
->>>>>>> 018b2c836ffde983ef0797405ca438bc4eb93867
     <ClCompile Include="XUI\Others\CBuffer.cpp" />
     <ClCompile Include="XUI\TinyXML\tinystr.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxml.cpp" />
