@@ -1,6 +1,7 @@
 #pragma once
 #include "XBase.hpp"
 #include "XTree.hpp"
+#include "XNotifier.hpp"
 #include "XMsg.hpp"
 #include "XProperty.hpp"
 #include "../WTL/atlctrls.h"

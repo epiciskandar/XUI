@@ -147,5 +147,8 @@
     <ClInclude Include="XUI\Others\BLog.hpp">
       <Filter>XUI\XFrameWork\3rd</Filter>
     </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XNotifier.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

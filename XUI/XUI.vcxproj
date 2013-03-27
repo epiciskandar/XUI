@@ -122,6 +122,7 @@
     <ClInclude Include="XUI\XFrameWork\XLayouter\LayouterBase.hpp" />
     <ClInclude Include="XUI\XFrameWork\XLayouter\Offset.hpp" />
     <ClInclude Include="XUI\XFrameWork\XMsg.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XNotifier.hpp" />
     <ClInclude Include="XUI\XFrameWork\XProperty.hpp" />
     <ClInclude Include="XUI\XFrameWork\XPropertyValue.hpp" />
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
