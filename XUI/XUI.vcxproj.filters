@@ -62,6 +62,9 @@
     <ClCompile Include="XUI\Others\CBuffer.cpp">
       <Filter>XUI\XFrameWork\3rd</Filter>
     </ClCompile>
+    <ClCompile Include="uiResponse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XUI\XUI.h">

@@ -121,8 +121,7 @@ public:
 	Property::CXProperty& GetPrpertyRef()	{return m_property;};
 
 protected:
-	VOID _SendXMessageToChildren(CXMsg& pMsg);
-	VOID _RaiseXMessageUp(CXMsg& msg);
+	VOID _SendXMsg(CXMsg& pMsg);
 
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);
@@ -150,13 +149,13 @@ End_Description;
 //////////////////////////////////////////////////////////////////////////
 #include "XLayouter/Layouter.hpp"
 
-CXElement::CXElement()
+inline CXElement::CXElement()
 	: m_isLayouting(FALSE)
 	, m_memDC(nullptr)
 {
 }
 
-CXElement::~CXElement()
+inline CXElement::~CXElement()
 {
 	if (m_memDC)
 	{
@@ -164,7 +163,7 @@ CXElement::~CXElement()
 	}
 }
 
-XResult CXElement::SetXMLProperty( CString name,CString value )
+inline XResult CXElement::SetXMLProperty( CString name,CString value )
 {
 	XMLConvert_Begin(name,value)
 		XMLConvert(Rect)
@@ -190,7 +189,7 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 	return XResult_NotSupport;
 }
 
-XResult CXElement::ProcessXMessage( CXMsg& msg )
+inline XResult CXElement::ProcessXMessage( CXMsg& msg )
 {
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_PropertyChanged)
@@ -202,38 +201,57 @@ XResult CXElement::ProcessXMessage( CXMsg& msg )
 		OnXMsg(CXMsg_PaintElement)
 		OnXMsg(CXMsg_AttachDC)
 	END_XMSG_MAP;
-	if (!msg.msgHandled)
-	{
-		_SendXMessageToChildren(msg);
-	}
+	_SendXMsg(msg);
 	return XResult_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-VOID CXElement::_SendXMessageToChildren( CXMsg& pMsg )
+inline VOID CXElement::_SendXMsg( CXMsg& pMsg )
 {
-	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+	if (pMsg.msgPolicy==MsgDispatchPolicy::Processor && pMsg.msgHandled)
 	{
-		XSmartPtr<CXElement> pElement = *i;
-		pElement->ProcessXMessage( pMsg );
+		return;
 	}
-}
 
-VOID CXElement::_RaiseXMessageUp(CXMsg& msg)
-{
-	ElementRef fatherElement;
-	fatherElement = GetFather();
-	while (fatherElement && !msg.msgHandled)
+	switch (pMsg.msgDirection)
 	{
-		fatherElement->ProcessXMessage(msg);
-		fatherElement = fatherElement->GetFather();
+	case MsgDirection::UpToRoot:
+	case MsgDirection::UpToRootThenDown:
+		if (m_father)
+		{
+			ElementRef(NodeRef(m_father))->ProcessXMessage(pMsg);
+		}
+		else
+		{
+			if (pMsg.msgDirection == MsgDirection::UpToRootThenDown)
+			{
+				pMsg.msgDirection = MsgDirection::Down;
+				_SendXMsg(pMsg);
+			}
+		}
+		break;
+		break;
+	case MsgDirection::Down:
+		for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+		{
+			if (pMsg.msgPolicy==MsgDispatchPolicy::Processor && pMsg.msgHandled)
+			{
+				return;
+			}
+			XSmartPtr<CXElement> pElement = *i;
+			pElement->ProcessXMessage( pMsg );
+		}
+		break;
+	default:
+		WTF;
+		break;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-XResult CXElement::GetPosition(Property::PositionType& value)
+inline XResult CXElement::GetPosition(Property::PositionType& value)
 {
 	CRect rect;
 	GetRect(rect);
@@ -241,7 +259,7 @@ XResult CXElement::GetPosition(Property::PositionType& value)
 	return XResult_OK;
 }
 
-XResult CXElement::SetPosition(Property::PositionType param)
+inline XResult CXElement::SetPosition(Property::PositionType param)
 {
 	CRect rect;
 	XResult result = GetRect(rect);
@@ -256,7 +274,7 @@ XResult CXElement::SetPosition(Property::PositionType param)
 	return SetRect(rect);
 }
 
-XResult CXElement::GetSize(Property::SizeType& value)
+inline XResult CXElement::GetSize(Property::SizeType& value)
 {
 	SetDefPropertyValue(Size,value);
 
@@ -270,7 +288,7 @@ XResult CXElement::GetSize(Property::SizeType& value)
 	return XResult_OK;
 }
 
-XResult CXElement::SetSize(Property::SizeType param)
+inline XResult CXElement::SetSize(Property::SizeType param)
 {
 	CRect rect;
 	GetRect(rect);
@@ -278,7 +296,7 @@ XResult CXElement::SetSize(Property::SizeType param)
 	return SetRect(rect);
 }
 
-XResult CXElement::GetLayoutRect(Property::LayoutRectType& value)
+inline XResult CXElement::GetLayoutRect(Property::LayoutRectType& value)
 {
 	GetRect(value);
 	CRect padding;
@@ -290,7 +308,7 @@ XResult CXElement::GetLayoutRect(Property::LayoutRectType& value)
 	return XResult_OK;
 }
 
-XResult CXElement::SetLayoutRect(Property::LayoutRectType param)
+inline XResult CXElement::SetLayoutRect(Property::LayoutRectType param)
 {
 	CRect padding;
 	GetPadding(padding);
@@ -303,7 +321,7 @@ XResult CXElement::SetLayoutRect(Property::LayoutRectType param)
 
 //////////////////////////////////////////////////////////////////////////
 
-VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
+inline VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
 {
 	URP(arg);
 	if (arg.name == Property::Size)
@@ -315,12 +333,12 @@ VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
 	return;
 }
 
-VOID CXElement::On_CXMsg_SizeChanged( CXMsg_SizeChanged& arg )
+inline VOID CXElement::On_CXMsg_SizeChanged( CXMsg_SizeChanged& arg )
 {
 	URP(arg);
 }
 
-VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
+inline VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 {
 	URP(arg);
 
@@ -374,7 +392,7 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 	}
 }
 
-VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
+inline VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 {
 	URP(arg);
 	BOOL bGhost = FALSE;
@@ -410,13 +428,13 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	CPoint oriOffset = arg.offsetFix;
 	arg.offsetFix += point;
 
-	_SendXMessageToChildren(arg);
+	_SendXMsg(arg);
 	arg.offsetFix = oriOffset;
 
 	arg.msgHandled = TRUE;
 }
 
-VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
+inline VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 {
 	arg.msgHandled = TRUE;
 	if (!m_memDC)
@@ -456,18 +474,18 @@ VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 
 	if (arg.paintChildren)
 	{
-		_SendXMessageToChildren(arg);
+		_SendXMsg(arg);
 	}
 
 	if (updated)
 	{
 		CXMsg_Invalidate msg;
 		msg.invalidRect = ElementUtil::GetElementRectInClientCoord(this);
-		_RaiseXMessageUp(msg);
+		_SendXMsg(msg);
 	}
 }
 
-VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
+inline VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 {
 	if (arg.hostDC)
 	{
@@ -499,13 +517,13 @@ VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 	arg.msgHandled = FALSE;
 }
 
-VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
+inline VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 {
 	CString toolTip;
 	if (XSUCCEEDED(GetToolTip(toolTip)))
 	{
 		CXMsg_GetHWnd msg;
-		_RaiseXMessageUp(msg);
+		_SendXMsg(msg);
 		if (!m_toolTip.IsWindow())
 		{
 			m_toolTip.Create(msg.hWnd, NULL, NULL, TTS_ALWAYSTIP | TTS_NOPREFIX,WS_EX_TOPMOST);
@@ -531,7 +549,7 @@ VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 	arg.msgHandled = TRUE;
 }
 
-VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
+inline VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
 {
 	if (m_toolTip.IsWindow())
 	{

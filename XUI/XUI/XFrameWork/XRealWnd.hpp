@@ -104,18 +104,18 @@ End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
-CXRealWnd::CXRealWnd() : CWindowImpl()
+inline CXRealWnd::CXRealWnd() : CWindowImpl()
 	, m_ignorePropertyChange(FALSE)
 	, m_firstPaint(TRUE)
 {
 }
 
-VOID CXRealWnd::OnDestroy()
+inline VOID CXRealWnd::OnDestroy()
 {
 	PostMessage(WM_QUIT,0,0);
 }
 
-LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam )
+inline LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch(uMsg)
 	{
@@ -130,13 +130,13 @@ LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM lParam
 	return 0;
 }
 
-XResult CXRealWnd::GetHWnd(Property::HWndType& value)
+inline XResult CXRealWnd::GetHWnd(Property::HWndType& value)
 {
 	value = m_hWnd;
 	return XResult_OK;
 }
 
-XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
+inline XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 {
 	BOOL autoWidth;
 	GetAutoWidth(autoWidth);
@@ -198,7 +198,7 @@ XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 	return XResult_Fail;
 }
 
-XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
+inline XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 {
 	BaseClass::ProcessXMessage(msg);
 
@@ -214,13 +214,13 @@ XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 //////////////////////////////////////////////////////////////////////////
 // message translate
 
-LRESULT CXRealWnd::_Translate_WM_CREATE(WPARAM wParam,LPARAM lParam)
+inline LRESULT CXRealWnd::_Translate_WM_CREATE(WPARAM wParam,LPARAM lParam)
 {
 	URP(wParam,lParam);
 	return 0;
 }
 
-LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
+inline LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
 {
 	URP(wParam,lParam);
 
@@ -232,7 +232,7 @@ LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
 		CXMsg_AttachDC msg;
 		msg.hostWnd = m_hWnd;
 		msg.hostDC = GetDC();
-		_SendXMessageToChildren(msg);
+		_SendXMsg(msg);
 	}
 
 	CXMsg_Paint msg;
@@ -252,7 +252,7 @@ LRESULT CXRealWnd::_Translate_WM_PAINT( WPARAM wParam,LPARAM lParam )
 	return msg.msgRet;
 }
 
-LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
+inline LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
 {
 	if (wParam != SIZE_RESTORED)
 	{
@@ -277,7 +277,7 @@ LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
 	return 0;
 }
 
-XResult CXRealWnd::SetXMLProperty( CString name,CString value )
+inline XResult CXRealWnd::SetXMLProperty( CString name,CString value )
 {
 	BaseClass::SetXMLProperty(name,value);
 	
@@ -292,7 +292,7 @@ XResult CXRealWnd::SetXMLProperty( CString name,CString value )
 	return XResult_OK;
 }
 
-VOID CXRealWnd::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
+inline VOID CXRealWnd::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 {
 	if (m_ignorePropertyChange)
 	{
@@ -332,7 +332,7 @@ VOID CXRealWnd::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 	}
 }
 
-VOID CXRealWnd::On_CXMsg_AppendElement(CXMsg_AppendElement& arg)
+inline VOID CXRealWnd::On_CXMsg_AppendElement(CXMsg_AppendElement& arg)
 {
 	if (arg.element && m_hWnd)
 	{
@@ -344,7 +344,7 @@ VOID CXRealWnd::On_CXMsg_AppendElement(CXMsg_AppendElement& arg)
 	}
 }
 
-LRESULT CXRealWnd::_Translate_WM_NCHITTEST( WPARAM wParam,LPARAM lParam )
+inline LRESULT CXRealWnd::_Translate_WM_NCHITTEST( WPARAM wParam,LPARAM lParam )
 {
 	URP(wParam);
 	POINTS points = MAKEPOINTS(lParam);
@@ -364,20 +364,20 @@ LRESULT CXRealWnd::_Translate_WM_NCHITTEST( WPARAM wParam,LPARAM lParam )
 	}
 }
 
-LRESULT CXRealWnd::_Translate_WM_MOUSEMOVE( WPARAM wParam,LPARAM lParam )
+inline LRESULT CXRealWnd::_Translate_WM_MOUSEMOVE( WPARAM wParam,LPARAM lParam )
 {
 	CPoint pos(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
 	return _Translate_MOUSEMOVE_MSG(wParam,pos);
 }
 
-LRESULT CXRealWnd::_Translate_WM_NCMOUSEMOVE( WPARAM wParam,LPARAM lParam )
+inline LRESULT CXRealWnd::_Translate_WM_NCMOUSEMOVE( WPARAM wParam,LPARAM lParam )
 {
 	CPoint pos(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
 	ScreenToClient(&pos);
 	return _Translate_MOUSEMOVE_MSG(wParam,pos);
 }
 
-LRESULT CXRealWnd::_Translate_MOUSEMOVE_MSG( WPARAM wParam,CPoint pointInClient )
+inline LRESULT CXRealWnd::_Translate_MOUSEMOVE_MSG( WPARAM wParam,CPoint pointInClient )
 {
 	URP(wParam);
 	ElementRef currHoverElement;
@@ -408,13 +408,13 @@ LRESULT CXRealWnd::_Translate_MOUSEMOVE_MSG( WPARAM wParam,CPoint pointInClient 
 	return 0;
 }
 
-VOID CXRealWnd::On_CXMsg_Invalidate( CXMsg_Invalidate& arg )
+inline VOID CXRealWnd::On_CXMsg_Invalidate( CXMsg_Invalidate& arg )
 {
 	InvalidateRect(arg.invalidRect,FALSE);
 	arg.msgHandled = TRUE;
 }
 
-VOID CXRealWnd::On_CXMsg_GetHWnd( CXMsg_GetHWnd& arg )
+inline VOID CXRealWnd::On_CXMsg_GetHWnd( CXMsg_GetHWnd& arg )
 {
 	arg.hWnd = m_hWnd;
 	arg.msgHandled = TRUE;

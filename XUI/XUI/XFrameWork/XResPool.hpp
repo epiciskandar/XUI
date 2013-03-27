@@ -18,16 +18,16 @@ MyNameIs(CXResPool)
 	I_Provide("资源目录的管理及路径字符串的转换")
 End_Description;
 
-CXResPool::CXResPool()
+inline CXResPool::CXResPool()
 {}
 
-XResult CXResPool::SetResDir( CString prefix,CString dirPath )
+inline XResult CXResPool::SetResDir( CString prefix,CString dirPath )
 {
 	m_convertMap[prefix] = dirPath;
 	return XResult_OK;
 }
 
-XResult CXResPool::TranslateResPath( CString& path )
+inline XResult CXResPool::TranslateResPath( CString& path )
 {
 	for (auto i=m_convertMap.begin(); i!=m_convertMap.end(); ++i)
 	{

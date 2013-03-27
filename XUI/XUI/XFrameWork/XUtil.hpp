@@ -27,7 +27,7 @@ namespace Util
 { 
 	namespace Path
 	{ 
-		XResult GetDir(CString& path,BOOL slash)
+		inline XResult GetDir(CString& path,BOOL slash)
 		{
 			Return_OnXError(Format(path));
 			int pos = path.ReverseFind(SplitChar(slash));
@@ -40,7 +40,7 @@ namespace Util
 			return XResult_OK;
 		}
 
-		XResult GetParentDir(CString& path,BOOL slash)
+		inline XResult GetParentDir(CString& path,BOOL slash)
 		{
 			Return_OnXError(Format(path,slash));
 			Return_OnXError(RemoveLastSplit(path,slash));
@@ -48,7 +48,7 @@ namespace Util
 			return XResult_OK;
 		}
 
-		XResult Format( CString& path,BOOL slash/*=TRUE*/ )
+		inline XResult Format( CString& path,BOOL slash/*=TRUE*/ )
 		{
 			path.Trim();
 			TCHAR slashes[] = {Slash,Slash,0};
@@ -66,7 +66,7 @@ namespace Util
 			return XResult_OK;
 		}
 
-		XResult FormatDirPath( CString& path,BOOL slash/*=TRUE*/ )
+		inline XResult FormatDirPath( CString& path,BOOL slash/*=TRUE*/ )
 		{
 			Return_OnXError(Format(path,slash));
 			Return_OnXError(RemoveLastSplit(path,slash));
@@ -74,7 +74,7 @@ namespace Util
 			return XResult_OK;
 		}
 
-		XResult RemoveLastSplit( CString& path,BOOL slash/*=UseSlash*/ )
+		inline XResult RemoveLastSplit( CString& path,BOOL slash/*=UseSlash*/ )
 		{
 			while ( path.GetLength()!=0 && 
 				path[path.GetLength()-1] == SplitChar(slash))
@@ -84,7 +84,7 @@ namespace Util
 			return XResult_OK;
 		}
 
-		XResult GetKnownPath( REFKNOWNFOLDERID id,CString& path )
+		inline XResult GetKnownPath( REFKNOWNFOLDERID id,CString& path )
 		{
 			PWSTR answer;
 			if (SUCCEEDED(SHGetKnownFolderPath(id,KF_FLAG_NO_ALIAS,0,&answer)))
@@ -100,7 +100,7 @@ namespace Util
 
 	namespace String
 	{
-		XResult UTF8ToUnicode( LPCSTR str,CString& outStr )
+		inline XResult UTF8ToUnicode( LPCSTR str,CString& outStr )
 		{
 			int targetLen = MultiByteToWideChar(CP_UTF8, 0, (LPCSTR)str, -1, NULL, 0);
 

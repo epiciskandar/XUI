@@ -1,6 +1,7 @@
 #pragma once
 
-#define XUI_TRACEMSG
+//#define XUI_TRACEMSG
+//#define XUI_DEBUGCONSOLE
 
 #include "XFrameWork/XBase.hpp"
 #include "XFrameWork/XGaia.hpp"
@@ -48,12 +49,12 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-CXUI::CXUI() : m_hInst(0)
+inline CXUI::CXUI() : m_hInst(0)
 {
 
 }
 
-BOOL CXUI::Initialize( HINSTANCE hInst )
+inline BOOL CXUI::Initialize( HINSTANCE hInst )
 {
 	ATLASSERT(m_hInst==0);
 	m_hInst = hInst;
@@ -73,12 +74,14 @@ BOOL CXUI::Initialize( HINSTANCE hInst )
 		m_fileLogger.Open(logFilePath);
 		logger.AddDevice(blog::BLOG_FILE,&m_fileLogger);
 	}
+#ifdef XUI_DEBUGCONSOLE
 	m_consoleLogger.Open();
 	logger.AddDevice(blog::BLOG_CONSOLE,&m_consoleLogger);
+#endif
 	return TRUE;
 }
 
-VOID CXUI::Finalize()
+inline VOID CXUI::Finalize()
 {
 	blog::CBLog& logger = blog::CBLog::GetInstance();
 	logger.RemoveDevice(blog::BLOG_CONSOLE);
@@ -89,7 +92,7 @@ VOID CXUI::Finalize()
 	m_atlModule.Term();
 }
 
-VOID CXUI::Work()
+inline VOID CXUI::Work()
 {
 	MSG msg;
 	while ( GetMessage(&msg, NULL, 0, 0) > 0 )
@@ -99,7 +102,7 @@ VOID CXUI::Work()
 	}
 }
 
-CXGaia& CXUI::GetGaia()
+inline CXGaia& CXUI::GetGaia()
 {
 	return CXGaia::GetInstance();
 }

@@ -6,7 +6,7 @@
 
 #define XMessage(_name) \
 public: \
-	static CString GetXMsgName(){return CString(#_name);} \
+	static CString GetXMsgName(){return CString(L#_name);} \
 	virtual CString GetMyMsgName() const {return GetXMsgName();}
 
 #ifdef XUI_TRACEMSG
@@ -15,6 +15,7 @@ public: \
 		CString fmt; \
 		fmt.Format(_T("ID: %s \t Function:%s"),_id,__FUNCTIONW__); \
 		_msg.processStep.push_back(fmt); \
+		_msg.msgName = _msg.GetMyMsgName(); \
 	}
 #else
 #define XMsgTrace(_msg,_id) ;
@@ -22,30 +23,52 @@ public: \
 
 #define XMsgTraceID(_msg)	XMsgTrace(_msg,GetID())
 
+enum class MsgDispatchPolicy
+{
+	BroadCast,
+	Processor,	// stop automatically while sb. processed
+};
+
+enum class MsgDirection
+{
+	UpToRoot,
+	UpToRootThenDown,
+	Down,
+};
+
 class CXMsg
 {
 	XMessage(CXMsg);
 public:
 	BOOL	msgHandled;
 	LRESULT	msgRet;
-	CXMsg() : msgHandled(FALSE),msgRet(0){};
+
+	MsgDispatchPolicy	msgPolicy;
+	MsgDirection		msgDirection;
+
+	CXMsg()
+		: msgHandled(FALSE)
+		, msgRet(0)
+		, msgPolicy(MsgDispatchPolicy::BroadCast)
+		, msgDirection(MsgDirection::Down)
+	{};
 
 #ifdef XUI_TRACEMSG
+	CString msgName;
 	std::list<CString>	processStep;
 	~CXMsg()
 	{
 		if (!processStep.empty())
 		{
 			blog::CBLog& logger = blog::CBLog::GetInstance();
-			LPCTSTR test = GetMyMsgName();
-			logger.Logf(DeviceMask_All,_T("-------Msg : %s begin\n"),(LPCTSTR)GetMyMsgName());
+			logger.Logf(DeviceMask_All,_T("-------Msg : %s begin\n"),msgName);
 			logger.IncreaseIndent();
 			for (auto& i:processStep)
 			{
 				logger.Log(DeviceMask_All,(LPCTSTR)i);
 			}
 			logger.DecreaseIndent();
-			logger.Logf(DeviceMask_All,_T("========Msg : %s end\n"),(LPCTSTR)GetMyMsgName());
+			logger.Logf(DeviceMask_All,_T("========Msg : %s end\n"),msgName);
 		}
 	}
 #endif
@@ -56,14 +79,14 @@ public:
 class CXMsg_GetListenList : public CXMsg
 {
 	XMessage(CXMsg_GetListenList);
-public:
+
 	std::list<CString> XMsgList;
 };
 
 class CXMsg_PropertyChanged : public CXMsg
 {
 	XMessage(CXMsg_PropertyChanged);
-public:
+
 	CString name;
 };
 
@@ -72,7 +95,7 @@ public:
 class CXMsg_Paint : public CXMsg
 {
 	XMessage(CXMsg_Paint);
-public:
+
 	CXDrawDevice	drawDevice;
 	CPoint			offsetFix;
 };
@@ -80,14 +103,14 @@ public:
 class CXMsg_Invalidate : public CXMsg
 {
 	XMessage(CXMsg_Invalidate);
-public:
+
 	CRect	invalidRect;
 };
 
 class CXMsg_PaintElement : public CXMsg
 {
 	XMessage(CXMsg_PaintElement);
-public:
+
 	BOOL	paintChildren;
 
 	CXMsg_PaintElement():paintChildren(FALSE){}
@@ -96,7 +119,7 @@ public:
 class CXMsg_AttachDC : public CXMsg
 {
 	XMessage(CXMsg_AttachDC);
-public:
+
 	HWND hostWnd;
 	HDC  hostDC;
 
@@ -106,14 +129,14 @@ public:
 class CXMsg_AppendElement : public CXMsg
 {
 	XMessage(CXMsg_AppendElement);
-public:
+
 	NodeRef element;
 };
 
 class CXMsg_SizeChanged : public CXMsg
 {
 	XMessage(CXMsg_SizeChanged);
-public:
+
 	NodeRef node;
 	ESizeType sizeType;
 
@@ -123,20 +146,19 @@ public:
 class CXMsg_Layout : public CXMsg
 {
 	XMessage(CXMsg_Layout);
-public:
 };
 
 class CXMsg_MouseMove : public CXMsg
 {
 	XMessage(CXMsg_MouseMove);
-public:
+
 	CPoint pt;
 };
 
 class CXMsg_MouseEnter : public CXMsg_MouseMove
 {
 	XMessage(CXMsg_MouseEnter);
-public:
+
 	NodeRef prevFocusNode;
 };
 
@@ -150,9 +172,13 @@ class CXMsg_MouseLeave : public CXMsg_MouseMove
 class CXMsg_GetHWnd : public CXMsg
 {
 	XMessage(CXMsg_GetHWnd);
-public:
+
 	HWND hWnd;
-	CXMsg_GetHWnd() : hWnd(0){}
+	CXMsg_GetHWnd() : hWnd(0)
+	{
+		msgDirection = MsgDirection::UpToRoot;
+		msgPolicy = MsgDispatchPolicy::Processor;
+	}
 };
 
 //////////////////////////////////////////////////////////////////////////

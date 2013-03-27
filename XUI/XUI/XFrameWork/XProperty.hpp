@@ -18,8 +18,8 @@ enum class ELayoutType
 
 namespace LayoutTypeString
 {
-	LPCTSTR Layout_OffsetString = _T("offset");
-	LPCTSTR Layout_BlockString = _T("block");
+	static LPCTSTR Layout_OffsetString = _T("offset");
+	static LPCTSTR Layout_BlockString = _T("block");
 }
 
 enum class ELayoutDirection
@@ -30,8 +30,8 @@ enum class ELayoutDirection
 
 namespace LayoutDirectionString
 {
-	LPCTSTR LayoutDirecting_HorizonString = _T("horizon");
-	LPCTSTR LayoutDirection_VerticalString = _T("vertical");
+	static LPCTSTR LayoutDirecting_HorizonString = _T("horizon");
+	static LPCTSTR LayoutDirection_VerticalString = _T("vertical");
 }
 
 enum class EAlignType
@@ -48,10 +48,10 @@ enum class EAlignType
 
 namespace AlignTypeString
 {
-	LPCTSTR Align_LeftString = _T("left");
-	LPCTSTR Align_TopString = _T("top");
-	LPCTSTR Align_RightString = _T("right");
-	LPCTSTR Align_BottomString = _T("bottom");
+	static LPCTSTR Align_LeftString = _T("left");
+	static LPCTSTR Align_TopString = _T("top");
+	static LPCTSTR Align_RightString = _T("right");
+	static LPCTSTR Align_BottomString = _T("bottom");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ MyNameIs(CXProperty)
 
 //////////////////////////////////////////////////////////////////////////
 
-BOOL CXProperty::IsChanged( CString key )
+inline BOOL CXProperty::IsChanged( CString key )
 {
 	auto i = m_propertyMap.find(key);
 	if (i != m_propertyMap.end())
@@ -127,7 +127,7 @@ BOOL CXProperty::IsChanged( CString key )
 	return FALSE;
 }
 
-VOID CXProperty::ChangeRestore( CString key )
+inline VOID CXProperty::ChangeRestore( CString key )
 {
 	if (key.GetLength() != 0)
 	{

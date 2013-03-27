@@ -26,7 +26,7 @@ End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
-VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
+inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
 	XMsgTraceID(msg);
 
@@ -57,7 +57,7 @@ VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 	msg.msgHandled = TRUE;
 }
 
-XResult CXStatic::ProcessXMessage( CXMsg& msg )
+inline XResult CXStatic::ProcessXMessage( CXMsg& msg )
 {
 	BaseClass::ProcessXMessage(msg);
 	
@@ -68,7 +68,7 @@ XResult CXStatic::ProcessXMessage( CXMsg& msg )
 	return XResult_OK;
 }
 
-XResult CXStatic::SetXMLProperty( CString name,CString value )
+inline XResult CXStatic::SetXMLProperty( CString name,CString value )
 {
 	XMLConvert_Begin(name,value)
 		XMLConvert(Text)
