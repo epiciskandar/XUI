@@ -9,6 +9,7 @@ class CXStatic : public CXElement
 		XProperty(Text)
 		XProperty(TextColor)
         XProperty(FontName)
+        XProperty(FontSize)
 	XProperty_End;
 
 	virtual XResult SetXMLProperty( CString name,CString value );
@@ -47,6 +48,8 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 	GetText(text);
     CString fontName;
     GetFontName(fontName);
+    INT fontSize;
+    GetFontSize (fontSize);
 
 	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
@@ -58,15 +61,8 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
         if (fontName != _T(""))
         {
             /* ÐÞ¸Ä×ÖÌå */
-            LOGFONT lf = {0};
-            CFont font(msg.drawDevice.dc.GetCurrentFont());
             CFont newFont;
-            font.GetLogFont (&lf);
-            lf.lfCharSet = 134;
-            lf.lfHeight = -150;
-            lf.lfWidth = 0;
-            lstrcpy (lf.lfFaceName, fontName);
-            newFont.CreateFontIndirect (&lf);
+            newFont.CreatePointFont (fontSize*10, fontName);         
             msg.drawDevice.dc.SelectFont (newFont.m_hFont);
          }
 
@@ -101,6 +97,8 @@ inline XResult CXStatic::SetXMLProperty( CString name,CString value )
 	XMLConvert_Begin(name,value)
 		XMLConvert(Text)
 		XMLConvert(TextColor)
+        XMLConvert(FontName)
+        XMLConvert(FontSize)
 	XMLConvert_End
 
 	return BaseClass::SetXMLProperty(name,value);
