@@ -10,6 +10,8 @@
 
 #include "../TinyXML/tinyxml.h"
 
+typedef std::function<XResult(NodeRef node)>	ListenerRegister;
+
 class CXGaia
 {
 	XClass(VOID);
@@ -19,12 +21,14 @@ public:
 	NodeRef CreateFromXML(CString xmlFile);
 	NodeRef ParseXMLNode(TiXmlElement* pElement);
 	XResult ParseAndSetParams(NodeRef node,const TiXmlElement* pElement);
+	XResult SetListenerRegister(ListenerRegister reger);
 
 protected:
 	XResult _CheckAndSkipXMLRoot(TiXmlElement* pRoot);
 protected:
 	typedef std::map<CString,std::function<NodeRef()>> ElementRecord;
 	ElementRecord m_record;
+	ListenerRegister	m_listenRegisterFunc;
 };
 
 MyNameIs(CXGaia)
@@ -112,6 +116,10 @@ inline NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 		}
 		pChild = pChild->NextSiblingElement();
 	}
+	if (m_listenRegisterFunc)
+	{
+		m_listenRegisterFunc(node);
+	}
 	return node;
 }
 
@@ -151,6 +159,12 @@ inline XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElem
 			attr = attr->Next();
 		}
 	}
+	return XResult_OK;
+}
+
+inline XResult CXGaia::SetListenerRegister( ListenerRegister reger )
+{
+	m_listenRegisterFunc = reger;
 	return XResult_OK;
 }
 

@@ -85,6 +85,7 @@ public: \
 
 class CXElement : public CXBase
 	, public CXTreeNode
+	, public CXNotifier
 {
 	XClass(CXBase);
 public:

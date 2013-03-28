@@ -150,5 +150,8 @@
     <ClInclude Include="XUI\XFrameWork\XNotifier.hpp">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
+    <ClInclude Include="uiResponse.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

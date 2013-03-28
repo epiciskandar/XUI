@@ -20,7 +20,7 @@ public:
 	DWORD m_earID;
 };
 
-class CXNotifier : public CXBase
+class CXNotifier
 {
 	XClass(CXBase);
 public:

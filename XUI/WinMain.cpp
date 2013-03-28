@@ -1,6 +1,7 @@
 //#include "VisualLeakDetector/include/vld.h"
 #define _CRTDBG_MAP_ALLOC
 #include "XUI/XUI.h"
+#include "uiResponse.h"
 
 void Prepare()
 {
@@ -19,10 +20,15 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(szCmdLine);
 	UNREFERENCED_PARAMETER(iCmdShow);
+
+	class CXUIListenerRegister listernerRegister;
 	
 	CXUI& xui = CXUI::GetInstance();
 	xui.Initialize(hInstance);
 	Prepare();
+	xui.GetGaia().SetListenerRegister(std::bind(
+		&CXUIListenerRegister::OnCreateElement,
+		listernerRegister,std::placeholders::_1));
 
 	CString xmlPath = _T("res:/test.xml");
 	CXResPool::GetInstance().TranslateResPath(xmlPath);

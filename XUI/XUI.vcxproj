@@ -102,6 +102,7 @@
     <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="uiResponse.h" />
     <ClInclude Include="XUI\Others\BLog.hpp" />
     <ClInclude Include="XUI\Others\CBuffer.h" />
     <ClInclude Include="XUI\Others\CFile.hpp" />
