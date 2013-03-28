@@ -367,4 +367,5 @@ DefineProperty(Ghost,			BOOL,				FALSE);
 DefineProperty(ToolTip,			CString,			_T(""));
 DefineProperty(FontName,		CString,			_T(""));
 DefineProperty(FontSize,		INT,				11);
+DefineProperty(Offset,		    CPoint,				CPoint(0,0));
 };

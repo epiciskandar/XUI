@@ -12,6 +12,7 @@ class CXImage : public CXElement
 
 	XProperty_Begin
 		XProperty(File)
+        XProperty(Offset)
 	XProperty_End;
 
 	virtual XResult SetXMLProperty( CString name,CString value );
@@ -36,9 +37,11 @@ inline VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
 	CRect rect;
 	GetRect(rect);
+    CPoint pt;
+    GetOffset (pt);
 	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
-		m_img.Draw(msg.drawDevice.dc,0,0,-1,-1,rect);
+		m_img.Draw(msg.drawDevice.dc,pt.x,pt.y,-1,-1,rect);
 
 		_SendXMsg(msg);
 	}
@@ -63,6 +66,7 @@ inline XResult CXImage::SetXMLProperty( CString name,CString value )
 
 	XMLConvert_Begin(name,value)
 		XMLConvert(File)
+        XMLConvert(Offset)
 	XMLConvert_End
 
 	return XResult_OK;
