@@ -46,7 +46,7 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 	CString text;
 	GetText(text);
     CString fontName;
-    GetFontName (fontName);
+    GetFontName(fontName);
 
 	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{

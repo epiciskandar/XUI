@@ -365,6 +365,6 @@ DefineProperty(Margin,			CRect,				CRect());
 DefineProperty(Padding,			CRect,				CRect());
 DefineProperty(Ghost,			BOOL,				FALSE);
 DefineProperty(ToolTip,			CString,			_T(""));
-DefineProperty(FontName,			CString,			_T(""));
+DefineProperty(FontName,		CString,			_T(""));
 
 };

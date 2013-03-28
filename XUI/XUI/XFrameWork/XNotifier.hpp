@@ -9,7 +9,7 @@ typedef std::function<XResult(CXMsg& msg)> XEar;
 class CAutoEar
 {
 public:
-	CAutoEar()
+	CAutoEar() : m_earID(0)
 	{
 		;
 	}
@@ -17,20 +17,22 @@ public:
 	{
 		;
 	}
+	DWORD m_earID;
 };
 
 class CXNotifier : public CXBase
 {
 	XClass(CXBase);
 public:
-	XResult Listen(XEar ear)
+	XResult Listen(XEar ear,DWORD& earID)
 	{
-		m_ears.push_back(ear);
+		earID = m_ears.size() + 1;
+		m_ears.insert(std::make_pair(earID,ear));
 		return XResult_OK;
 	}
-	XResult GoDeaf(XEar ear)
+	XResult GoDeaf(DWORD earID)
 	{
-		auto ci = std::find(m_ears.begin(),m_ears.end(),ear);
+		auto ci = m_ears.find(earID);
 		if (ci != m_ears.end())
 		{
 			m_ears.erase(ci);
@@ -39,7 +41,7 @@ public:
 		return XResult_NotFound;
 	}
 protected:
-	std::vector<XEar> m_ears;
+	std::map<DWORD /*id*/,XEar> m_ears;
 };
 
 MyNameIs(CXNotifier)
