@@ -6,20 +6,6 @@
 
 typedef std::function<XResult(CXMsg& msg)> XEar;
 
-class CAutoEar
-{
-public:
-	CAutoEar() : m_earID(0)
-	{
-		;
-	}
-	virtual ~CAutoEar()
-	{
-		;
-	}
-	DWORD m_earID;
-};
-
 class CXNotifier
 {
 	XClass(CXBase);
@@ -30,15 +16,33 @@ public:
 		m_ears.insert(std::make_pair(earID,ear));
 		return XResult_OK;
 	}
-	XResult GoDeaf(DWORD earID)
+	XResult StopListen(DWORD earID)
 	{
 		auto ci = m_ears.find(earID);
 		if (ci != m_ears.end())
 		{
+			CXMsg_BeforeDeaf msg;
+			ci->second(msg);
 			m_ears.erase(ci);
 			return XResult_OK;
 		}
 		return XResult_NotFound;
+	}
+	XResult Whisper(CXMsg& msg)
+	{
+		std::vector<XEar> ears;
+		for (auto& i:m_ears)
+		{
+			ears.push_back(i.second);
+		}
+		for (auto& i:ears)
+		{
+			if (i)
+			{
+				i(msg);
+			}
+		}
+		return XResult_OK;
 	}
 protected:
 	std::map<DWORD /*id*/,XEar> m_ears;

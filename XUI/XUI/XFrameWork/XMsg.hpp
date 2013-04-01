@@ -23,6 +23,27 @@ public: \
 
 #define XMsgTraceID(_msg)	XMsgTrace(_msg,GetID())
 
+// define XMsg router
+#define BEGIN_XMSG_MAP(_msg) \
+{ \
+	CXMsg_GetListenList* pListMsg = dynamic_cast<CXMsg_GetListenList*>(&_msg);
+#define OnXMsgFunc(_msg,_func) \
+	if (pListMsg) \
+	{ \
+		pListMsg->XMsgList.push_back(_msg::GetXMsgName()); \
+	} \
+	else if( msg.GetMyMsgName().CompareNoCase(_msg::GetXMsgName()) == 0) \
+	{ \
+		_msg* pDeriMsg = dynamic_cast<_msg*>(&msg); \
+		ATLASSERT(pDeriMsg && "invalid XMessage response!!!!!!!"); \
+		_func(*pDeriMsg); \
+		if(msg.msgHandled) \
+			return XResult_Handled; \
+	}
+#define OnXMsg(_msg)	OnXMsgFunc(_msg,On_##_msg)
+#define END_XMSG_MAP \
+}
+
 enum class MsgDispatchPolicy
 {
 	BroadCast,
@@ -179,6 +200,40 @@ class CXMsg_GetHWnd : public CXMsg
 		msgDirection = MsgDirection::UpToRoot;
 		msgPolicy = MsgDispatchPolicy::Processor;
 	}
+};
+
+class CXMsg_FrameClick : public CXMsg
+{
+	XMessage(CXMsg_FrameClick);
+
+	CPoint pt;
+	BOOL ctrlState;
+	BOOL shiftState;
+	BOOL middleBtnState;
+	BOOL rightBtnState;
+	BOOL XButton1State;
+	BOOL XButton2State;
+
+	CXMsg_FrameClick()
+		: ctrlState(FALSE)
+		, shiftState(FALSE)
+		, middleBtnState(FALSE)
+		, rightBtnState(FALSE)
+		, XButton1State(FALSE)
+		, XButton2State(FALSE)
+	{
+		msgPolicy = MsgDispatchPolicy::Processor;
+	}
+};
+
+class CXMsg_BeforeDeaf : public CXMsg
+{
+	XMessage(CXMsg_BeforeDeaf);
+};
+
+class CXMsg_RealWndClosing : public CXMsg
+{
+	XMessage(CXMsg_RealWndClosing);
 };
 
 //////////////////////////////////////////////////////////////////////////
