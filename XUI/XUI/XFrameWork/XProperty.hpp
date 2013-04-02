@@ -3,6 +3,7 @@
 #include "XTree.hpp"
 #include "XPropertyValue.hpp"
 #include "../Others/CBuffer.h"
+#include "XFontDemo.hpp"
 
 #include <map>
 
@@ -97,7 +98,8 @@ public:
 	SupportType(m_propertyMap,CPropertyValue<HWND>);
 	SupportType(m_propertyMap,CPropertyValue<ELayoutType>);
 	SupportType(m_propertyMap,CPropertyValue<EAlignType>);
-	SupportType(m_propertyMap,CPropertyValue<ELayoutDirection>)
+	SupportType(m_propertyMap,CPropertyValue<ELayoutDirection>);
+	SupportType(m_propertyMap,CPropertyValue<CXFontDemo>);
 
 	BOOL IsChanged(CString key);
 	VOID ChangeRestore(CString key/*empty means all*/);
@@ -183,7 +185,8 @@ public:
 	}
 };
 
-typedef CXMLConverter_DWORD CXMLConverter_HWND;
+class CXMLConverter_HWND: public CXMLConverter_DWORD
+{};
 
 class CXMLConverter_COLORREF
 {
@@ -323,11 +326,15 @@ public:
 };
 
 // contains each properties definition
-#define DefineProperty(_name,_type,_defaultValue)	\
+#define DefineProperter(_name,_type,_defaultValue)	\
 	static LPCTSTR _name = _T(#_name); \
 	static _type _name##DefaultValue = _defaultValue; \
 	typedef _type _name##Type; \
-	typedef CXMLConverter_##_type _name##XMLConverter; \
+	class CXMLConverter_##_type;
+
+#define DefineProperty(_name,_type,_defaultValue) \
+	DefineProperter(_name,_type,_defaultValue) \
+	typedef CXMLConverter_##_type _name##XMLConverter;
 
 #define SetDefPropertyValue(_name,_var) _var = Property::_name##DefaultValue;
 
@@ -368,4 +375,5 @@ DefineProperty(ToolTip,			CString,			_T(""));
 DefineProperty(FontName,		CString,			_T(""));
 DefineProperty(FontSize,		INT,				11);
 DefineProperty(Offset,		    CPoint,				CPoint(0,0));
+DefineProperty(FontDemo,		CXFontDemo,			CXFontDemo());
 };

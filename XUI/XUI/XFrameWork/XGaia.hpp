@@ -21,6 +21,7 @@ public:
 	NodeRef CreateFromXML(CString xmlFile);
 	NodeRef ParseXMLNode(TiXmlElement* pElement);
 	XResult ParseAndSetParams(NodeRef node,const TiXmlElement* pElement);
+	XResult ParseAndSetProperter(NodeRef properter,const TiXmlElement* proplement);
 	XResult SetListenerRegister(ListenerRegister reger);
 
 protected:
@@ -39,6 +40,7 @@ End_Description;
 
 #define XUIXMLFlag		"XUI"
 #define XUIXMLVersion	"1"
+#define SubPropertyNodeName	"Property"
 
 #define RecordXClass(xclass) m_record[xclass::GetMyClassName()] = []{return new xclass;};
 
@@ -48,6 +50,7 @@ inline CXGaia::CXGaia()
 	RecordXClass(CXRealWnd);
 	RecordXClass(CXStatic);
 	RecordXClass(CXImage);
+	RecordXClass(CXFontDemo);
 }
 
 inline NodeRef CXGaia::Create( CString className )
@@ -56,6 +59,10 @@ inline NodeRef CXGaia::Create( CString className )
 	if (i != m_record.end())
 	{
 		return NodeRef((i->second)());	// it is important to init NodeRef this way
+	}
+	else
+	{
+		WTF;
 	}
 	return nullptr;
 }
@@ -93,6 +100,10 @@ inline NodeRef CXGaia::CreateFromXML( CString xmlFile )
 inline NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 {
 	CStringA strClass = pElement->Value();
+	if (strClass == SubPropertyNodeName)
+	{
+		return nullptr;
+	}
 	NodeRef node;
 	CString strClassName = _T("C");
 	strClassName += strClass;
@@ -158,6 +169,28 @@ inline XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElem
 			element->SetXMLProperty(key,value);
 			attr = attr->Next();
 		}
+		const TiXmlNode* propNode = pElement->FirstChild(CStringA(SubPropertyNodeName));
+		if (propNode)
+		{
+			const TiXmlElement* propElement = propNode->ToElement();
+			const TiXmlNode* childNode = propElement->FirstChild();
+			const TiXmlElement* childElement = nullptr;
+			if (childNode)
+			{
+				childElement = childNode->ToElement();
+			}
+			while (childElement)
+			{
+				CString name = childElement->Value();
+				name = _T("C") + name;
+				NodeRef propNode = Create(name);
+				if (propNode)
+				{
+					ParseAndSetProperter(propNode,childElement);
+				}
+				childElement = childElement->NextSiblingElement();
+			}
+		}
 	}
 	return XResult_OK;
 }
@@ -168,3 +201,23 @@ inline XResult CXGaia::SetListenerRegister( ListenerRegister reger )
 	return XResult_OK;
 }
 
+inline XResult CXGaia::ParseAndSetProperter( NodeRef properterNode,const TiXmlElement* proplement )
+{
+	const TiXmlElement* pchildElement = proplement->ToElement();
+	const TiXmlAttribute* pchildAttr = pchildElement->FirstAttribute();
+	while (pchildAttr)
+	{
+		CString key = pchildAttr->Name();
+		CStringA valueA = pchildAttr->Value();
+		CString value;
+		Util::String::UTF8ToUnicode(valueA,value);
+
+		XSmartPtr<CXProperter> properter(properterNode);
+		if (properter)
+		{
+			properter->SetXMLProperty(key,value);
+		}
+		pchildAttr = pchildAttr->Next();
+	}
+	return XResult_OK;
+}

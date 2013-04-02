@@ -153,5 +153,8 @@
     <ClInclude Include="uiResponse.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XFontDemo.hpp">
+      <Filter>XUI</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

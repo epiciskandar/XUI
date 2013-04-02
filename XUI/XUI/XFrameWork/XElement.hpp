@@ -92,6 +92,7 @@ public:
 		XProperty(HitTest)
 		XProperty(ToolTip)
 		XProperty(Ghost)
+		XProperty(FontDemo)
 	XProperty_End;
 
 	// XMsg的接收入口函数

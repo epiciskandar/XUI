@@ -55,3 +55,13 @@ public:
 		return m_value;
 	}; 
 };
+
+class CXProperter : public CXTreeNode
+{
+public:
+	virtual XResult SetXMLProperty(CString key,CString value)
+	{
+		URP(key,value);
+		return XResult_NotImpl;
+	}
+};
