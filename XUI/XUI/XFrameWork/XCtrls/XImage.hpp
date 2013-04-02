@@ -41,7 +41,7 @@ inline VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
     GetOffset (pt);
 	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
-		m_img.Draw(msg.drawDevice.dc,pt.x,pt.y,-1,-1,rect);
+        m_img.Draw(msg.drawDevice.dc,-pt.x,-pt.y,-1,-1,rect);
 
 		_SendXMsg(msg);
 	}
