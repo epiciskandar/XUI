@@ -51,6 +51,10 @@ public:
 		, WM_NCHITTEST
 		, WM_MOUSEMOVE
 		, WM_NCMOUSEMOVE
+		, WM_LBUTTONDOWN
+		, WM_LBUTTONUP
+		, WM_LBUTTONDBLCLK
+		, WM_CLOSE
 		//, WM_CREATE
 		, 0x00AE
 		, 0x00AF
@@ -82,6 +86,10 @@ protected:
 	LRESULT _Translate_WM_NCMOUSEMOVE(WPARAM wParam,LPARAM lParam);
 	LRESULT _Translate_MOUSEMOVE_MSG(WPARAM wParam,CPoint pointInClient);
 	LRESULT _Translate_WM_CREATE(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_LBUTTONDOWN(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_LBUTTONUP(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_LBUTTONDBLCLK(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_CLOSE(WPARAM wParam,LPARAM lParam);
 
 	//--------------------------------//
 
@@ -125,6 +133,10 @@ inline LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM
 		XMsgTranslater(WM_MOUSEMOVE,	_Translate_WM_MOUSEMOVE);
 		XMsgTranslater(WM_NCMOUSEMOVE,	_Translate_WM_NCMOUSEMOVE);
 		XMsgTranslater(WM_CREATE,		_Translate_WM_CREATE);
+		XMsgTranslater(WM_LBUTTONDOWN,	_Translate_WM_LBUTTONDOWN);
+		XMsgTranslater(WM_LBUTTONUP,	_Translate_WM_LBUTTONUP);
+		XMsgTranslater(WM_LBUTTONDBLCLK,_Translate_WM_LBUTTONDBLCLK);
+		XMsgTranslater(WM_CLOSE,		_Translate_WM_CLOSE);
 	}
 
 	return 0;
@@ -417,4 +429,46 @@ inline VOID CXRealWnd::On_CXMsg_GetHWnd( CXMsg_GetHWnd& arg )
 {
 	arg.hWnd = m_hWnd;
 	arg.msgHandled = TRUE;
+}
+
+inline LRESULT CXRealWnd::_Translate_WM_LBUTTONUP( WPARAM wParam,LPARAM lParam )
+{
+	CPoint pointInClient;
+	pointInClient.x = GET_X_LPARAM(lParam);
+	pointInClient.y = GET_Y_LPARAM(lParam);
+	ElementRef currHoverElement;
+	ElementUtil::GetElementByPoint(pointInClient,this,currHoverElement);
+	if (currHoverElement)
+	{
+		CXMsg_FrameClick msg;
+		msg.pt = pointInClient;
+		msg.ctrlState = wParam & MK_CONTROL;
+		msg.shiftState = wParam & MK_SHIFT;
+		msg.middleBtnState = wParam & MK_MBUTTON;
+		msg.rightBtnState = wParam & MK_RBUTTON;
+		msg.XButton1State = wParam & MK_XBUTTON1;
+		msg.XButton2State = wParam & MK_XBUTTON2;
+		currHoverElement->ProcessXMessage(msg);
+	}
+	return 0;
+}
+
+inline LRESULT CXRealWnd::_Translate_WM_LBUTTONDOWN( WPARAM wParam,LPARAM lParam )
+{
+	URP(wParam,lParam);
+	return 0;
+}
+
+inline LRESULT CXRealWnd::_Translate_WM_LBUTTONDBLCLK( WPARAM wParam,LPARAM lParam )
+{
+	URP(wParam,lParam);
+	return 0;
+}
+
+inline LRESULT CXRealWnd::_Translate_WM_CLOSE( WPARAM wParam,LPARAM lParam )
+{
+	URP(wParam,lParam);
+	CXMsg_RealWndClosing msg;
+	ProcessXMessage(msg);
+	return DefWindowProc();
 }

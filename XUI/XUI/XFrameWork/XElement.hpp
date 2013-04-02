@@ -61,26 +61,6 @@ public: \
 #define XMLConvert_End	{} \
 }
 
-// define XMsg router
-#define BEGIN_XMSG_MAP(_msg) \
-{ \
-	CXMsg_GetListenList* pListMsg = dynamic_cast<CXMsg_GetListenList*>(&_msg);
-#define OnXMsg(_msg) \
-	if (pListMsg) \
-	{ \
-		pListMsg->XMsgList.push_back(_msg::GetXMsgName()); \
-	} \
-	else if( msg.GetMyMsgName().CompareNoCase(_msg::GetXMsgName()) == 0) \
-	{ \
-		_msg* pDeriMsg = dynamic_cast<_msg*>(&msg); \
-		ATLASSERT(pDeriMsg && "invalid XMessage response!!!!!!!"); \
-		On_##_msg(*pDeriMsg); \
-		if(msg.msgHandled) \
-		return XResult_Handled; \
-	}
-#define END_XMSG_MAP \
-}
-
 //////////////////////////////////////////////////////////////////////////
 
 class CXElement : public CXBase
@@ -133,6 +113,8 @@ protected:
 	VOID On_CXMsg_MouseEnter(CXMsg_MouseEnter& arg);
 	VOID On_CXMsg_MouseLeave(CXMsg_MouseLeave& arg);
 	VOID On_CXMsg_AttachDC(CXMsg_AttachDC& arg);
+	VOID On_CXMsg_FrameClick(CXMsg_FrameClick& arg);
+	VOID On_CXMsg_RealWndClosing(CXMsg_RealWndClosing& arg);
 protected:
 	Property::CXProperty	m_property;
 	BOOL	m_isLayouting;
@@ -202,6 +184,8 @@ inline XResult CXElement::ProcessXMessage( CXMsg& msg )
 		OnXMsg(CXMsg_MouseLeave)
 		OnXMsg(CXMsg_PaintElement)
 		OnXMsg(CXMsg_AttachDC)
+		OnXMsg(CXMsg_FrameClick)
+		OnXMsg(CXMsg_RealWndClosing)
 	END_XMSG_MAP;
 	_SendXMsg(msg);
 	return XResult_OK;
@@ -560,4 +544,15 @@ inline VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
 		m_toolTip.DestroyWindow();
 	}
 	arg.msgHandled = TRUE;
+}
+
+inline VOID CXElement::On_CXMsg_FrameClick( CXMsg_FrameClick& arg )
+{
+	Whisper(arg);
+	arg.msgHandled = TRUE;
+}
+
+inline VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
+{
+	Whisper(arg);
 }
