@@ -5,6 +5,14 @@
 class CXStatic : public CXElement
 {
 	XClass(CXElement);
+	CXStatic()
+	{
+		;
+	}
+	~CXStatic()
+	{
+		;
+	}
 
 	XProperty_Begin
 		XProperty(Text)
@@ -55,13 +63,14 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 		CPen pen;
         pen.CreatePen(PS_SOLID,1,color);
         
-        CXFont font;
-        GetXFont(font);      
-        if (font.GetFontName() != _T(""))
+		NodeRef fontNode;
+		GetXFont(fontNode);
+		XPtr<CXFont> font(fontNode);
+        if (font && font->GetFontName() != _T(""))
         {
             /* ÐÞ¸Ä×ÖÌå */
-            font.ChangeWork();    
-            msg.drawDevice.dc.SelectFont (font.m_hFont);
+            font->ChangeWork();    
+            msg.drawDevice.dc.SelectFont (font->m_hFont);
          }
 
 

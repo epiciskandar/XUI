@@ -14,12 +14,12 @@ public:
     {
         return;
     }
-    inline CString GetFontName() {return _fontName;}
-    inline INT GetFontSize() {return _fontSize;}
-    inline void SetFont(CString fontName, INT fontSize);
-    inline XResult SetXMLProperty( CString name,CString value );//Set Class Property
-    inline void ChangeWork();
-    inline CXFont& operator=(const CXFont& rhs)
+    CString GetFontName() {return _fontName;}
+    INT GetFontSize() {return _fontSize;}
+    void SetFont(CString fontName, INT fontSize);
+    XResult SetXMLProperty( CString name,CString value ) override;
+    void ChangeWork();
+    CXFont& operator=(const CXFont& rhs)
     {
         _fontName = rhs._fontName;
         _fontSize = rhs._fontSize;
@@ -43,6 +43,10 @@ inline void CXFont::ChangeWork()
 
 inline XResult CXFont::SetXMLProperty( CString name,CString value )//Set Class Property
 {
+	if (name == _T("ID"))
+	{
+		SetID(value);
+	}
     if (name == _T("FontName"))
     {
         _fontName = value;

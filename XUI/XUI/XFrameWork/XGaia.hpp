@@ -182,11 +182,12 @@ inline XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElem
 			while (childElement)
 			{
 				CString name = childElement->Value();
-				name = _T("C") + name;
-				NodeRef propNode = Create(name);
+				CString className = _T("C") + name;
+				NodeRef propNode = Create(className);
 				if (propNode)
 				{
 					ParseAndSetProperter(propNode,childElement);
+					element->GetPrpertyRef().SetProperty(name,propNode);
 				}
 				childElement = childElement->NextSiblingElement();
 			}

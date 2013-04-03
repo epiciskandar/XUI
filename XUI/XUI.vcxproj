@@ -117,7 +117,6 @@
     <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp" />
     <ClInclude Include="XUI\XFrameWork\XElement.hpp" />
     <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XFontDemo.hpp" />
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
     <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />
     <ClInclude Include="XUI\XFrameWork\XLayouter\Block.hpp" />
