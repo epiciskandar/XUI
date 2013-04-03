@@ -110,6 +110,7 @@
     <ClInclude Include="XUI\TinyXML\tinyxml.h" />
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
     <ClInclude Include="XUI\XFrameWork\XCreator.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XCtrls\XFont.hpp" />
     <ClInclude Include="XUI\XFrameWork\XCtrls\XImage.hpp" />
     <ClInclude Include="XUI\XFrameWork\XCtrls\XStatic.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />

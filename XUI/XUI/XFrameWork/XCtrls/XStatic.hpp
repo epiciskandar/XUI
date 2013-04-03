@@ -1,5 +1,6 @@
 #pragma once
 #include "../XElement.hpp"
+#include "XFont.hpp"
 
 class CXStatic : public CXElement
 {
@@ -8,8 +9,7 @@ class CXStatic : public CXElement
 	XProperty_Begin
 		XProperty(Text)
 		XProperty(TextColor)
-        XProperty(FontName)
-        XProperty(FontSize)
+        XProperty(XFont)
 	XProperty_End;
 
 	virtual XResult SetXMLProperty( CString name,CString value );
@@ -46,10 +46,7 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 	rect.OffsetRect(msg.offsetFix);
 	CString text;
 	GetText(text);
-    CString fontName;
-    GetFontName(fontName);
-    INT fontSize;
-    GetFontSize (fontSize);
+
 
 	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
@@ -58,12 +55,13 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 		CPen pen;
         pen.CreatePen(PS_SOLID,1,color);
         
-        if (fontName != _T(""))
+        CXFont font;
+        GetXFont(font);      
+        if (font.GetFontName() != _T(""))
         {
             /* ÐÞ¸Ä×ÖÌå */
-            CFont newFont;
-            newFont.CreatePointFont (fontSize*10, fontName);         
-            msg.drawDevice.dc.SelectFont (newFont.m_hFont);
+            font.ChangeWork();    
+            msg.drawDevice.dc.SelectFont (font.m_hFont);
          }
 
 
@@ -97,8 +95,6 @@ inline XResult CXStatic::SetXMLProperty( CString name,CString value )
 	XMLConvert_Begin(name,value)
 		XMLConvert(Text)
 		XMLConvert(TextColor)
-        XMLConvert(FontName)
-        XMLConvert(FontSize)
 	XMLConvert_End
 
 	return BaseClass::SetXMLProperty(name,value);

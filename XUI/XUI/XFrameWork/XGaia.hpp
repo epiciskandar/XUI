@@ -50,7 +50,7 @@ inline CXGaia::CXGaia()
 	RecordXClass(CXRealWnd);
 	RecordXClass(CXStatic);
 	RecordXClass(CXImage);
-	RecordXClass(CXFontDemo);
+	RecordXClass(CXFont);
 }
 
 inline NodeRef CXGaia::Create( CString className )

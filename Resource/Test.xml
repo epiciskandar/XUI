@@ -10,7 +10,7 @@
       <XElement ID="Foot" Size="1,20" Color="176,103,241" BorderColor="220,30,30" ExpandWidth="true" Align="bottom">
         <XStatic ID="testStatic"  Ghost="false" Text="test汉字" ToolTip="看毛" Size="100,1" Color="127,127,127" ExpandHeight="true" FontName="宋体" FontSize="11"/>
         <Property>
-          <XFontDemo ID="test" Test="test"/>
+          <XFont ID="XFont" FontName="微软雅黑" FontSize="20"/>
         </Property>
       </XElement>
     </XElement>

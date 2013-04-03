@@ -3,7 +3,7 @@
 #include "XTree.hpp"
 #include "XPropertyValue.hpp"
 #include "../Others/CBuffer.h"
-#include "XFontDemo.hpp"
+#include "XCtrls\XFont.hpp"
 
 #include <map>
 
@@ -99,7 +99,7 @@ public:
 	SupportType(m_propertyMap,CPropertyValue<ELayoutType>);
 	SupportType(m_propertyMap,CPropertyValue<EAlignType>);
 	SupportType(m_propertyMap,CPropertyValue<ELayoutDirection>);
-	SupportType(m_propertyMap,CPropertyValue<CXFontDemo>);
+	SupportType(m_propertyMap,CPropertyValue<CXFont>);
 
 	BOOL IsChanged(CString key);
 	VOID ChangeRestore(CString key/*empty means all*/);
@@ -375,5 +375,5 @@ DefineProperty(ToolTip,			CString,			_T(""));
 DefineProperty(FontName,		CString,			_T(""));
 DefineProperty(FontSize,		INT,				11);
 DefineProperty(Offset,		    CPoint,				CPoint(0,0));
-DefineProperty(FontDemo,		CXFontDemo,			CXFontDemo());
+DefineProperty(XFont,		    CXFont,			    CXFont());
 };
