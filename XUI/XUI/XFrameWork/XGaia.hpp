@@ -3,7 +3,6 @@
 #include <map>
 #include <functional>
 
-#include "XFrameWork/XFrame.hpp"
 #include "XFrameWork/XRealWnd.hpp"
 #include "XFrameWork/XCtrls/XStatic.hpp"
 #include "XFrameWork/XCtrls/XImage.hpp"
