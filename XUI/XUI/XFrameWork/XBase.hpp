@@ -14,43 +14,14 @@
 #include "../WTL/atlframe.h"
 #include "../WTL/atlcrack.h"	// message handle
 #include "../WTL/atlmisc.h"
-#include "Others/CFile.hpp"
+#include <Others/CFile.hpp>
 
-#include "Others/BLog.hpp"
-
-class CXBase
-{
-public:
-	virtual CString GetDescription() = 0;
-	static CString GetMyClassName();
-};
+#include <Others/BLog.hpp>
 
 //////////////////////////////////////////////////////////////////////////
 
-#define XClass(_baseclass) \
-public: \
-	virtual CString GetDescription(); \
-	static CString GetMyClassName(); \
-	typedef _baseclass BaseClass;
+#define XClass ;
 
-#define MyNameIs(_className) \
-inline CString _className :: GetMyClassName() \
-{ \
-	return CString(_CRT_WIDE(#_className)); \
-} \
-inline CString _className :: GetDescription() \
-{ \
-	CString description; \
-	description.AppendFormat(_T("This is class %s.\n"),CString(_CRT_WIDE(#_className)));
-
-#define End_Description \
-	return description; \
-}
-
-#define I_Can(_use) description.AppendFormat(_T("I can %s.\n"),_CRT_WIDE(#_use));
-#define I_Provide(_function) description.AppendFormat(_T("I provide functions like %s\n"),_CRT_WIDE(#_function));
-#define And_You_Should_Notice(_instruction) description.AppendFormat(_T("%s\n"),_CRT_WIDE(#_instruction));
-	
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef DISALLOW_COPY_AND_ASSIGN
@@ -178,7 +149,6 @@ protected:
 };
 
 #define XPtr XSmartPtr
-typedef XSmartPtr<CXBase> BaseRef;
 
 //////////////////////////////////////////////////////////////////////////
 

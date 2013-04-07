@@ -86,7 +86,7 @@ namespace AlignTypeString
 
 class CXProperty
 {
-	XClass(VOID);
+	XClass;
 public:
 	SupportType(m_propertyMap,CPropertyValue<CString>);
 	SupportType(m_propertyMap,CPropertyValue<DWORD>);
@@ -108,10 +108,6 @@ public:
 protected:
 	std::map<CString,CBuffer>	m_propertyMap;
 };
-
-MyNameIs(CXProperty)
-	I_Provide("属性描述表及属性的保持工具")
-	End_Description;
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -376,3 +372,59 @@ DefineProperty(FontSize,		INT,				11);
 DefineProperty(Offset,		    CPoint,				CPoint(0,0));
 DefineProperty(XFont,		    NodeRef,			nullptr);
 };
+
+
+//////////////////////////////////////////////////////////////////////////
+
+// define property functions
+#define XProperty_Begin
+#define XProperty_Get(_name) \
+	virtual XResult Get##_name (Property::_name##Type& value) \
+	{ \
+	value = Property::_name##DefaultValue; \
+	return m_property.GetProperty(L#_name,value); \
+}
+#define XProperty_Set(_name) \
+public: \
+	virtual XResult Set##_name (Property::_name##Type param) \
+	{ \
+	XResult result = m_property.SetProperty(L#_name,param); \
+	CXMsg_PropertyChanged msg; \
+	msg.name = L#_name; \
+	ProcessXMessage(msg); \
+	return  result;\
+}
+#define XProperty(_name) \
+	XProperty_Get(_name) \
+	XProperty_Set(_name)
+
+#define XFakeProperty_Get(_name) \
+	virtual XResult Get##_name (Property::_name##Type& value);
+#define XFakeProperty_Set(_name) \
+	virtual XResult Set##_name (Property::_name##Type param);
+#define XFakeProperty(_name) \
+	XFakeProperty_Get(_name); \
+	XFakeProperty_Set(_name);
+
+#define XProperty_End
+
+// define XML converters
+#define XMLConvert_Begin(_name,_value) \
+{ \
+	CString& propName = _name; \
+	CString& propVaule = _value;
+#define XMLConvert(_name) \
+	if (Property::_name == propName) \
+	{ \
+	m_property.SetProperty(propName,Property::_name##XMLConverter::ConvertToValue(propVaule)); \
+	CXMsg_PropertyChanged msg; \
+	msg.name = propName; \
+	ProcessXMessage(msg); \
+}else
+#define XMLFakeConvert(_name) \
+	if (Property::_name == propName) \
+	{ \
+	return Set##_name(Property::_name##XMLConverter::ConvertToValue(propVaule)); \
+}else
+#define XMLConvert_End	{} \
+}

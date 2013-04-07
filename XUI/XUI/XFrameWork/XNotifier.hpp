@@ -8,7 +8,7 @@ typedef std::function<XResult(CXMsg& msg)> XEar;
 
 class CXNotifier
 {
-	XClass(CXBase);
+	XClass;
 public:
 	XResult Listen(XEar ear,DWORD& earID)
 	{
@@ -47,7 +47,3 @@ public:
 protected:
 	std::map<DWORD /*id*/,XEar> m_ears;
 };
-
-MyNameIs(CXNotifier)
-	I_Can("将消息发送给注册了监听的对象")
-End_Description;

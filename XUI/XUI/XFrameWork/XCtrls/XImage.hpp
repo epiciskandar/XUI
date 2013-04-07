@@ -1,5 +1,5 @@
 #pragma once
-#include "../XElement.hpp"
+#include "../XElement.h"
 #include "../XResPool.hpp"
 #pragma warning(push)
 #pragma warning(disable:4996)
@@ -8,7 +8,7 @@
 
 class CXImage : public CXElement
 {
-	XClass(CXElement);
+	XClass;
 
 	XProperty_Begin
 		XProperty(File)
@@ -26,10 +26,6 @@ public:
 	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 };
-
-MyNameIs(CXImage)
-	I_Can("image")
-End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -59,7 +55,7 @@ inline VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 
 inline XResult CXImage::ProcessXMessage( CXMsg& msg )
 {
-	BaseClass::ProcessXMessage(msg);
+	__super::ProcessXMessage(msg);
 	
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_Paint);
@@ -71,7 +67,7 @@ inline XResult CXImage::ProcessXMessage( CXMsg& msg )
 
 inline XResult CXImage::SetXMLProperty( CString name,CString value )
 {
-	BaseClass::SetXMLProperty(name,value);
+	__super::SetXMLProperty(name,value);
 
 	XMLConvert_Begin(name,value)
 		XMLConvert(File)

@@ -6,7 +6,7 @@ typedef XSmartPtr<CXTreeNode> NodeRef;
 
 class CXTreeNode : public Util::Class::CRefCountImpl
 {
-	XClass(VOID);
+	XClass;
 public:
 	CXTreeNode();
 	virtual ~CXTreeNode();
@@ -40,14 +40,6 @@ protected:
 	CXTreeNode* m_father;
 	XNodeList m_children;
 };
-
-MyNameIs(CXTreeNode)
-	I_Can("提供控件树的维护功能")
-	I_Provide("子控件Z序维护，值从0起始")
-	And_You_Should_Notice("绘制顺序为队列从前向后，在后方的会覆盖前方的绘制。 \
-						  节点的生命周期通过引用计数维护，不要使用类裸指针操作，而是使用 \
-						  每个类提供的Ref类。")
-End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 

@@ -64,6 +64,9 @@
     <ClCompile Include="uiResponse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="XUI\XFrameWork\XElement.cpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XUI\XUI.h">
@@ -79,9 +82,6 @@
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XElement.hpp">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp">
@@ -155,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XCtrls\XFont.hpp">
       <Filter>XUI\XFrameWork\XCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XElement.h">
+      <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

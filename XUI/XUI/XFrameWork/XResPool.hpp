@@ -5,7 +5,7 @@
 
 class CXResPool
 {
-	XClass(VOID);
+	XClass;
 	XSingleton(CXResPool);
 public:
 	XResult SetResDir(CString prefix,CString dirPath);
@@ -13,10 +13,6 @@ public:
 protected:
 	std::map<CString/*prefix*/,CString/*path*/>	m_convertMap;
 };
-
-MyNameIs(CXResPool)
-	I_Provide("资源目录的管理及路径字符串的转换")
-End_Description;
 
 inline CXResPool::CXResPool()
 {}

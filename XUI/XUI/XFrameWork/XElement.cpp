@@ -1,146 +1,14 @@
 #pragma once
-#include "XBase.hpp"
-#include "XTree.hpp"
-#include "XNotifier.hpp"
-#include "XMsg.hpp"
-#include "XProperty.hpp"
-#include "../WTL/atlctrls.h"
+#include "XElement.h"
+#include <XFrameWork/XLayouter/Layouter.hpp>
 
-//////////////////////////////////////////////////////////////////////////
-
-// define property functions
-#define XProperty_Begin
-#define XProperty_Get(_name) \
-	virtual XResult Get##_name (Property::_name##Type& value) \
-	{ \
-		value = Property::_name##DefaultValue; \
-		return m_property.GetProperty(L#_name,value); \
-	}
-#define XProperty_Set(_name) \
-public: \
-	virtual XResult Set##_name (Property::_name##Type param) \
-	{ \
-		XResult result = m_property.SetProperty(L#_name,param); \
-		CXMsg_PropertyChanged msg; \
-		msg.name = L#_name; \
-		ProcessXMessage(msg); \
-		return  result;\
-	}
-#define XProperty(_name) \
-	XProperty_Get(_name) \
-	XProperty_Set(_name)
-
-#define XFakeProperty_Get(_name) \
-	virtual XResult Get##_name (Property::_name##Type& value);
-#define XFakeProperty_Set(_name) \
-	virtual XResult Set##_name (Property::_name##Type param);
-#define XFakeProperty(_name) \
-	XFakeProperty_Get(_name); \
-	XFakeProperty_Set(_name);
-
-#define XProperty_End
-
-// define XML converters
-#define XMLConvert_Begin(_name,_value) \
-{ \
-	CString& propName = _name; \
-	CString& propVaule = _value;
-#define XMLConvert(_name) \
-	if (Property::_name == propName) \
-	{ \
-		m_property.SetProperty(propName,Property::_name##XMLConverter::ConvertToValue(propVaule)); \
-		CXMsg_PropertyChanged msg; \
-		msg.name = propName; \
-		ProcessXMessage(msg); \
-	}else
-#define XMLFakeConvert(_name) \
-	if (Property::_name == propName) \
-	{ \
-		return Set##_name(Property::_name##XMLConverter::ConvertToValue(propVaule)); \
-	}else
-#define XMLConvert_End	{} \
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-class CXElement : public CXBase
-	, public CXTreeNode
-	, public CXNotifier
-{
-	XClass(CXBase);
-public:
-	CXElement();
-	~CXElement();
-
-	XProperty_Begin
-		XFakeProperty(Position)
-		XFakeProperty(Size)
-		XFakeProperty(LayoutRect)
-		XProperty(Rect)
-		XProperty(LayoutType)
-		XProperty(LayoutInvalid)
-		XProperty(LayoutDirection)
-		XProperty(Padding)
-		XProperty(Align)
-		XProperty(AutoWidth)
-		XProperty(AutoHeight)
-		XProperty(ExpandWidth)
-		XProperty(ExpandHeight)
-		XProperty(Color)
-		XProperty(BorderColor)
-		XProperty(BorderWidth)
-		XProperty(HitTest)
-		XProperty(ToolTip)
-		XProperty(Ghost)
-		XProperty(XFont)
-	XProperty_End;
-
-	// XMsg的接收入口函数
-	virtual XResult ProcessXMessage(CXMsg& msg);
-
-	// 对string类型的属性值的解析支持，用于XML的实例化，可通过该函数知道XML支持什么属性
-	virtual XResult SetXMLProperty(CString name,CString value);
-
-	Property::CXProperty& GetPrpertyRef()	{return m_property;};
-
-protected:
-	VOID _SendXMsg(CXMsg& pMsg);
-
-	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
-	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);
-	VOID On_CXMsg_Layout(CXMsg_Layout& arg);
-	VOID On_CXMsg_Paint(CXMsg_Paint& arg);
-	VOID On_CXMsg_PaintElement(CXMsg_PaintElement& arg);
-	VOID On_CXMsg_MouseEnter(CXMsg_MouseEnter& arg);
-	VOID On_CXMsg_MouseLeave(CXMsg_MouseLeave& arg);
-	VOID On_CXMsg_AttachDC(CXMsg_AttachDC& arg);
-	VOID On_CXMsg_FrameClick(CXMsg_FrameClick& arg);
-	VOID On_CXMsg_RealWndClosing(CXMsg_RealWndClosing& arg);
-protected:
-	Property::CXProperty	m_property;
-	BOOL	m_isLayouting;
-	CToolTipCtrl	m_toolTip;
-	XPtr<CGDIMemDC>	m_memDC;
-};
-
-typedef XSmartPtr<CXElement> ElementRef;
-
-#include "XElementUtil.hpp"
-
-MyNameIs(CXElement)
-	I_Provide("可绘制元素的基本属性及X消息路由,对xml创建ui元素做了属性上的支持")
-End_Description;
-
-//////////////////////////////////////////////////////////////////////////
-#include "XLayouter/Layouter.hpp"
-
-inline CXElement::CXElement()
-	: m_isLayouting(FALSE)
+CXElement::CXElement() : m_isLayouting(FALSE)
 	, m_memDC(nullptr)
 {
+
 }
 
-inline CXElement::~CXElement()
+CXElement::~CXElement()
 {
 	if (m_memDC)
 	{
@@ -148,33 +16,7 @@ inline CXElement::~CXElement()
 	}
 }
 
-inline XResult CXElement::SetXMLProperty( CString name,CString value )
-{
-	XMLConvert_Begin(name,value)
-		XMLConvert(Rect)
-		XMLFakeConvert(Position)
-		XMLFakeConvert(Size)
-		XMLFakeConvert(ID)
-		XMLConvert(Color)
-		XMLConvert(AutoWidth)
-		XMLConvert(AutoHeight)
-		XMLConvert(ExpandWidth)
-		XMLConvert(ExpandHeight)
-		XMLConvert(LayoutType)
-		XMLConvert(LayoutDirection)
-		XMLConvert(Align)
-		XMLConvert(BorderColor)
-		XMLConvert(BorderWidth)
-		XMLConvert(HitTest)
-		XMLConvert(Padding)
-		XMLConvert(ToolTip)
-		XMLConvert(Ghost)
-	XMLConvert_End
-
-	return XResult_NotSupport;
-}
-
-inline XResult CXElement::ProcessXMessage( CXMsg& msg )
+XResult CXElement::ProcessXMessage( CXMsg& msg )
 {
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_PropertyChanged)
@@ -192,9 +34,7 @@ inline XResult CXElement::ProcessXMessage( CXMsg& msg )
 	return XResult_OK;
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-inline VOID CXElement::_SendXMsg( CXMsg& pMsg )
+VOID CXElement::_SendXMsg( CXMsg& pMsg )
 {
 	if (pMsg.msgPolicy==MsgDispatchPolicy::Processor && pMsg.msgHandled)
 	{
@@ -236,9 +76,7 @@ inline VOID CXElement::_SendXMsg( CXMsg& pMsg )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-inline XResult CXElement::GetPosition(Property::PositionType& value)
+XResult CXElement::GetPosition( Property::PositionType& value )
 {
 	CRect rect;
 	GetRect(rect);
@@ -246,7 +84,7 @@ inline XResult CXElement::GetPosition(Property::PositionType& value)
 	return XResult_OK;
 }
 
-inline XResult CXElement::SetPosition(Property::PositionType param)
+XResult CXElement::SetPosition( Property::PositionType param )
 {
 	CRect rect;
 	XResult result = GetRect(rect);
@@ -261,7 +99,7 @@ inline XResult CXElement::SetPosition(Property::PositionType param)
 	return SetRect(rect);
 }
 
-inline XResult CXElement::GetSize(Property::SizeType& value)
+XResult CXElement::GetSize( Property::SizeType& value )
 {
 	SetDefPropertyValue(Size,value);
 
@@ -275,7 +113,7 @@ inline XResult CXElement::GetSize(Property::SizeType& value)
 	return XResult_OK;
 }
 
-inline XResult CXElement::SetSize(Property::SizeType param)
+XResult CXElement::SetSize( Property::SizeType param )
 {
 	CRect rect;
 	GetRect(rect);
@@ -283,7 +121,7 @@ inline XResult CXElement::SetSize(Property::SizeType param)
 	return SetRect(rect);
 }
 
-inline XResult CXElement::GetLayoutRect(Property::LayoutRectType& value)
+XResult CXElement::GetLayoutRect( Property::LayoutRectType& value )
 {
 	GetRect(value);
 	CRect padding;
@@ -295,7 +133,7 @@ inline XResult CXElement::GetLayoutRect(Property::LayoutRectType& value)
 	return XResult_OK;
 }
 
-inline XResult CXElement::SetLayoutRect(Property::LayoutRectType param)
+XResult CXElement::SetLayoutRect( Property::LayoutRectType param )
 {
 	CRect padding;
 	GetPadding(padding);
@@ -306,9 +144,7 @@ inline XResult CXElement::SetLayoutRect(Property::LayoutRectType param)
 	return SetSize(param.Size());
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-inline VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
+VOID CXElement::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 {
 	URP(arg);
 	if (arg.name == Property::Size)
@@ -320,12 +156,12 @@ inline VOID CXElement::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
 	return;
 }
 
-inline VOID CXElement::On_CXMsg_SizeChanged( CXMsg_SizeChanged& arg )
+VOID CXElement::On_CXMsg_SizeChanged( CXMsg_SizeChanged& arg )
 {
 	URP(arg);
 }
 
-inline VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
+VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 {
 	URP(arg);
 
@@ -379,7 +215,7 @@ inline VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 	}
 }
 
-inline VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
+VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 {
 	URP(arg);
 	BOOL bGhost = FALSE;
@@ -420,9 +256,8 @@ inline VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	arg.msgHandled = TRUE;
 }
 
-inline VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
+VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 {
-
 	arg.msgHandled = TRUE;
 	if (!m_memDC)
 	{
@@ -472,7 +307,7 @@ inline VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 	}
 }
 
-inline VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
+VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 {
 	if (arg.hostDC)
 	{
@@ -489,7 +324,7 @@ inline VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 			WTF;
 		}
 		m_memDC->ClearDrawDevice();
-		
+
 		CXMsg_PaintElement msg;
 		msg.paintChildren = FALSE;
 		ProcessXMessage(msg);
@@ -504,7 +339,7 @@ inline VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 	arg.msgHandled = FALSE;
 }
 
-inline VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
+VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 {
 	CString toolTip;
 	if (XSUCCEEDED(GetToolTip(toolTip)))
@@ -536,7 +371,7 @@ inline VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 	arg.msgHandled = TRUE;
 }
 
-inline VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
+VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
 {
 	if (m_toolTip.IsWindow())
 	{
@@ -547,13 +382,39 @@ inline VOID CXElement::On_CXMsg_MouseLeave( CXMsg_MouseLeave& arg )
 	arg.msgHandled = TRUE;
 }
 
-inline VOID CXElement::On_CXMsg_FrameClick( CXMsg_FrameClick& arg )
+VOID CXElement::On_CXMsg_FrameClick( CXMsg_FrameClick& arg )
 {
 	Whisper(arg);
 	arg.msgHandled = TRUE;
 }
 
-inline VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
+VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
 {
 	Whisper(arg);
+}
+
+XResult CXElement::SetXMLProperty( CString name,CString value )
+{
+	XMLConvert_Begin(name,value)
+		XMLConvert(Rect)
+		XMLFakeConvert(Position)
+		XMLFakeConvert(Size)
+		XMLFakeConvert(ID)
+		XMLConvert(Color)
+		XMLConvert(AutoWidth)
+		XMLConvert(AutoHeight)
+		XMLConvert(ExpandWidth)
+		XMLConvert(ExpandHeight)
+		XMLConvert(LayoutType)
+		XMLConvert(LayoutDirection)
+		XMLConvert(Align)
+		XMLConvert(BorderColor)
+		XMLConvert(BorderWidth)
+		XMLConvert(HitTest)
+		XMLConvert(Padding)
+		XMLConvert(ToolTip)
+		XMLConvert(Ghost)
+		XMLConvert_End
+
+		return XResult_NotSupport;
 }

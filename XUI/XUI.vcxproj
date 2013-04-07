@@ -42,6 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>XUI\CXImage\;VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>XUI;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -115,7 +116,8 @@
     <ClInclude Include="XUI\XFrameWork\XCtrls\XStatic.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XElement.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XElement.h" />
+    <ClCompile Include="XUI\XFrameWork\XElement.cpp" />
     <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp" />
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
     <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />

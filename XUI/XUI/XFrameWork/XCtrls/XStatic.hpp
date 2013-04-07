@@ -1,19 +1,11 @@
 #pragma once
-#include "../XElement.hpp"
+#include "../XElement.h"
 #include "XFont.hpp"
 
 class CXStatic : public CXElement
 {
-	XClass(CXElement);
-	CXStatic()
-	{
-		;
-	}
-	~CXStatic()
-	{
-		;
-	}
-
+	XClass;
+public:
 	XProperty_Begin
 		XProperty(Text)
 		XProperty(TextColor)
@@ -30,17 +22,13 @@ public:
 
 typedef XSmartPtr<CXStatic> CXStaticRef;
 
-MyNameIs(CXStatic)
-	I_Can("ÏÔÊ¾¾²Ì¬ÎÄ±¾")
-End_Description;
-
 //////////////////////////////////////////////////////////////////////////
 
 inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
 	XMsgTraceID(msg);
 
-	BaseClass::On_CXMsg_Paint(msg);
+	__super::On_CXMsg_Paint(msg);
 
 	BOOL bGhost = FALSE;
 	GetGhost (bGhost);
@@ -90,7 +78,7 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 
 inline XResult CXStatic::ProcessXMessage( CXMsg& msg )
 {
-	BaseClass::ProcessXMessage(msg);
+	__super::ProcessXMessage(msg);
 	
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_Paint);
@@ -106,5 +94,5 @@ inline XResult CXStatic::SetXMLProperty( CString name,CString value )
 		XMLConvert(TextColor)
 	XMLConvert_End
 
-	return BaseClass::SetXMLProperty(name,value);
+	return __super::SetXMLProperty(name,value);
 }

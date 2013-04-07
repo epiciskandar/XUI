@@ -13,7 +13,7 @@ typedef std::function<XResult(NodeRef node)>	ListenerRegister;
 
 class CXGaia
 {
-	XClass(VOID);
+	XClass;
 	XSingleton(CXGaia);
 public:
 	NodeRef Create(CString className);
@@ -31,17 +31,13 @@ protected:
 	ListenerRegister	m_listenRegisterFunc;
 };
 
-MyNameIs(CXGaia)
-	I_Can("创建子节点")
-End_Description;
-
 //////////////////////////////////////////////////////////////////////////
 
 #define XUIXMLFlag		"XUI"
 #define XUIXMLVersion	"1"
 #define SubPropertyNodeName	"Property"
 
-#define RecordXClass(xclass) m_record[xclass::GetMyClassName()] = []{return new xclass;};
+#define RecordXClass(xclass) m_record[typeid(xclass).name()] = []{return new xclass;};
 
 inline CXGaia::CXGaia()
 {
@@ -54,6 +50,7 @@ inline CXGaia::CXGaia()
 
 inline NodeRef CXGaia::Create( CString className )
 {
+	className = _T("class ")+className;
 	auto i = m_record.find(className);
 	if (i != m_record.end())
 	{

@@ -1,5 +1,5 @@
 #pragma once
-#include "XElement.hpp"
+#include "XElement.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +37,7 @@ class CXRealWnd :
 	public CXElement,
 	public CWindowImpl<CXRealWnd>
 {
-	XClass(CXElement);
+	XClass;
 	//DECLARE_WND_CLASS_EX(_T("XUIWnd1"),CS_HREDRAW|CS_VREDRAW|CS_DROPSHADOW, COLOR_WINDOW);
 public:
 	CXRealWnd();
@@ -105,10 +105,6 @@ protected:
 };
 
 typedef XSmartPtr<CXRealWnd> CXRealWndRef;
-
-MyNameIs(CXRealWnd)
-	I_Provide("将windows消息转换为内部消息，并提供真窗口的一些基本维护，暴漏WTL::CWindow对外")
-End_Description;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -213,7 +209,7 @@ inline XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 
 inline XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 {
-	BaseClass::ProcessXMessage(msg);
+	__super::ProcessXMessage(msg);
 
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_PropertyChanged);
@@ -290,7 +286,7 @@ inline LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
 
 inline XResult CXRealWnd::SetXMLProperty( CString name,CString value )
 {
-	BaseClass::SetXMLProperty(name,value);
+	__super::SetXMLProperty(name,value);
 	
 	XMLConvert_Begin(name,value)
 		XMLConvert(Title)

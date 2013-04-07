@@ -4,16 +4,8 @@
 class CXFont : public CFont
     ,public CXProperter
 {
-    XClass(CXFont);
+    XClass;
 public:
-    CXFont()
-    {
-        return;
-    }
-    ~CXFont()
-    {
-        return;
-    }
     CString GetFontName() {return _fontName;}
     INT GetFontSize() {return _fontSize;}
     void SetFont(CString fontName, INT fontSize);
@@ -28,12 +20,7 @@ public:
 private:
     CString _fontName;
     INT _fontSize;
-
-    
 };
-MyNameIs(CXFont)
-	I_Can("√Ë ˆ◊÷ÃÂ")
-End_Description;
 
 
 inline void CXFont::ChangeWork()
