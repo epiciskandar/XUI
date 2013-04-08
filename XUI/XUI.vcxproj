@@ -43,11 +43,13 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>XUI\CXImage\;VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
     <IncludePath>XUI;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)\intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>XUI\CXImage\;VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
     <IncludePath>XUI;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)\intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
