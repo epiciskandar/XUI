@@ -64,7 +64,7 @@
     <ClCompile Include="uiResponse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XUI\XFrameWork\XElement.hpp">
+    <ClCompile Include="XUI\XFrameWork\XElement.cpp">
       <Filter>XUI\XFrameWork</Filter>
     </ClCompile>
   </ItemGroup>

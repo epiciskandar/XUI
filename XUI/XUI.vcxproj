@@ -47,6 +47,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>XUI\CXImage\;VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>XUI;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,6 +102,7 @@
     <ClCompile Include="XUI\TinyXML\tinyxml.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp" />
+    <ClCompile Include="XUI\XFrameWork\XElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="uiResponse.h" />
@@ -117,7 +119,6 @@
     <ClInclude Include="XUI\XFrameWork\XDefine.hpp" />
     <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp" />
     <ClInclude Include="XUI\XFrameWork\XElement.h" />
-    <ClCompile Include="XUI\XFrameWork\XElement.hpp" />
     <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp" />
     <ClInclude Include="XUI\XFrameWork\XFrame.hpp" />
     <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />
