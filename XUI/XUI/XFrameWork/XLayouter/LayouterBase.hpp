@@ -1,4 +1,7 @@
 #pragma once
+#include "XFrameWork/XBase.hpp"
+#include "XFrameWork/XProperty.hpp"
+#include "XFrameWork/XElement.h"
 
 namespace Layouter
 {
