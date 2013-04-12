@@ -91,7 +91,7 @@ public:
 	SupportType(m_propertyMap,CPropertyValue<CString>);
 	SupportType(m_propertyMap,CPropertyValue<DWORD>);
 	SupportType(m_propertyMap,CPropertyValue<INT>);
-	SupportType(m_propertyMap,CPropertyValue<NodeRef>);
+	SupportType(m_propertyMap,CPropertyValue<XNodeRef>);
 	SupportType(m_propertyMap,CPropertyValue<CRect>);
 	SupportType(m_propertyMap,CPropertyValue<CPoint>);
 	SupportType(m_propertyMap,CPropertyValue<CSize>);
@@ -370,7 +370,7 @@ DefineProperty(ToolTip,			CString,			_T(""));
 DefineProperty(FontName,		CString,			_T(""));
 DefineProperty(FontSize,		INT,				11);
 DefineProperty(Offset,		    CPoint,				CPoint(0,0));
-DefineProperty(XFont,		    NodeRef,			nullptr);
+DefineProperty(XFont,		    XNodeRef,			nullptr);
 };
 
 

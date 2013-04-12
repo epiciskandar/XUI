@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XUI", "XUI\XUI.vcxproj", "{E471B6BA-8303-42E8-A157-7FC9D8A23879}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uier", "uier\uier.vcxproj", "{393EFA2A-6024-4D4F-BF6A-A0D3F2C31E67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E471B6BA-8303-42E8-A157-7FC9D8A23879} = {E471B6BA-8303-42E8-A157-7FC9D8A23879}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +18,10 @@ Global
 		{E471B6BA-8303-42E8-A157-7FC9D8A23879}.Debug|Win32.Build.0 = Debug|Win32
 		{E471B6BA-8303-42E8-A157-7FC9D8A23879}.Release|Win32.ActiveCfg = Release|Win32
 		{E471B6BA-8303-42E8-A157-7FC9D8A23879}.Release|Win32.Build.0 = Release|Win32
+		{393EFA2A-6024-4D4F-BF6A-A0D3F2C31E67}.Debug|Win32.ActiveCfg = Debug|Win32
+		{393EFA2A-6024-4D4F-BF6A-A0D3F2C31E67}.Debug|Win32.Build.0 = Debug|Win32
+		{393EFA2A-6024-4D4F-BF6A-A0D3F2C31E67}.Release|Win32.ActiveCfg = Release|Win32
+		{393EFA2A-6024-4D4F-BF6A-A0D3F2C31E67}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

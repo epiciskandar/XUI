@@ -1,5 +1,4 @@
 #pragma once
-#include "XDefine.hpp"
 #include <shlobj.h>
 
 namespace Util
@@ -111,34 +110,5 @@ namespace Util
 			outStr.ReleaseBuffer();
 			return XResult_OK;  
 		}
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-namespace Util
-{
-	namespace Class
-	{
-		class CRefCountImpl
-		{
-		public:
-			ULONG STDMETHODCALLTYPE AddRef()
-			{
-				return InterlockedIncrement(&m_refCount);
-			}
-			ULONG STDMETHODCALLTYPE Release()
-			{
-				unsigned long ul = 0;
-				if ((ul = InterlockedDecrement(&m_refCount)) == 0)
-				{
-					delete this;
-				}
-				return ul;
-			}
-			unsigned long m_refCount;
-			CRefCountImpl():m_refCount(0){}
-			virtual ~CRefCountImpl(){};
-		};
 	}
 }

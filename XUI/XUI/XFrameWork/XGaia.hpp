@@ -1,32 +1,29 @@
 #pragma once
 #include "XTree.hpp"
 #include <map>
-#include <functional>
 
-#include "XFrameWork/XRealWnd.hpp"
-#include "XFrameWork/XCtrls/XStatic.hpp"
-#include "XFrameWork/XCtrls/XImage.hpp"
+#include "XRealWnd.hpp"
+#include "XCtrls/XStatic.hpp"
+#include "XCtrls/XImage.hpp"
 
 #include "../TinyXML/tinyxml.h"
 
-typedef std::function<XResult(NodeRef node)>	ListenerRegister;
-
-class CXGaia
+class CXGaia : public IXGaia
 {
 	XClass;
 	XSingleton(CXGaia);
 public:
-	NodeRef Create(CString className);
-	NodeRef CreateFromXML(CString xmlFile);
-	NodeRef ParseXMLNode(TiXmlElement* pElement);
-	XResult ParseAndSetParams(NodeRef node,const TiXmlElement* pElement);
-	XResult ParseAndSetProperter(NodeRef properter,const TiXmlElement* proplement);
-	XResult SetListenerRegister(ListenerRegister reger);
+	XNodeRef Create(CString className) override;
+	XNodeRef CreateFromXML(CString xmlFile) override;
+	XResult SetListenerRegister(ListenerRegister reger) override;
+	XNodeRef ParseXMLNode(TiXmlElement* pElement);
+	XResult ParseAndSetParams(XNodeRef node,const TiXmlElement* pElement);
+	XResult ParseAndSetProperter(XNodeRef properter,const TiXmlElement* proplement);
 
 protected:
 	XResult _CheckAndSkipXMLRoot(TiXmlElement* pRoot);
 protected:
-	typedef std::map<CString,std::function<NodeRef()>> ElementRecord;
+	typedef std::map<CString,std::function<XNodeRef()>> ElementRecord;
 	ElementRecord m_record;
 	ListenerRegister	m_listenRegisterFunc;
 };
@@ -48,13 +45,13 @@ inline CXGaia::CXGaia()
 	RecordXClass(CXFont);
 }
 
-inline NodeRef CXGaia::Create( CString className )
+inline XNodeRef CXGaia::Create( CString className )
 {
 	className = _T("class ")+className;
 	auto i = m_record.find(className);
 	if (i != m_record.end())
 	{
-		return NodeRef((i->second)());	// it is important to init NodeRef this way
+		return XNodeRef((i->second)());	// it is important to init XNodeRef this way
 	}
 	else
 	{
@@ -63,7 +60,7 @@ inline NodeRef CXGaia::Create( CString className )
 	return nullptr;
 }
 
-inline NodeRef CXGaia::CreateFromXML( CString xmlFile )
+inline XNodeRef CXGaia::CreateFromXML( CString xmlFile )
 {
 	CStringA xmlFileA(xmlFile);
 	TiXmlDocument doc;
@@ -83,7 +80,7 @@ inline NodeRef CXGaia::CreateFromXML( CString xmlFile )
 					pRoot = childNode->ToElement();
 					if (pRoot)
 					{
-						NodeRef rootNode = ParseXMLNode(pRoot);
+						XNodeRef rootNode = ParseXMLNode(pRoot);
 						return rootNode;
 					}
 				}
@@ -93,14 +90,14 @@ inline NodeRef CXGaia::CreateFromXML( CString xmlFile )
 	return nullptr;
 }
 
-inline NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
+inline XNodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 {
 	CStringA strClass = pElement->Value();
 	if (strClass == SubPropertyNodeName)
 	{
 		return nullptr;
 	}
-	NodeRef node;
+	XNodeRef node;
 	CString strClassName = _T("C");
 	strClassName += strClass;
 	node = Create(strClassName);
@@ -115,7 +112,7 @@ inline NodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 		TiXmlElement* pChildElement = pChild->ToElement();
 		if (pChildElement)
 		{
-			NodeRef childNode = ParseXMLNode(pChildElement);
+			XNodeRef childNode = ParseXMLNode(pChildElement);
 			if (childNode)
 			{
 				node->AppendChild(childNode);
@@ -149,7 +146,7 @@ inline XResult CXGaia::_CheckAndSkipXMLRoot( TiXmlElement* pRoot )
 	return XResult_Error;
 }
 
-inline XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElement )
+inline XResult CXGaia::ParseAndSetParams( XNodeRef node,const TiXmlElement* pElement )
 {
 	CheckParam(node && pElement);
 	XSmartPtr<CXElement> element = node;
@@ -179,7 +176,7 @@ inline XResult CXGaia::ParseAndSetParams( NodeRef node,const TiXmlElement* pElem
 			{
 				CString name = childElement->Value();
 				CString className = _T("C") + name;
-				NodeRef propNode = Create(className);
+				XNodeRef propNode = Create(className);
 				if (propNode)
 				{
 					ParseAndSetProperter(propNode,childElement);
@@ -198,7 +195,7 @@ inline XResult CXGaia::SetListenerRegister( ListenerRegister reger )
 	return XResult_OK;
 }
 
-inline XResult CXGaia::ParseAndSetProperter( NodeRef properterNode,const TiXmlElement* proplement )
+inline XResult CXGaia::ParseAndSetProperter( XNodeRef properterNode,const TiXmlElement* proplement )
 {
 	const TiXmlElement* pchildElement = proplement->ToElement();
 	const TiXmlAttribute* pchildAttr = pchildElement->FirstAttribute();

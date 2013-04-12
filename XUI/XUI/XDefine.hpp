@@ -1,5 +1,9 @@
 #pragma once
 #include <tchar.h>
+#include <Windows.h>
+#include <WindowsX.h>
+#include <atlstr.h>
+#include <atldef.h>
 
 enum XResult
 {

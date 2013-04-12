@@ -7,7 +7,7 @@ public:
 	CXEar() : m_earID(0){}
 	virtual ~CXEar(){}
 
-	virtual XResult Listen(NodeRef node)
+	virtual XResult Listen(XNodeRef node)
 	{
 		ElementRef element(node);
 		if (element)
@@ -77,7 +77,7 @@ public:
 class CXUIListenerRegister
 {
 public:
-	XResult OnCreateElement(NodeRef node)
+	XResult OnCreateElement(XNodeRef node)
 	{
 		if (node->GetID() == _T("Close"))
 		{

@@ -1,6 +1,6 @@
 #pragma once
 #include "XElement.h"
-#include <XFrameWork/XLayouter/Layouter.hpp>
+#include "XLayouter/Layouter.hpp"
 
 CXElement::CXElement() : m_isLayouting(FALSE)
 	, m_memDC(nullptr)
@@ -47,7 +47,7 @@ VOID CXElement::_SendXMsg( CXMsg& pMsg )
 	case MsgDirection::UpToRootThenDown:
 		if (m_father)
 		{
-			ElementRef(NodeRef(m_father))->ProcessXMessage(pMsg);
+			ElementRef(XNodeRef(m_father))->ProcessXMessage(pMsg);
 		}
 		else
 		{

@@ -9,7 +9,7 @@ public:
 		rect.OffsetRect(childRect.TopLeft());
 	}
 
-	static VOID TranslateRectToChildCoord(CRect& rect,NodeRef child)
+	static VOID TranslateRectToChildCoord(CRect& rect,XNodeRef child)
 	{
 		CRect childRect;
 		ElementRef element(child);
@@ -24,7 +24,7 @@ public:
 		pt.y -= childRect.top;
 	}
 
-	static VOID TranslatePointToChildCoord(CPoint& pt,NodeRef child)
+	static VOID TranslatePointToChildCoord(CPoint& pt,XNodeRef child)
 	{
 		CRect childRect;
 		ElementRef element(child);
@@ -43,7 +43,7 @@ public:
 		{
 			CPoint testPoint(pt);
 			TranslatePointToChildCoord(testPoint,root);
-			NodeRef childNode;
+			XNodeRef childNode;
 			root->GetFirstChild(childNode);
 			while (childNode)
 			{

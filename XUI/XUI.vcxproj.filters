@@ -43,9 +43,6 @@
     </Xml>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="XUI\TinyXML\tinystr.cpp">
       <Filter>XUI\XFrameWork\3rd\TinyXML</Filter>
     </ClCompile>
@@ -61,10 +58,10 @@
     <ClCompile Include="XUI\Others\CBuffer.cpp">
       <Filter>XUI\XFrameWork\3rd</Filter>
     </ClCompile>
-    <ClCompile Include="uiResponse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="XUI\XFrameWork\XElement.cpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClCompile>
+    <ClCompile Include="XUI\XFrameWork\XUI.cpp">
       <Filter>XUI\XFrameWork</Filter>
     </ClCompile>
   </ItemGroup>
@@ -75,19 +72,10 @@
     <ClInclude Include="XUI\XFrameWork\XBase.hpp">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XCreator.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XDefine.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XFrame.hpp">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XGaia.hpp">
@@ -150,14 +138,17 @@
     <ClInclude Include="XUI\XFrameWork\XNotifier.hpp">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
-    <ClInclude Include="uiResponse.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XCtrls\XFont.hpp">
       <Filter>XUI\XFrameWork\XCtrls</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XElement.h">
       <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XUI_include.h">
+      <Filter>XUI</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XSmartPtr.h">
+      <Filter>XUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

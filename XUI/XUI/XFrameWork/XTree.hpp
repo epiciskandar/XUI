@@ -1,40 +1,37 @@
 #pragma once
 #include "XBase.hpp"
 
-class CXTreeNode;
-typedef XSmartPtr<CXTreeNode> NodeRef;
-
-class CXTreeNode : public Util::Class::CRefCountImpl
+class CXTreeNode : public IXNode
 {
 	XClass;
 public:
 	CXTreeNode();
 	virtual ~CXTreeNode();
-	XResult SetID(CString id);
-	CString GetID() const;
-	XResult	AppendChild(NodeRef pChild);
-	XResult InsertAfter(NodeRef pChild,NodeRef pAfterMe);
-	XResult InsertBefore(NodeRef pChild,NodeRef pAfterMe);
-	XResult GetFirstChild(NodeRef& pChild);
-	XResult GetChild(CString id,NodeRef& pChild);
-	XResult SearchChild(CString id,NodeRef& pChild);	// search tree
-	XResult	SwapNode(NodeRef pNode1,NodeRef pNode2);
-	XResult	GetSibling(NodeRef& pBefore,NodeRef& pAfter);
-	XResult	GetLSibling(NodeRef& pSibling);
-	XResult	GetRSibling(NodeRef& pSibling);
-	XResult RemoveChild(NodeRef pChild);
-	NodeRef GetFather();
-	XResult RemoveFromTree(); // pick it out from father node
-	XResult RIPMySelf();
+	XResult SetID(CString id) override;
+	CString GetID() const override;
+	XResult	AppendChild(XNodeRef pChild) override;
+	XResult InsertAfter(XNodeRef pChild,XNodeRef pAfterMe) override;
+	XResult InsertBefore(XNodeRef pChild,XNodeRef pAfterMe) override;
+	XResult GetFirstChild(XNodeRef& pChild) override;
+	XResult GetChild(CString id,XNodeRef& pChild) override;
+	XResult SearchChild(CString id,XNodeRef& pChild) override;	// search tree
+	XResult	SwapNode(XNodeRef pNode1,XNodeRef pNode2) override;
+	XResult	GetSibling(XNodeRef& pBefore,XNodeRef& pAfter) override;
+	XResult	GetLSibling(XNodeRef& pSibling) override;
+	XResult	GetRSibling(XNodeRef& pSibling) override;
+	XResult RemoveChild(XNodeRef pChild) override;
+	XNodeRef GetFather() override;
+	XResult RemoveFromTree() override; // pick it out from father node
+	XResult RIPMySelf() override;
 
-	XResult IncreaseZOrder();
-	XResult DecreaseZOrder();
-	XResult MoveZOrderBottom();
+	XResult IncreaseZOrder() override;
+	XResult DecreaseZOrder() override;
+	XResult MoveZOrderBottom() override;
 
 protected:
-	typedef std::list<NodeRef> XNodeList;
+	typedef std::list<XNodeRef> XNodeList;
 	XResult _SetZOrder(INT zOrder);
-	XNodeList::iterator _GetNodeIter(NodeRef pNode);
+	XNodeList::iterator _GetNodeIter(XNodeRef pNode);
 protected:
 	CString m_ID;
 	CXTreeNode* m_father;
@@ -63,30 +60,30 @@ inline CString CXTreeNode::GetID() const
 	return m_ID;
 }
 
-inline XResult CXTreeNode::AppendChild( NodeRef pChild )
+inline XResult CXTreeNode::AppendChild( XNodeRef pChild )
 {
 	if (!pChild)
 	{
 		return XResult_InvalidArg;
 	}
 	m_children.push_back(pChild);
-	pChild->m_father = this;
+	XPtr<CXTreeNode>(pChild)->m_father = this;
 	return XResult_OK;
 }
 
-inline XResult CXTreeNode::RemoveChild( NodeRef pChild )
+inline XResult CXTreeNode::RemoveChild( XNodeRef pChild )
 {
 	XNodeList::iterator i = _GetNodeIter(pChild);
 	if (i != m_children.end())
 	{
 		m_children.erase(i);
-		pChild->m_father = NULL;
+		XPtr<CXTreeNode>(pChild)->m_father = NULL;
 		return XResult_OK;
 	}
 	return XResult_Fail;
 }
 
-inline NodeRef CXTreeNode::GetFather()
+inline XNodeRef CXTreeNode::GetFather()
 {
 	return m_father;
 }
@@ -99,12 +96,12 @@ inline XResult CXTreeNode::RIPMySelf()
 	}
 	for (auto& i:m_children)
 	{
-		i->m_father = nullptr;
+		XPtr<CXTreeNode>(i)->m_father = nullptr;
 	}
 	return XResult_OK;
 }
 
-inline CXTreeNode::XNodeList::iterator CXTreeNode::_GetNodeIter( NodeRef pNode )
+inline CXTreeNode::XNodeList::iterator CXTreeNode::_GetNodeIter( XNodeRef pNode )
 {
 	auto i=m_children.begin();
 	for (; i!=m_children.end(); ++i)
@@ -117,7 +114,7 @@ inline CXTreeNode::XNodeList::iterator CXTreeNode::_GetNodeIter( NodeRef pNode )
 	return i;
 }
 
-inline XResult CXTreeNode::GetFirstChild( NodeRef& pChild )
+inline XResult CXTreeNode::GetFirstChild( XNodeRef& pChild )
 {
 	if (m_children.empty())
 	{
@@ -127,7 +124,7 @@ inline XResult CXTreeNode::GetFirstChild( NodeRef& pChild )
 	return XResult_OK;
 }
 
-inline XResult CXTreeNode::GetChild( CString id,NodeRef& pChild )
+inline XResult CXTreeNode::GetChild( CString id,XNodeRef& pChild )
 {
 	auto i = m_children.begin();
 	while (i != m_children.end())
@@ -142,7 +139,7 @@ inline XResult CXTreeNode::GetChild( CString id,NodeRef& pChild )
 	return XResult_NotFound;
 }
 
-inline XResult CXTreeNode::GetSibling( NodeRef& pBefore,NodeRef& pAfter )
+inline XResult CXTreeNode::GetSibling( XNodeRef& pBefore,XNodeRef& pAfter )
 {
 	pBefore = nullptr;
 	pAfter = nullptr;
@@ -170,7 +167,7 @@ inline XResult CXTreeNode::GetSibling( NodeRef& pBefore,NodeRef& pAfter )
 	return XResult_OK;
 }
 
-inline XResult CXTreeNode::GetLSibling(NodeRef& pSibling)
+inline XResult CXTreeNode::GetLSibling(XNodeRef& pSibling)
 {
 	pSibling = nullptr;
 	if (!m_father)
@@ -190,7 +187,7 @@ inline XResult CXTreeNode::GetLSibling(NodeRef& pSibling)
 	return XResult_Fail;
 }
 
-inline XResult CXTreeNode::GetRSibling(NodeRef& pSibling)
+inline XResult CXTreeNode::GetRSibling(XNodeRef& pSibling)
 {
 	pSibling = nullptr;
 	if (!m_father)
@@ -210,7 +207,7 @@ inline XResult CXTreeNode::GetRSibling(NodeRef& pSibling)
 	return XResult_Fail;
 }
 
-inline XResult CXTreeNode::SearchChild( CString id,NodeRef& pChild )
+inline XResult CXTreeNode::SearchChild( CString id,XNodeRef& pChild )
 {
 	pChild = nullptr;
 	GetChild(id,pChild);
@@ -218,7 +215,7 @@ inline XResult CXTreeNode::SearchChild( CString id,NodeRef& pChild )
 	{
 		for (auto& i:m_children)
 		{
-			NodeRef childNode = i;
+			XNodeRef childNode = i;
 			childNode->SearchChild(id,pChild);
 			if (pChild)
 			{
@@ -236,4 +233,67 @@ inline XResult CXTreeNode::RemoveFromTree()
 		m_father->RemoveChild(this);
 	}
 	return XResult_OK;
+}
+
+inline XResult CXTreeNode::InsertAfter( XNodeRef pChild,XNodeRef pAfterMe )
+{
+	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+	{
+		if (*i == pAfterMe)
+		{
+			if (i == m_children.end())
+			{
+				m_children.push_back(pChild);
+			}
+			else
+			{
+				++i;
+				m_children.insert(i,pChild);
+			}
+			return XResult_OK;
+		}
+	}
+	return XResult_Fail;
+}
+
+inline XResult CXTreeNode::InsertBefore( XNodeRef pChild,XNodeRef pAfterMe )
+{
+	for (auto i=m_children.begin(); i!=m_children.end(); ++i)
+	{
+		if (*i == pAfterMe)
+		{
+			m_children.insert(i,pChild);
+			return XResult_OK;
+		}
+	}
+	return XResult_Fail;
+}
+
+inline XResult CXTreeNode::SwapNode( XNodeRef pNode1,XNodeRef pNode2 )
+{
+	auto i1 = std::find(m_children.begin(),m_children.end(),pNode1);
+	auto i2 = std::find(m_children.begin(),m_children.end(),pNode2);
+	if (i1!=m_children.end() && i2!=m_children.end())
+	{
+		auto swaper = *i1;
+		*i1 = *i2;
+		*i2 = swaper;
+		return XResult_OK;
+	}
+	return XResult_Fail;
+}
+
+inline XResult CXTreeNode::IncreaseZOrder()
+{
+	return XResult_NotImpl;
+}
+
+inline XResult CXTreeNode::DecreaseZOrder()
+{
+	return XResult_NotImpl;
+}
+
+inline XResult CXTreeNode::MoveZOrderBottom()
+{
+	return XResult_NotImpl;
 }

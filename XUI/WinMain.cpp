@@ -3,6 +3,8 @@
 #include "XUI/XUI.h"
 #include "uiResponse.h"
 
+#pragma comment(lib,"../Debug/xui.lib")
+
 void Prepare()
 {
 	CString path;
@@ -32,14 +34,14 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 
 	CString xmlPath = _T("res:/test.xml");
 	CXResPool::GetInstance().TranslateResPath(xmlPath);
-	NodeRef xmlNode = xui.GetGaia().CreateFromXML(xmlPath);
+	XNodeRef xmlNode = xui.GetGaia().CreateFromXML(xmlPath);
 
 	CXRealWndRef wnd = xmlNode;
 	if (wnd)
 	{
 		wnd->Create(0);
 		wnd->ShowWindow(SW_SHOW);
-		NodeRef textNode;
+		XNodeRef textNode;
 		xmlNode->SearchChild(_T("anotherText"),textNode);
 		//CXStaticRef textRef = textNode;
 		//textRef->SetPosition(CPoint(100,100));

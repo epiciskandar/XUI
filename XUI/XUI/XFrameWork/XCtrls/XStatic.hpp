@@ -51,7 +51,7 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 		CPen pen;
         pen.CreatePen(PS_SOLID,1,color);
         
-		NodeRef fontNode;
+		XNodeRef fontNode;
 		GetXFont(fontNode);
 		XPtr<CXFont> font(fontNode);
         if (font && font->GetFontName() != _T(""))

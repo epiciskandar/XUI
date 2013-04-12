@@ -238,7 +238,7 @@ namespace Layouter
 				return XResult_Error;
 			}
 
-			NodeRef childNode;
+			XNodeRef childNode;
 			element->GetFirstChild(childNode);
 			while (childNode)
 			{
@@ -273,7 +273,7 @@ namespace Layouter
 			{ // determine layout direction
 				direction = Property::LayoutDirectionDefaultValue;
 
-				NodeRef child;
+				XNodeRef child;
 				element->GetFirstChild(child);
 				ElementRef childElement(child);
 				BOOL determined = FALSE;
