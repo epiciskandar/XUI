@@ -3,13 +3,13 @@
 
 #include <map>
 
-class CXResPool
+class CXResPool : public IXResPool
 {
 	XClass;
 	XSingleton(CXResPool);
 public:
-	XResult SetResDir(CString prefix,CString dirPath);
-	XResult TranslateResPath(CString& path);
+	XResult SetResDir(CString prefix,CString dirPath) override;
+	XResult TranslateResPath(CString& path) override;
 protected:
 	std::map<CString/*prefix*/,CString/*path*/>	m_convertMap;
 };

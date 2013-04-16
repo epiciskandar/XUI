@@ -10,53 +10,6 @@
 namespace Property
 { \
 
-//////////////////////////////////////////////////////////////////////////
-enum class ELayoutType
-{
-	Offset,
-	Block
-};
-
-namespace LayoutTypeString
-{
-	static LPCTSTR Layout_OffsetString = _T("offset");
-	static LPCTSTR Layout_BlockString = _T("block");
-}
-
-enum class ELayoutDirection
-{
-	Horizon,
-	Vertical
-};
-
-namespace LayoutDirectionString
-{
-	static LPCTSTR LayoutDirecting_HorizonString = _T("horizon");
-	static LPCTSTR LayoutDirection_VerticalString = _T("vertical");
-}
-
-enum class EAlignType
-{
-	Left,
-	Top,
-	Right,
-	Bottom,
-	//Center,
-	//HCenter,
-	//VCenter,
-	//Element,
-};
-
-namespace AlignTypeString
-{
-	static LPCTSTR Align_LeftString = _T("left");
-	static LPCTSTR Align_TopString = _T("top");
-	static LPCTSTR Align_RightString = _T("right");
-	static LPCTSTR Align_BottomString = _T("bottom");
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 #define SupportType(_prop,_type) \
 	XResult SetProperty(CString key,const _type::ValueType& value) \
 	{ \
@@ -91,7 +44,6 @@ public:
 	SupportType(m_propertyMap,CPropertyValue<CString>);
 	SupportType(m_propertyMap,CPropertyValue<DWORD>);
 	SupportType(m_propertyMap,CPropertyValue<INT>);
-	SupportType(m_propertyMap,CPropertyValue<XNodeRef>);
 	SupportType(m_propertyMap,CPropertyValue<CRect>);
 	SupportType(m_propertyMap,CPropertyValue<CPoint>);
 	SupportType(m_propertyMap,CPropertyValue<CSize>);
@@ -100,6 +52,23 @@ public:
 	SupportType(m_propertyMap,CPropertyValue<EAlignType>);
 	SupportType(m_propertyMap,CPropertyValue<ELayoutDirection>);
 
+	// 基于引用计数的对象不能简单地用内存buffer完成
+	XResult SetProperty(CString key,const XNodeRef& value)
+	{
+		m_nodeMap[key] = value;
+		return XResult_OK;
+	}
+	XResult GetProperty(CString key,XNodeRef& value) const
+	{
+		auto ci = m_nodeMap.find(key);
+		if (ci == m_nodeMap.end())
+		{
+			return XResult_NotFound;
+		}
+		value = ci->second;
+		return XResult_OK;
+	}
+
 	BOOL IsChanged(CString key);
 	VOID ChangeRestore(CString key/*empty means all*/);
 
@@ -107,6 +76,7 @@ public:
 	XResult	Switch(CXProperty& rhs);
 protected:
 	std::map<CString,CBuffer>	m_propertyMap;
+	std::map<CString,XNodeRef>	m_nodeMap;
 };
 
 
@@ -149,235 +119,7 @@ inline VOID CXProperty::ChangeRestore( CString key )
 
 //////////////////////////////////////////////////////////////////////////
 
-class CXMLConverter_CString
-{
-public:
-	static CString ConvertToValue(CString value)
-	{
-		return value;
-	}
-};
-
-class CXMLConverter_INT
-{
-public:
-	static INT ConvertToValue(CString value)
-	{
-		INT intValue;
-		intValue = _ttoi(value);
-		return intValue;
-	}
-};
-
-class CXMLConverter_DWORD
-{
-public:
-	static DWORD ConvertToValue(CString value)
-	{
-		DWORD dwValue;
-		_stscanf_s(value,_T("%u"),&dwValue);
-		return dwValue;
-	}
-};
-
-class CXMLConverter_HWND: public CXMLConverter_DWORD
-{};
-
-class CXMLConverter_COLORREF
-{
-public:
-	static COLORREF ConvertToValue(CString value)
-	{
-		COLORREF dwValue;
-		DWORD r = 0;
-		DWORD g = 0;
-		DWORD b = 0;
-		DWORD a = 0;
-		_stscanf_s(value,_T("%u,%u,%u,%u"),&r,&g,&b,&a);
-		dwValue = RGBA(r,g,b,a);
-		return dwValue;
-	}
-};
-
-class CXMLConverter_BOOL
-{
-public:
-	static COLORREF ConvertToValue(CString value)
-	{
-		BOOL boolValue = FALSE;
-		if (value == _T("true"))
-		{
-			boolValue = TRUE;
-		}
-		else
-		{
-			boolValue = _ttoi(value)==0? FALSE:TRUE;
-		}
-		return boolValue;
-	}
-};
-
-class CXMLConverter_CRect
-{
-public:
-	static CRect ConvertToValue(CString value)
-	{
-		CRect rect;
-		_stscanf_s(value,_T("%d,%d,%d,%d"),&rect.left,&rect.top,&rect.right,&rect.bottom);
-		return rect;
-	}
-};
-
-class CXMLConverter_CPoint
-{
-public:
-	static CPoint ConvertToValue(CString value)
-	{
-		CPoint point;
-		_stscanf_s(value,_T("%d,%d"),&point.x,&point.y);
-		return point;
-	}
-};
-
-class CXMLConverter_CSize
-{
-public:
-	static CSize ConvertToValue(CString value)
-	{
-		CSize size;
-		_stscanf_s(value,_T("%d,%d"),&size.cx,&size.cy);
-		return size;
-	}
-};
-
-class CXMLConverter_ELayoutType
-{
-public:
-	static ELayoutType ConvertToValue(CString value)
-	{
-		ELayoutType type = ELayoutType::Block;
-		if (value == LayoutTypeString::Layout_OffsetString)
-		{
-			type = ELayoutType::Offset;
-		}
-		else if (value == LayoutTypeString::Layout_BlockString)
-		{
-			type = ELayoutType::Block;
-		}
-		else
-		{
-			ATLASSERT(FALSE && "invalid layout type");
-		}
-		return type;
-	}
-};
-
-class CXMLConverter_ELayoutDirection
-{
-public:
-	static ELayoutDirection ConvertToValue(CString value)
-	{
-		ELayoutDirection directionValue = ELayoutDirection::Horizon;
-		if (value.CompareNoCase(LayoutDirectionString::LayoutDirecting_HorizonString) == 0)
-		{
-			directionValue = ELayoutDirection::Horizon;
-		}
-		else if (value.CompareNoCase(LayoutDirectionString::LayoutDirection_VerticalString) == 0)
-		{
-			directionValue = ELayoutDirection::Vertical;
-		}
-		return directionValue;
-	}
-};
-
-class CXMLConverter_EAlignType
-{
-public:
-	static EAlignType ConvertToValue(CString value)
-	{
-		EAlignType type = EAlignType::Left;
-		if (value == AlignTypeString::Align_LeftString)
-		{
-			type = EAlignType::Left;
-		}
-		else if (value == AlignTypeString::Align_TopString)
-		{
-			type = EAlignType::Top;
-		}
-		else if (value == AlignTypeString::Align_RightString)
-		{
-			type = EAlignType::Right;
-		}
-		else if (value == AlignTypeString::Align_BottomString)
-		{
-			type = EAlignType::Bottom;
-		}
-		else
-		{
-			ATLASSERT(FALSE && "invalid align type");
-		}
-		return type;
-	}
-};
-
-// contains each properties definition
-#define DefineProperter(_name,_type,_defaultValue)	\
-	static LPCTSTR _name = _T(#_name); \
-	static _type _name##DefaultValue = _defaultValue; \
-	typedef _type _name##Type; \
-	class CXMLConverter_##_type;
-
-#define DefineProperty(_name,_type,_defaultValue) \
-	DefineProperter(_name,_type,_defaultValue) \
-	typedef CXMLConverter_##_type _name##XMLConverter;
-
-#define SetDefPropertyValue(_name,_var) _var = Property::_name##DefaultValue;
-
-//				Name			Type				DefaultValue
-DefineProperty(ID,				CString,			_T(""));
-DefineProperty(Rect,			CRect,				CRect());
-DefineProperty(Position,		CPoint,				CPoint());
-DefineProperty(Size,			CSize,				CSize());
-DefineProperty(Text,			CString,			_T(""));
-DefineProperty(Title,			CString,			_T(""));
-DefineProperty(Color,			COLORREF,			0);
-DefineProperty(TextColor,		COLORREF,			0);
-DefineProperty(BorderColor,		COLORREF,			RGB(0,0,0));
-DefineProperty(BorderWidth,		DWORD,				1);
-DefineProperty(WinStyle,		DWORD,				WS_OVERLAPPEDWINDOW|WS_VISIBLE);
-DefineProperty(WinExStyle,		DWORD,				0);
-DefineProperty(HWnd,			HWND,				0);
-DefineProperty(CenterWindow,	BOOL,				TRUE);
-DefineProperty(ShowState,		BOOL,				FALSE);
-DefineProperty(LayoutType,		ELayoutType,		ELayoutType::Block);
-DefineProperty(LayoutInvalid,	BOOL,				TRUE);
-DefineProperty(LayoutDirection,	ELayoutDirection,	ELayoutDirection::Horizon);
-DefineProperty(LayoutRect,		CRect,				CRect());
-DefineProperty(Align,			EAlignType,			EAlignType::Left);
-DefineProperty(AutoWidth,		BOOL,				FALSE);
-DefineProperty(AutoHeight,		BOOL,				FALSE);
-DefineProperty(ExpandWidth,		BOOL,				FALSE);
-DefineProperty(ExpandHeight,	BOOL,				FALSE);
-DefineProperty(SizeLimit,		CRect,				CRect(-1,-1,-1,-1));
-DefineProperty(BorderFix,		BOOL,				FALSE);
-DefineProperty(File,			CString,			_T(""));
-DefineProperty(ImageWidth,		DWORD,				0);
-DefineProperty(HitTest,			DWORD,				HTCLIENT);
-DefineProperty(Margin,			CRect,				CRect());
-DefineProperty(Padding,			CRect,				CRect());
-DefineProperty(Ghost,			BOOL,				FALSE);
-DefineProperty(ToolTip,			CString,			_T(""));
-DefineProperty(FontName,		CString,			_T(""));
-DefineProperty(FontSize,		INT,				11);
-DefineProperty(Offset,		    CPoint,				CPoint(0,0));
-DefineProperty(XFont,		    XNodeRef,			nullptr);
-};
-
-
-//////////////////////////////////////////////////////////////////////////
-
 // define property functions
-#define XProperty_Begin
 #define XProperty_Get(_name) \
 	virtual XResult Get##_name (Property::_name##Type& value) \
 	{ \
@@ -406,25 +148,5 @@ public: \
 	XFakeProperty_Get(_name); \
 	XFakeProperty_Set(_name);
 
-#define XProperty_End
 
-// define XML converters
-#define XMLConvert_Begin(_name,_value) \
-{ \
-	CString& propName = _name; \
-	CString& propVaule = _value;
-#define XMLConvert(_name) \
-	if (Property::_name == propName) \
-	{ \
-	m_property.SetProperty(propName,Property::_name##XMLConverter::ConvertToValue(propVaule)); \
-	CXMsg_PropertyChanged msg; \
-	msg.name = propName; \
-	ProcessXMessage(msg); \
-}else
-#define XMLFakeConvert(_name) \
-	if (Property::_name == propName) \
-	{ \
-	return Set##_name(Property::_name##XMLConverter::ConvertToValue(propVaule)); \
-}else
-#define XMLConvert_End	{} \
 }

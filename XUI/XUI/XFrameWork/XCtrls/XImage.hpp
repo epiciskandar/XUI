@@ -6,18 +6,14 @@
 #include "../../CXImage/CxImage/ximage.h"
 #pragma warning(pop)
 
-class CXImage : public CXElement
+class CXImage : public CXElement , virtual public IXImage
 {
 	XClass;
 
-	XProperty_Begin
-		XProperty(File)
-        XProperty(Offset)
-	XProperty_End;
+	XProperty(File);
+    XProperty(Offset);
 
-	virtual XResult SetXMLProperty( CString name,CString value );
-
-	virtual XResult ProcessXMessage(CXMsg& msg);
+	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
 protected:
 	CxImage m_img;
@@ -53,7 +49,7 @@ inline VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 	msg.msgHandled = TRUE;
 }
 
-inline XResult CXImage::ProcessXMessage( CXMsg& msg )
+inline XResult CXImage::ProcessXMessage( IXMsg& msg )
 {
 	__super::ProcessXMessage(msg);
 	
@@ -61,18 +57,6 @@ inline XResult CXImage::ProcessXMessage( CXMsg& msg )
 		OnXMsg(CXMsg_Paint);
 		OnXMsg(CXMsg_PropertyChanged);
 	END_XMSG_MAP;
-
-	return XResult_OK;
-}
-
-inline XResult CXImage::SetXMLProperty( CString name,CString value )
-{
-	__super::SetXMLProperty(name,value);
-
-	XMLConvert_Begin(name,value)
-		XMLConvert(File)
-        XMLConvert(Offset)
-	XMLConvert_End
 
 	return XResult_OK;
 }

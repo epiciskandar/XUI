@@ -4,6 +4,9 @@
 #include <WindowsX.h>
 #include <atlstr.h>
 #include <atldef.h>
+#define _WTL_NO_CSTRING
+#include "WTL/atlapp.h"
+#include "WTL/atlmisc.h"
 
 enum XResult
 {
@@ -54,3 +57,6 @@ enum ESizeType	// see WM_SIZE on MSDN
 #endif
 
 #define WTF ATLASSERT(FALSE && "WTF!?");
+#define URP(...)	(__VA_ARGS__);
+#define IF_RETURN(_exp,_ret)	{if(_exp){return _ret;}}
+#define Return_OnXError(_exp)	{XResult result = _exp;if(XFAILED(result)){return result;}}

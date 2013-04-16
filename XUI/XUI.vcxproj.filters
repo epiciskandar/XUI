@@ -31,16 +31,14 @@
     <Filter Include="XUI\XFrameWork\3rd\TinyXML">
       <UniqueIdentifier>{0d633fb1-4689-44be-a6a6-bc86cbb56d23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XUI\Include">
+      <UniqueIdentifier>{ddf0d67d-4b2d-4720-823f-199058f0df7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="postbuild.bat">
       <Filter>Resource Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="..\Resource\Test.xml">
-      <Filter>Resource Files</Filter>
-    </Xml>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XUI\TinyXML\tinystr.cpp">
@@ -66,46 +64,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="XUI\XUI.h">
-      <Filter>XUI</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XBase.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XGaia.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XMsg.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XProperty.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XPropertyValue.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XResPool.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XTree.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XUtil.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XCtrls\XImage.hpp">
-      <Filter>XUI\XFrameWork\XCtrls</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XCtrls\XStatic.hpp">
       <Filter>XUI\XFrameWork\XCtrls</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XLayouter\Layouter.hpp">
@@ -135,20 +94,74 @@
     <ClInclude Include="XUI\Others\BLog.hpp">
       <Filter>XUI\XFrameWork\3rd</Filter>
     </ClInclude>
-    <ClInclude Include="XUI\XFrameWork\XNotifier.hpp">
-      <Filter>XUI\XFrameWork</Filter>
-    </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XCtrls\XFont.hpp">
       <Filter>XUI\XFrameWork\XCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XCtrls\XStatic.hpp">
+      <Filter>XUI\XFrameWork\XCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\IXMsg.h">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XDefine.hpp">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XElementDef.h">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XMsgNotify.h">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XPropertyDefine.h">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XSmartPtr.h">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XUI.h">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XUI_include.h">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XUtil.hpp">
+      <Filter>XUI\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XBase.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp">
+      <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XElement.h">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
-    <ClInclude Include="XUI\XUI_include.h">
-      <Filter>XUI</Filter>
+    <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp">
+      <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
-    <ClInclude Include="XUI\XSmartPtr.h">
-      <Filter>XUI</Filter>
+    <ClInclude Include="XUI\XFrameWork\XGaia.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XMsg.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XNotifier.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XProperty.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XPropertyValue.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XResPool.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XTree.hpp">
+      <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

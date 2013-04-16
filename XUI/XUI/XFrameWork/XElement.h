@@ -4,10 +4,10 @@
 #include "XNotifier.hpp"
 #include "XMsg.hpp"
 #include "XProperty.hpp"
-#include "../WTL/atlctrls.h"
 
 class CXElement 
-	: public CXTreeNode
+	: public virtual IXElement
+	, public CXTreeNode
 	, public CXNotifier
 {
 	XClass;
@@ -15,39 +15,39 @@ public:
 	CXElement();
 	~CXElement();
 
-	XProperty_Begin
-		XFakeProperty(Position)
-		XFakeProperty(Size)
-		XFakeProperty(LayoutRect)
-		XProperty(Rect)
-		XProperty(LayoutType)
-		XProperty(LayoutInvalid)
-		XProperty(LayoutDirection)
-		XProperty(Padding)
-		XProperty(Align)
-		XProperty(AutoWidth)
-		XProperty(AutoHeight)
-		XProperty(ExpandWidth)
-		XProperty(ExpandHeight)
-		XProperty(Color)
-		XProperty(BorderColor)
-		XProperty(BorderWidth)
-		XProperty(HitTest)
-		XProperty(ToolTip)
-		XProperty(Ghost)
-		XProperty(XFont)
-	XProperty_End;
+	XFakeProperty(Position);
+	XFakeProperty(Size);
+	XFakeProperty(LayoutRect);
+	XProperty(Rect);
+	XProperty(LayoutType);
+	XProperty(LayoutInvalid);
+	XProperty(LayoutDirection);
+	XProperty(Padding);
+	XProperty(Align);
+	XProperty(AutoWidth);
+	XProperty(AutoHeight);
+	XProperty(ExpandWidth);
+	XProperty(ExpandHeight);
+	XProperty(Color);
+	XProperty(BorderColor);
+	XProperty(BorderWidth);
+	XProperty(HitTest);
+	XProperty(ToolTip);
+	XProperty(Ghost);
+	XProperty(XFont);
+	virtual XResult Listen(XEar ear,DWORD& earID){return CXNotifier::Listen(ear,earID);};
+	virtual XResult StopListen(DWORD earID){return CXNotifier::StopListen(earID);};
+	virtual XResult Whisper(IXMsg& msg){return CXNotifier::Whisper(msg);};
 
 	// XMsg的接收入口函数
-	virtual XResult ProcessXMessage(CXMsg& msg);
+	virtual XResult ProcessXMessage(IXMsg& msg);
 
-	// 对string类型的属性值的解析支持，用于XML的实例化，可通过该函数知道XML支持什么属性
-	virtual XResult SetXMLProperty(CString name,CString value);
+	XResult SetXMLProperty( CString name,CString value );
 
 	Property::CXProperty& GetPrpertyRef()	{return m_property;};
 
 protected:
-	VOID _SendXMsg(CXMsg& pMsg);
+	VOID _SendXMsg(IXMsg& pMsg);
 
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);

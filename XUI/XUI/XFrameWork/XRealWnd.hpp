@@ -35,7 +35,8 @@ typedef CWinTraits<WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN |
 
 class CXRealWnd :
 	public CXElement,
-	public CWindowImpl<CXRealWnd>
+	public CWindowImpl<CXRealWnd>,
+	virtual public IXRealWnd
 {
 	XClass;
 	//DECLARE_WND_CLASS_EX(_T("XUIWnd1"),CS_HREDRAW|CS_VREDRAW|CS_DROPSHADOW, COLOR_WINDOW);
@@ -61,19 +62,15 @@ public:
 		)
 	END_MSG_MAP();
 
-	virtual XResult ProcessXMessage(CXMsg& msg);
+	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
-	XProperty_Begin
-		XProperty(Title)
-		XProperty(WinStyle)
-		XProperty(WinExStyle)
-		XFakeProperty_Get(HWnd)
-		XProperty(CenterWindow)
-	XProperty_End;
+	XProperty(Title)
+	XProperty(WinStyle)
+	XProperty(WinExStyle)
+	XFakeProperty_Get(HWnd)
+	XProperty(CenterWindow)
 
-	virtual XResult SetXMLProperty( CString name,CString value );
-
-	XResult Create(HWND hwndParent=0);
+	XResult Create(HWND hwndParent=0) override;
 
 protected:
 	LRESULT MessageTranslateFunc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -96,7 +93,7 @@ protected:
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_AppendElement(CXMsg_AppendElement& arg);
 	VOID On_CXMsg_Invalidate(CXMsg_Invalidate& arg);
-	VOID On_CXMsg_GetHWnd(CXMsg_GetHWnd& arg);
+	VOID On_CXMsg_GetRealWnd(CXMsg_GetRealWnd& arg);
 
 protected:
 	BOOL m_ignorePropertyChange;
@@ -207,7 +204,7 @@ inline XResult CXRealWnd::Create( HWND hwndParent/*=0*/ )
 	return XResult_Fail;
 }
 
-inline XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
+inline XResult CXRealWnd::ProcessXMessage( IXMsg& msg )
 {
 	__super::ProcessXMessage(msg);
 
@@ -215,7 +212,7 @@ inline XResult CXRealWnd::ProcessXMessage( CXMsg& msg )
 		OnXMsg(CXMsg_PropertyChanged);
 		OnXMsg(CXMsg_AppendElement);
 		OnXMsg(CXMsg_Invalidate);
-		OnXMsg(CXMsg_GetHWnd);
+		OnXMsg(CXMsg_GetRealWnd);
 	END_XMSG_MAP;
 	return XResult_OK;
 }
@@ -282,21 +279,6 @@ inline LRESULT CXRealWnd::_Translate_WM_Size( WPARAM wParam,LPARAM lParam )
 	m_ignorePropertyChange = FALSE;
 
 	return 0;
-}
-
-inline XResult CXRealWnd::SetXMLProperty( CString name,CString value )
-{
-	__super::SetXMLProperty(name,value);
-	
-	XMLConvert_Begin(name,value)
-		XMLConvert(Title)
-		XMLConvert(ShowState)
-		XMLConvert(WinStyle)
-		XMLConvert(WinExStyle)
-		XMLConvert(CenterWindow)
-	XMLConvert_End
-
-	return XResult_OK;
 }
 
 inline VOID CXRealWnd::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
@@ -421,9 +403,9 @@ inline VOID CXRealWnd::On_CXMsg_Invalidate( CXMsg_Invalidate& arg )
 	arg.msgHandled = TRUE;
 }
 
-inline VOID CXRealWnd::On_CXMsg_GetHWnd( CXMsg_GetHWnd& arg )
+inline VOID CXRealWnd::On_CXMsg_GetRealWnd( CXMsg_GetRealWnd& arg )
 {
-	arg.hWnd = m_hWnd;
+	arg.wnd = this;
 	arg.msgHandled = TRUE;
 }
 

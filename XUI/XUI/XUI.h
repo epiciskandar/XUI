@@ -10,6 +10,7 @@ public:
 	VOID Finalize() override;
 	VOID Work() override;
 	IXGaia& GetGaia() override;
+	IXResPool& GetResPool() override;
 private:
 	CAppModule m_atlModule;
 	HINSTANCE m_hInst;

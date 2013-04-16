@@ -4,8 +4,6 @@
 #include <vector>
 #include <functional>
 
-typedef std::function<XResult(CXMsg& msg)> XEar;
-
 class CXNotifier
 {
 	XClass;
@@ -28,7 +26,7 @@ public:
 		}
 		return XResult_NotFound;
 	}
-	XResult Whisper(CXMsg& msg)
+	XResult Whisper(IXMsg& msg)
 	{
 		std::vector<XEar> ears;
 		for (auto& i:m_ears)

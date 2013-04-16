@@ -1,5 +1,4 @@
 #pragma once
-#include "XUI/XUI.h"
 
 class CXEar
 {
@@ -9,7 +8,7 @@ public:
 
 	virtual XResult Listen(XNodeRef node)
 	{
-		ElementRef element(node);
+		XElementRef element(node);
 		if (element)
 		{
 			m_uiElement = element;
@@ -21,12 +20,12 @@ public:
 	{
 		if (m_uiElement && m_earID)
 		{
-			ElementRef notifier(m_uiElement);
+			XElementRef notifier(m_uiElement);
 			notifier->StopListen(m_earID);
 		}
 		return XResult_OK;
 	}
-	virtual XResult Hear(CXMsg& msg)
+	virtual XResult Hear(IXMsg& msg)
 	{
 		BEGIN_XMSG_MAP(msg)
 			OnXMsgFunc(CXMsg_BeforeDeaf,OnBeforeDeaf);
@@ -41,13 +40,13 @@ public:
 		return XResult_OK;
 	}
 	DWORD m_earID;
-	ElementRef m_uiElement;
+	XElementRef m_uiElement;
 };
 
 class CCloseListener : public CXEar
 {
 public:
-	virtual XResult Hear(CXMsg& msg) override
+	virtual XResult Hear(IXMsg& msg) override
 	{
 		BEGIN_XMSG_MAP(msg)
 			OnXMsgFunc(CXMsg_FrameClick,OnFrameClick);
@@ -59,9 +58,14 @@ public:
 	XResult OnFrameClick(CXMsg_FrameClick& msg)
 	{
 		URP(msg);
-		CXMsg_GetHWnd msg_GetHWnd;
+		CXMsg_GetRealWnd msg_GetHWnd;
 		m_uiElement->ProcessXMessage(msg_GetHWnd);
-		PostMessage(msg_GetHWnd.hWnd,WM_CLOSE,0,0);
+		if (msg_GetHWnd.wnd)
+		{
+			HWND hWnd = 0;
+			msg_GetHWnd.wnd->GetHWnd(hWnd);
+			PostMessage(hWnd,WM_CLOSE,0,0);
+		}
 		return XResult_OK;
 	}
 

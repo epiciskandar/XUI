@@ -27,13 +27,6 @@ class CXMsg : public IXMsg
 
 //////////////////////////////////////////////////////////////////////////
 
-class CXMsg_GetListenList : public CXMsg
-{
-	XMessage(CXMsg_GetListenList);
-
-	std::list<CString> XMsgList;
-};
-
 class CXMsg_PropertyChanged : public CXMsg
 {
 	XMessage(CXMsg_PropertyChanged);
@@ -117,53 +110,6 @@ class CXMsg_MouseLeave : public CXMsg_MouseMove
 {
 	XMessage(CXMsg_MouseLeave);
 	XNodeRef newFocusNode;
-};
-
-
-class CXMsg_GetHWnd : public CXMsg
-{
-	XMessage(CXMsg_GetHWnd);
-
-	HWND hWnd;
-	CXMsg_GetHWnd() : hWnd(0)
-	{
-		msgDirection = MsgDirection::UpToRoot;
-		msgPolicy = MsgDispatchPolicy::Processor;
-	}
-};
-
-class CXMsg_FrameClick : public CXMsg
-{
-	XMessage(CXMsg_FrameClick);
-
-	CPoint pt;
-	BOOL ctrlState;
-	BOOL shiftState;
-	BOOL middleBtnState;
-	BOOL rightBtnState;
-	BOOL XButton1State;
-	BOOL XButton2State;
-
-	CXMsg_FrameClick()
-		: ctrlState(FALSE)
-		, shiftState(FALSE)
-		, middleBtnState(FALSE)
-		, rightBtnState(FALSE)
-		, XButton1State(FALSE)
-		, XButton2State(FALSE)
-	{
-		msgPolicy = MsgDispatchPolicy::Processor;
-	}
-};
-
-class CXMsg_BeforeDeaf : public CXMsg
-{
-	XMessage(CXMsg_BeforeDeaf);
-};
-
-class CXMsg_RealWndClosing : public CXMsg
-{
-	XMessage(CXMsg_RealWndClosing);
 };
 
 //////////////////////////////////////////////////////////////////////////

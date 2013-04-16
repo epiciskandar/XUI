@@ -1,2 +1,2 @@
-#include "XUI/XUI.h"
+#include "stdafx.h"
 #include "uiResponse.h"

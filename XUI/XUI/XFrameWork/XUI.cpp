@@ -88,6 +88,11 @@ IXGaia& CXUI::GetGaia()
 	return CXGaia::GetInstance();
 }
 
+IXResPool& CXUI::GetResPool()
+{
+	return CXResPool::GetInstance();
+}
+
 __declspec(dllexport) BOOL GetIXUI(IXUI** pXUI)
 {
 	if (!pXUI)

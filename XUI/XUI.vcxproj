@@ -95,11 +95,6 @@
     <None Include="postbuild.bat" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\Resource\Test.xml">
-      <SubType>Designer</SubType>
-    </Xml>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="XUI\Others\CBuffer.cpp" />
     <ClCompile Include="XUI\TinyXML\tinystr.cpp" />
     <ClCompile Include="XUI\TinyXML\tinyxml.cpp" />
@@ -109,11 +104,14 @@
     <ClCompile Include="XUI\XFrameWork\XUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="XUI\IXMsg.h" />
     <ClInclude Include="XUI\Others\BLog.hpp" />
     <ClInclude Include="XUI\Others\CBuffer.h" />
     <ClInclude Include="XUI\Others\CFile.hpp" />
     <ClInclude Include="XUI\TinyXML\tinystr.h" />
     <ClInclude Include="XUI\TinyXML\tinyxml.h" />
+    <ClInclude Include="XUI\XDefine.hpp" />
+    <ClInclude Include="XUI\XElementDef.h" />
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
     <ClInclude Include="XUI\XFrameWork\XCtrls\XFont.hpp" />
     <ClInclude Include="XUI\XFrameWork\XCtrls\XImage.hpp" />
@@ -133,10 +131,12 @@
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
     <ClInclude Include="XUI\XFrameWork\XTree.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XUtil.hpp" />
+    <ClInclude Include="XUI\XMsgNotify.h" />
+    <ClInclude Include="XUI\XPropertyDefine.h" />
     <ClInclude Include="XUI\XSmartPtr.h" />
     <ClInclude Include="XUI\XUI.h" />
     <ClInclude Include="XUI\XUI_include.h" />
+    <ClInclude Include="XUI\XUtil.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

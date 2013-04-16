@@ -2,36 +2,32 @@
 #include "../XElement.h"
 #include "XFont.hpp"
 
-class CXStatic : public CXElement
+class CXText : public CXElement , virtual public IXText
 {
 	XClass;
 public:
-	XProperty_Begin
-		XProperty(Text)
-		XProperty(TextColor)
-        XProperty(XFont)
-	XProperty_End;
+	XProperty(Text);
+	XProperty(TextColor);
+    XProperty(XFont);
 
-	virtual XResult SetXMLProperty( CString name,CString value );
-
-	virtual XResult ProcessXMessage(CXMsg& msg);
+	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
 public:
 	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
 };
 
-typedef XSmartPtr<CXStatic> CXStaticRef;
+typedef XSmartPtr<CXText> CXStaticRef;
 
 //////////////////////////////////////////////////////////////////////////
 
-inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
+inline VOID CXText::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
 	XMsgTraceID(msg);
 
 	__super::On_CXMsg_Paint(msg);
 
 	BOOL bGhost = FALSE;
-	GetGhost (bGhost);
+	GetGhost(bGhost);
 	if (bGhost) //Ghost 属性为真 跳过绘制
 	{
 		return;
@@ -76,7 +72,7 @@ inline VOID CXStatic::On_CXMsg_Paint(CXMsg_Paint& msg)
 	msg.msgHandled = TRUE;
 }
 
-inline XResult CXStatic::ProcessXMessage( CXMsg& msg )
+inline XResult CXText::ProcessXMessage( IXMsg& msg )
 {
 	__super::ProcessXMessage(msg);
 	
@@ -85,14 +81,4 @@ inline XResult CXStatic::ProcessXMessage( CXMsg& msg )
 	END_XMSG_MAP;
 
 	return XResult_OK;
-}
-
-inline XResult CXStatic::SetXMLProperty( CString name,CString value )
-{
-	XMLConvert_Begin(name,value)
-		XMLConvert(Text)
-		XMLConvert(TextColor)
-	XMLConvert_End
-
-	return __super::SetXMLProperty(name,value);
 }

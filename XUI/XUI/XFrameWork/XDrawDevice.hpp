@@ -1,6 +1,5 @@
 #pragma once
 #include "XBase.hpp"
-#include "XUtil.hpp"
 
 class CXDrawDevice
 {

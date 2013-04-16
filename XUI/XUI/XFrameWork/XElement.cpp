@@ -16,7 +16,7 @@ CXElement::~CXElement()
 	}
 }
 
-XResult CXElement::ProcessXMessage( CXMsg& msg )
+XResult CXElement::ProcessXMessage( IXMsg& msg )
 {
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_PropertyChanged)
@@ -34,7 +34,7 @@ XResult CXElement::ProcessXMessage( CXMsg& msg )
 	return XResult_OK;
 }
 
-VOID CXElement::_SendXMsg( CXMsg& pMsg )
+VOID CXElement::_SendXMsg( IXMsg& pMsg )
 {
 	if (pMsg.msgPolicy==MsgDispatchPolicy::Processor && pMsg.msgHandled)
 	{
@@ -344,29 +344,35 @@ VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 	CString toolTip;
 	if (XSUCCEEDED(GetToolTip(toolTip)))
 	{
-		CXMsg_GetHWnd msg;
+		CXMsg_GetRealWnd msg;
 		_SendXMsg(msg);
+		if (!msg.wnd)
+		{
+			return;
+		}
+		HWND hWnd = 0;
+		msg.wnd->GetHWnd(hWnd);
 		if (!m_toolTip.IsWindow())
 		{
-			m_toolTip.Create(msg.hWnd, NULL, NULL, TTS_ALWAYSTIP | TTS_NOPREFIX,WS_EX_TOPMOST);
+			m_toolTip.Create(hWnd, NULL, NULL, TTS_ALWAYSTIP | TTS_NOPREFIX,WS_EX_TOPMOST);
 			if (!m_toolTip.IsWindow())
 			{
 				WTF;
 			}
-			m_toolTip.SetWindowLongPtr(GWLP_USERDATA,(LONG_PTR)msg.hWnd);
+			m_toolTip.SetWindowLongPtr(GWLP_USERDATA,(LONG_PTR)hWnd);
 
 			CSize size;
 			GetSize(size);
 			m_toolTip.SetMaxTipWidth(260);
-			m_toolTip.AddTool(msg.hWnd,_T(""));
+			m_toolTip.AddTool(hWnd,_T(""));
 			m_toolTip.SetDelayTime( TTDT_AUTOPOP, static_cast<int>(GetDoubleClickTime() * 10) ) ;
 			m_toolTip.SetDelayTime( TTDT_RESHOW, static_cast<int>(GetDoubleClickTime() * 10) ) ;
 			m_toolTip.Activate(TRUE);
 		}
-		MSG mouseMsg = { msg.hWnd, WM_MOUSEMOVE, 0, MAKELONG (arg.pt.x,arg.pt.y)};
+		MSG mouseMsg = { hWnd, WM_MOUSEMOVE, 0, MAKELONG (arg.pt.x,arg.pt.y)};
 		m_toolTip.RelayEvent(&mouseMsg);
 
-		m_toolTip.UpdateTipText((LPCTSTR)toolTip,msg.hWnd);
+		m_toolTip.UpdateTipText((LPCTSTR)toolTip,hWnd);
 	}
 	arg.msgHandled = TRUE;
 }
@@ -393,28 +399,69 @@ VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
 	Whisper(arg);
 }
 
+// define XML converters
+#define XMLConvert_Begin(_name,_value) \
+{ \
+	CString& propName = _name; \
+	CString& propValue = _value; \
+
+#define XMLFakeConvert(_name,_converter) \
+	if (Property::_name == propName) \
+	{ \
+		return Set##_name(_converter::ConvertToValue(propValue)); \
+	}else
+
+#define GetConverter(_name) Property::_name##XMLConverterType
+#define XMLConverter(_name) \
+	if(Property::_name == propName) \
+	{ \
+		m_property.SetProperty(propName,GetConverter(_name)::ConvertToValue(propValue)); \
+		CXMsg_PropertyChanged msg; \
+		msg.name = propName; \
+		ProcessXMessage(msg); \
+	}else
+
+#define XMLConvert_End	{} \
+}
+
 XResult CXElement::SetXMLProperty( CString name,CString value )
 {
 	XMLConvert_Begin(name,value)
-		XMLConvert(Rect)
-		XMLFakeConvert(Position)
-		XMLFakeConvert(Size)
-		XMLFakeConvert(ID)
-		XMLConvert(Color)
-		XMLConvert(AutoWidth)
-		XMLConvert(AutoHeight)
-		XMLConvert(ExpandWidth)
-		XMLConvert(ExpandHeight)
-		XMLConvert(LayoutType)
-		XMLConvert(LayoutDirection)
-		XMLConvert(Align)
-		XMLConvert(BorderColor)
-		XMLConvert(BorderWidth)
-		XMLConvert(HitTest)
-		XMLConvert(Padding)
-		XMLConvert(ToolTip)
-		XMLConvert(Ghost)
-		XMLConvert_End
+		XMLFakeConvert(Position,Property::CXMLConverter_CPoint)
+		XMLFakeConvert(Size,	Property::CXMLConverter_CSize)
+		XMLFakeConvert(ID,		Property::CXMLConverter_CString)
 
-		return XResult_NotSupport;
+		XMLConverter(Rect)
+		XMLConverter(Text)
+		XMLConverter(Title)
+		XMLConverter(Color)
+		XMLConverter(TextColor)
+		XMLConverter(BorderColor)
+		XMLConverter(BorderWidth)
+		XMLConverter(WinStyle)
+		XMLConverter(WinExStyle)
+		XMLConverter(CenterWindow)
+		XMLConverter(ShowState)
+		XMLConverter(LayoutType)
+		XMLConverter(LayoutDirection)
+		XMLConverter(Align)
+		XMLConverter(AutoWidth)
+		XMLConverter(AutoHeight)
+		XMLConverter(ExpandWidth)
+		XMLConverter(ExpandHeight)
+		XMLConverter(SizeLimit)
+		XMLConverter(BorderFix)
+		XMLConverter(File)
+		XMLConverter(ImageWidth)
+		XMLConverter(HitTest)
+		XMLConverter(Margin)
+		XMLConverter(Padding)
+		XMLConverter(Ghost)
+		XMLConverter(ToolTip)
+		XMLConverter(FontName)
+		XMLConverter(FontSize)
+		XMLConverter(Offset)
+	XMLConvert_End
+
+	return XResult_OK;
 }

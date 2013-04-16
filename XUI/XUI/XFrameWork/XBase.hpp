@@ -4,12 +4,10 @@
 #include <list>
 #include <set>
 
-#define _WTL_NO_CSTRING
-#include "../WTL/atlapp.h"
 #include "../WTL/atlwinx.h"		// reflection
 #include "../WTL/atlframe.h"
 #include "../WTL/atlcrack.h"	// message handle
-#include "../WTL/atlmisc.h"
+#include "../WTL/atlctrls.h"
 #include "../Others/CFile.hpp"
 
 #include "../Others/BLog.hpp"
@@ -38,10 +36,3 @@ private: \
 public: \
 	static ClassName& GetInstance(){static ClassName _instance;return _instance;};
 
-#define URP(...)	(__VA_ARGS__);
-#define IF_RETURN(_exp,_ret)	{if(_exp){return _ret;}}
-#define Return_OnXError(_exp)	{XResult result = _exp;if(XFAILED(result)){return result;}}
-
-//////////////////////////////////////////////////////////////////////////
-
-#include "XUtil.hpp"

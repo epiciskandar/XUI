@@ -40,7 +40,7 @@ inline CXGaia::CXGaia()
 {
 	RecordXClass(CXElement);
 	RecordXClass(CXRealWnd);
-	RecordXClass(CXStatic);
+	RecordXClass(CXText);
 	RecordXClass(CXImage);
 	RecordXClass(CXFont);
 }

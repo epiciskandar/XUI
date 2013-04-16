@@ -1,6 +1,4 @@
-//#include "VisualLeakDetector/include/vld.h"
-#define _CRTDBG_MAP_ALLOC
-#include "XUI/XUI.h"
+#include "stdafx.h"
 #include "uiResponse.h"
 
 #pragma comment(lib,"../Debug/xui.lib")
@@ -13,7 +11,9 @@ void Prepare()
 	Util::Path::GetDir(path);
 	Util::Path::GetParentDir(path);
 	path += _T("Resource/");
-	CXResPool::GetInstance().SetResDir(_T("res:"),path);
+	IXUI* pXUI = nullptr;
+	GetIXUI(&pXUI);
+	pXUI->GetResPool().SetResDir(_T("res:"),path);
 } 
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
@@ -24,35 +24,33 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	UNREFERENCED_PARAMETER(iCmdShow);
 
 	class CXUIListenerRegister listernerRegister;
-	
-	CXUI& xui = CXUI::GetInstance();
-	xui.Initialize(hInstance);
+
+	IXUI* pXUI = nullptr;
+	GetIXUI(&pXUI);
+	pXUI->Initialize(hInstance);
 	Prepare();
-	xui.GetGaia().SetListenerRegister(std::bind(
+	pXUI->GetGaia().SetListenerRegister(std::bind(
 		&CXUIListenerRegister::OnCreateElement,
 		listernerRegister,std::placeholders::_1));
 
 	CString xmlPath = _T("res:/test.xml");
-	CXResPool::GetInstance().TranslateResPath(xmlPath);
-	XNodeRef xmlNode = xui.GetGaia().CreateFromXML(xmlPath);
+	pXUI->GetResPool().TranslateResPath(xmlPath);
+	XNodeRef xmlNode = pXUI->GetGaia().CreateFromXML(xmlPath);
 
-	CXRealWndRef wnd = xmlNode;
+	XRealWndRef wnd = xmlNode;
 	if (wnd)
 	{
-		wnd->Create(0);
-		wnd->ShowWindow(SW_SHOW);
-		XNodeRef textNode;
-		xmlNode->SearchChild(_T("anotherText"),textNode);
-		//CXStaticRef textRef = textNode;
-		//textRef->SetPosition(CPoint(100,100));
-		//CXRealWndRef wndRef = xmlNode;
+		wnd->Create();
+		HWND hWnd = 0;
+		wnd->GetHWnd(hWnd);
+		ShowWindow(hWnd,SW_SHOW);
 
-		xui.Work();
+		pXUI->Work();
 
-		wnd->RIPMySelf();
+		XNodeRef(wnd)->RIPMySelf();
 	}
 
-	xui.Finalize();
+	pXUI->Finalize();
 	
 	return 0;
 }
