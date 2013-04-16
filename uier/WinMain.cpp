@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "uiResponse.h"
 
-#pragma comment(lib,"../Debug/xui.lib")
-
 void Prepare()
 {
 	CString path;
