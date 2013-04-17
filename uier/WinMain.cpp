@@ -8,7 +8,7 @@ void Prepare()
 	path.ReleaseBuffer();
 	Util::Path::GetDir(path);
 	Util::Path::GetParentDir(path);
-	path += _T("Resource/");
+	path += _T("../Resource/");
 	IXUI* pXUI = nullptr;
 	GetIXUI(&pXUI);
 	pXUI->GetResPool().SetResDir(_T("res:"),path);
