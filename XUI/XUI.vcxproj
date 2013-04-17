@@ -41,13 +41,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>XUI\CXImage\;VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)\intermediate\$(Configuration)\</IntDir>
+    <LibraryPath>XUI\CXImage\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\output\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>XUI\CXImage\;VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)\intermediate\$(Configuration)\</IntDir>
+    <LibraryPath>XUI\CXImage\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\output\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -131,10 +133,10 @@
     <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
     <ClInclude Include="XUI\XFrameWork\XTree.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XUI.h" />
     <ClInclude Include="XUI\XMsgNotify.h" />
     <ClInclude Include="XUI\XPropertyDefine.h" />
     <ClInclude Include="XUI\XSmartPtr.h" />
-    <ClInclude Include="XUI\XUI.h" />
     <ClInclude Include="XUI\XUI_include.h" />
     <ClInclude Include="XUI\XUtil.hpp" />
   </ItemGroup>

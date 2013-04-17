@@ -1,19 +1,20 @@
 @echo off
 
-del /f/q "../output/Lib_%1/include" > nul
-mkdir "../output/Lib_%1/include" > nul
-xcopy /f/c/y "XUI/*.h*" "../output/Lib_%1/include" > nul
-mkdir "../output/Lib_%1/include/WTL" > nul
-echo %cd%
-xcopy /f/c/y "./XUI/WTL/*.h" "../output/Lib_%1/include/WTL/" > nul
+@set outputdir=../output
 
-del /f/q "../output/Lib_%1/dll" > nul
-mkdir "../output/Lib_%1/dll" > nul
-xcopy /f/c/y "../%1/*.dll" "../output/Lib_%1/dll" > nul
-xcopy /f/c/y "../%1/*.lib" "../output/Lib_%1/dll" > nul
+del /f/q "%outputdir%/Lib_%1/include" > nul
+@mkdir "%outputdir%/Lib_%1/include" > nul
+xcopy /f/c/y "XUI/*.h*" "%outputdir%/Lib_%1/include" > nul
+@mkdir "%outputdir%/Lib_%1/include/WTL" > nul
+xcopy /f/c/y "./XUI/WTL/*.h" "%outputdir%/Lib_%1/include/WTL/" > nul
+
+del /f/q "%outputdir%/Lib_%1/dll" > nul
+@mkdir "%outputdir%/Lib_%1/dll" > nul
+xcopy /f/c/y "%outputdir%/%1/*.dll" "%outputdir%/Lib_%1/dll" > nul
+xcopy /f/c/y "%outputdir%/%1/*.lib" "%outputdir%/Lib_%1/dll" > nul
 
 if %1==Release goto release
-xcopy /f/c/y "VisualLeakDetector/bin/win32/*" "../%1" > nul
+xcopy /f/c/y "../VisualLeakDetector/bin/win32/*" "%outputdir%/%1" > nul
 goto gend
 
 :release

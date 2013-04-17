@@ -1,5 +1,5 @@
-#include "../XUI.h"
-
+#include "XUI.h"
+//#include "../../../VisualLeakDetector/include/vld.h"
 //#define XUI_TRACEMSG
 //#define XUI_DEBUGCONSOLE
 
@@ -100,5 +100,11 @@ __declspec(dllexport) BOOL GetIXUI(IXUI** pXUI)
 		return FALSE;
 	}
 	*pXUI = &CXUI::GetInstance();
+	return TRUE;
+}
+
+BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
+{
+	URP(hModule,ul_reason_for_call,lpReserved);
 	return TRUE;
 }
