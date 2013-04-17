@@ -30,7 +30,7 @@ def Parse(target="XUI_include.h"):
 			if "#pragma once" in line:
 				lines[i] = "\n"
 			temp += lines[i]
-		return temp
+		return "//////////////////////////\n////"+ target + "\n//////////////////////////\n" + temp +"\n//////////////////////////\n////End " + target + "\n//////////////////////////\n"
 	else:
 		print("Can't find "+target+"\n")
 		return ""
@@ -38,10 +38,10 @@ def Parse(target="XUI_include.h"):
 if __name__ == "__main__":
 	i = Parse()
 	if i != "":
-		f = open("XUI_include.h.new", "w")
+		f = open("XUI_include_new.h", "w")
 		f.write(i)
 		f.close()
-		print("Sava as XUI_include.h.new Complete!")
+		print("Sava as XUI_include_new.h Complete!")
 	else:
 		print("Failed!")
 	
