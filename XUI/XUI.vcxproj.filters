@@ -118,9 +118,6 @@
     <ClInclude Include="XUI\XSmartPtr.h">
       <Filter>XUI\Include</Filter>
     </ClInclude>
-    <ClInclude Include="XUI\XUI.h">
-      <Filter>XUI\Include</Filter>
-    </ClInclude>
     <ClInclude Include="XUI\XUI_include.h">
       <Filter>XUI\Include</Filter>
     </ClInclude>
@@ -161,6 +158,9 @@
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="XUI\XFrameWork\XTree.hpp">
+      <Filter>XUI\XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XUI.h">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "../XUI.h"
+#include "XUI.h"
 
 //#define XUI_TRACEMSG
 //#define XUI_DEBUGCONSOLE

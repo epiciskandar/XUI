@@ -1,6 +1,6 @@
 #pragma once
-#include "XFrameWork/XBase.hpp"
-#include "XFrameWork/XGaia.hpp"
+#include "XBase.hpp"
+#include "XGaia.hpp"
 
 class CXUI : public IXUI
 {
