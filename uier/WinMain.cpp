@@ -1,4 +1,5 @@
 #include "stdafx.h"
+//#include "../VisualLeakDetector/include/vld.h"
 #include "uiResponse.h"
 
 void Prepare()
