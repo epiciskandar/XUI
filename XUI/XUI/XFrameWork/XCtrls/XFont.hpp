@@ -20,12 +20,16 @@ public:
 private:
     CString _fontName;
     INT _fontSize;
+    HFONT _hFont;
 };
 
 
 inline void CXFont::ChangeWork()
 {
-    CreatePointFont(_fontSize*10, _fontName);
+    if (!_hFont)
+    {
+        _hFont = CreatePointFont(_fontSize*10, _fontName);
+    }    
 }
 
 inline XResult CXFont::SetXMLProperty( CString name,CString value )//Set Class Property
