@@ -22,7 +22,9 @@
     <ClInclude Include="uiResponse.h" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\Resource\Test.xml" />
+    <Xml Include="..\Resource\Test.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{393EFA2A-6024-4D4F-BF6A-A0D3F2C31E67}</ProjectGuid>

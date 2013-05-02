@@ -13,7 +13,7 @@ void Prepare()
 	IXUI* pXUI = nullptr;
 	GetIXUI(&pXUI);
 	pXUI->GetResPool().SetResDir(_T("res:"),path);
-} 
+}
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
