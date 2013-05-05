@@ -129,4 +129,4 @@ UI元素
 
 [VNOC]: https://github.com/VNOC/vnoc
 [Gaia]: http://en.wikipedia.org/wiki/Gaia_%28mythology%29
-[Element.md]: https://github.com/epiciskandar/XUI
+[Element.md]: https://github.com/epiciskandar/XUI/Element.md
