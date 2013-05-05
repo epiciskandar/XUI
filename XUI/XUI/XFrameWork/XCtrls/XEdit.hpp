@@ -13,6 +13,7 @@ public:
 
 	BEGIN_MSG_MAP_EX(CXEdit)
 		MSG_WM_ERASEBKGND(OnEraseBkgnd)
+		MSG_WM_PAINT(OnPaint)
 	END_MSG_MAP()
 
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
@@ -24,6 +25,7 @@ public:
 	VOID On_CXMsg_OnCtlColor(CXMsg_OnCtlColor& arg);
 	VOID _Create(HWND hWndParent);
 	BOOL OnEraseBkgnd(HDC hDC);
+	VOID OnPaint(HDC hDC);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -119,4 +121,10 @@ BOOL CXEdit::OnEraseBkgnd( HDC hDC )
 {
 	URP(hDC);
 	return TRUE;
+}
+
+VOID CXEdit::OnPaint( HDC hDC )
+{
+	URP(hDC);
+	hDC = hDC;
 }
