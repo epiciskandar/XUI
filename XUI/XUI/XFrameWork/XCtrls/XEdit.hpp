@@ -11,13 +11,19 @@ public:
 	XProperty(TextColor);
 	XProperty(XFont);
 
+	BEGIN_MSG_MAP_EX(CXEdit)
+		MSG_WM_ERASEBKGND(OnEraseBkgnd)
+	END_MSG_MAP()
+
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
 public:
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
 	VOID On_CXMsg_AttachDC(CXMsg_AttachDC& arg);
+	VOID On_CXMsg_OnCtlColor(CXMsg_OnCtlColor& arg);
 	VOID _Create(HWND hWndParent);
+	BOOL OnEraseBkgnd(HDC hDC);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,6 +45,7 @@ inline XResult CXEdit::ProcessXMessage( IXMsg& msg )
 		OnXMsg(CXMsg_PropertyChanged);
 		OnXMsg(CXMsg_Paint);
 		OnXMsg(CXMsg_AttachDC);
+		OnXMsg(CXMsg_OnCtlColor);
 	END_XMSG_MAP;
 
 	return XResult_OK;
@@ -96,4 +103,20 @@ VOID CXEdit::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 		GetLayoutRect(rect);
 		rect = rect;
 	}
+}
+
+VOID CXEdit::On_CXMsg_OnCtlColor( CXMsg_OnCtlColor& arg )
+{
+	if (arg.hWnd != m_hWnd)	WTF;
+
+	SetBkMode(arg.hDC,TRANSPARENT);
+	arg.hBrush = GetStockObject(HOLLOW_BRUSH);
+
+	arg.msgHandled = TRUE;
+}
+
+BOOL CXEdit::OnEraseBkgnd( HDC hDC )
+{
+	URP(hDC);
+	return TRUE;
 }

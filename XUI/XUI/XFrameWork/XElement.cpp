@@ -220,7 +220,9 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	URP(arg);
 	BOOL bGhost = FALSE;
 	GetGhost (bGhost);
-	if (bGhost) //Ghost 属性为真 跳过绘制
+	BOOL needRealPaint;
+	GetNeedRealPaint(needRealPaint);
+	if (bGhost || !needRealPaint) //Ghost 属性为真 跳过绘制
 	{
 		return;
 	}
@@ -310,6 +312,7 @@ VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 		_SendXMsg(arg);
 	}
 
+	SetNeedRealPaint(updated);
 	if (updated)
 	{
 		CXMsg_Invalidate msg;

@@ -112,6 +112,15 @@ class CXMsg_MouseLeave : public CXMsg_MouseMove
 	XNodeRef newFocusNode;
 };
 
+class CXMsg_OnCtlColor : public CXMsg
+{
+	XMessage(CXMsg_OnCtlColor);
+	HDC hDC;
+	HWND hWnd;
+
+	HGDIOBJ hBrush;
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 #undef XMessage
