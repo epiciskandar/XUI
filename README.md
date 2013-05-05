@@ -32,7 +32,7 @@ XUI
 
 - 调用Initialize初始化XUI
 - 可选，调用GetResPool，设置ResPool，登记你的ui资源位置
-- 调用GetGaia，**通过Gaia创建出需要的UI对象**
+- 调用GetGaia， **通过Gaia创建出需要的UI对象**
 - 调用Work，此时XUI将会占用当前线程作为UI线程使用，当所有窗口关闭后才会继续执行下去
 - 调用Finalize，通知XUI退出
 
