@@ -1,7 +1,7 @@
 #include "XUI.h"
 //#include "../../../VisualLeakDetector/include/vld.h"
 //#define XUI_TRACEMSG
-//#define XUI_DEBUGCONSOLE
+#define XUI_DEBUGCONSOLE
 
 #include "XResPool.hpp"
 
@@ -59,6 +59,7 @@ BOOL CXUI::Initialize( HINSTANCE hInst )
 	m_consoleLogger.Open();
 	logger.AddDevice(blog::BLOG_CONSOLE,&m_consoleLogger);
 #endif
+	logger.SetThreadName(GetCurrentThreadId(),_T("XUI Init Thread"));
 	return TRUE;
 }
 
@@ -75,6 +76,9 @@ VOID CXUI::Finalize()
 
 VOID CXUI::Work()
 {
+	blog::CBLog& logger = blog::CBLog::GetInstance();
+	logger.SetThreadName(GetCurrentThreadId(),_T("XUI Main Thread"));
+
 	MSG msg;
 	while ( GetMessage(&msg, NULL, 0, 0) > 0 )
 	{

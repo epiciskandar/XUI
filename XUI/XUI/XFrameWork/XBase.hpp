@@ -36,3 +36,4 @@ private: \
 public: \
 	static ClassName& GetInstance(){static ClassName _instance;return _instance;};
 
+#define XLOG(...)	blog::CBLog::GetInstance().Logf(DeviceMask_All,__VA_ARGS__)

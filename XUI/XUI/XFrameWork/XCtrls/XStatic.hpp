@@ -8,15 +8,13 @@ class CXText : public CXElement , virtual public IXText
 public:
 	XProperty(Text);
 	XProperty(TextColor);
-    XProperty(XFont);
+	XProperty(XFont);
 
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
 public:
 	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
 };
-
-typedef XSmartPtr<CXText> CXStaticRef;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -45,17 +43,17 @@ inline VOID CXText::On_CXMsg_Paint(CXMsg_Paint& msg)
 		COLORREF color;
 		GetColor(color);
 		CPen pen;
-        pen.CreatePen(PS_SOLID,1,color);
-        
+		pen.CreatePen(PS_SOLID,1,color);
+		
 		XNodeRef fontNode;
 		GetXFont(fontNode);
 		XPtr<CXFont> font(fontNode);
-        if (font && font->GetFontName() != _T(""))
-        {
-            /* 修改字体 */
-            font->ChangeWork();    
-            msg.drawDevice.dc.SelectFont (font->m_hFont);
-         }
+		if (font && font->GetFontName() != _T(""))
+		{
+			/* 修改字体 */
+			font->ChangeWork();    
+			msg.drawDevice.dc.SelectFont (font->m_hFont);
+		 }
 
 
 		CGDIHandleSwitcher switcher(msg.drawDevice.dc,pen,FALSE);

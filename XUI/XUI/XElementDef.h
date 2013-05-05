@@ -115,3 +115,13 @@ public:
 	XProperty_Support(XFont);
 };
 typedef XPtr<IXText> IXTextRef;
+
+// ±à¼­¿ò
+class IXEdit : virtual public Util::Class::CRefCountImpl
+{
+public:
+	XProperty_Support(Text);
+	XProperty_Support(TextColor);
+	XProperty_Support(XFont);
+};
+typedef XPtr<IXEdit> XEditRef;

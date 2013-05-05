@@ -371,6 +371,12 @@ inline LRESULT CXRealWnd::_Translate_MOUSEMOVE_MSG( WPARAM wParam,CPoint pointIn
 	URP(wParam);
 	ElementRef currHoverElement;
 	ElementUtil::GetElementByPoint(pointInClient,this,currHoverElement);
+	if (currHoverElement)
+	{
+		CString id;
+		id = currHoverElement->GetID();
+		XLOG(_T("mouse test at %s\n"),id);
+	}
 	if (currHoverElement != m_currFocusElement)
 	{
 		if (m_currFocusElement)

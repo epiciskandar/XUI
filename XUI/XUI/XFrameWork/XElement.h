@@ -60,6 +60,8 @@ protected:
 	VOID On_CXMsg_FrameClick(CXMsg_FrameClick& arg);
 	VOID On_CXMsg_RealWndClosing(CXMsg_RealWndClosing& arg);
 protected:
+	BOOL _NeedPaint(const CXMsg_Paint& arg,CRect& paintingRect,CPoint& srcPt);
+protected:
 	Property::CXProperty	m_property;
 	BOOL	m_isLayouting;
 	CToolTipCtrl	m_toolTip;
