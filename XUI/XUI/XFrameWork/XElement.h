@@ -35,6 +35,7 @@ public:
 	XProperty(ToolTip);
 	XProperty(Ghost);
 	XProperty(XFont);
+	XProperty(NeedRealPaint)
 	virtual XResult Listen(XEar ear,DWORD& earID){return CXNotifier::Listen(ear,earID);};
 	virtual XResult StopListen(DWORD earID){return CXNotifier::StopListen(earID);};
 	virtual XResult Whisper(IXMsg& msg){return CXNotifier::Whisper(msg);};
@@ -59,6 +60,8 @@ protected:
 	VOID On_CXMsg_AttachDC(CXMsg_AttachDC& arg);
 	VOID On_CXMsg_FrameClick(CXMsg_FrameClick& arg);
 	VOID On_CXMsg_RealWndClosing(CXMsg_RealWndClosing& arg);
+protected:
+	BOOL _NeedPaint(const CXMsg_Paint& arg,CRect& paintingRect,CPoint& srcPt);
 protected:
 	Property::CXProperty	m_property;
 	BOOL	m_isLayouting;

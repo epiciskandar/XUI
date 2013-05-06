@@ -115,6 +115,7 @@
     <ClInclude Include="XUI\XDefine.hpp" />
     <ClInclude Include="XUI\XElementDef.h" />
     <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
+    <ClInclude Include="XUI\XFrameWork\XCtrls\XEdit.hpp" />
     <ClInclude Include="XUI\XFrameWork\XCtrls\XFont.hpp" />
     <ClInclude Include="XUI\XFrameWork\XCtrls\XImage.hpp" />
     <ClInclude Include="XUI\XFrameWork\XCtrls\XStatic.hpp" />

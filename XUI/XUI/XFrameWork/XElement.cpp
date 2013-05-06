@@ -220,7 +220,9 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	URP(arg);
 	BOOL bGhost = FALSE;
 	GetGhost (bGhost);
-	if (bGhost) //Ghost 属性为真 跳过绘制
+	BOOL needRealPaint;
+	GetNeedRealPaint(needRealPaint);
+	if (bGhost || !needRealPaint) //Ghost 属性为真 跳过绘制
 	{
 		return;
 	}
@@ -231,18 +233,13 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 		CXMsg_Layout msg;
 		ProcessXMessage(msg);
 	}
-	CRect rect;
-	GetRect(rect);
-	rect.OffsetRect(arg.offsetFix);
+	CRect paintingRect;
+	CPoint srcPt;
 
-	CRect testRect;
-	if (m_memDC && 
-		testRect.IntersectRect(arg.drawDevice.invalidRect,rect))
+	if (_NeedPaint(arg,paintingRect,srcPt))
 	{
-		CPoint srcPoint = testRect.TopLeft();
-		srcPoint -= rect.TopLeft();
-		arg.drawDevice.dc.BitBlt(testRect.left,testRect.top,testRect.Width(),testRect.Height(),
-			m_memDC->m_hDC,srcPoint.x,srcPoint.y,SRCCOPY);
+		arg.drawDevice.dc.BitBlt(paintingRect.left,paintingRect.top,paintingRect.Width(),paintingRect.Height(),
+			m_memDC->m_hDC,srcPt.x,srcPt.y,SRCCOPY);
 	}
 
 	CPoint point;
@@ -254,6 +251,22 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	arg.offsetFix = oriOffset;
 
 	arg.msgHandled = TRUE;
+}
+
+BOOL CXElement::_NeedPaint( const CXMsg_Paint& arg,CRect& paintingRect,CPoint& srcPt )
+{
+	CRect rect;
+	GetRect(rect);
+	rect.OffsetRect(arg.offsetFix);
+
+	if (m_memDC && 
+		paintingRect.IntersectRect(arg.drawDevice.invalidRect,rect))
+	{
+		srcPt = paintingRect.TopLeft();
+		srcPt -= rect.TopLeft();
+		return TRUE;
+	}
+	return FALSE;
 }
 
 VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
@@ -299,6 +312,7 @@ VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
 		_SendXMsg(arg);
 	}
 
+	SetNeedRealPaint(updated);
 	if (updated)
 	{
 		CXMsg_Invalidate msg;

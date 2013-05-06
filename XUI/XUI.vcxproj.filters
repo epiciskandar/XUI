@@ -163,5 +163,8 @@
     <ClInclude Include="XUI\XFrameWork\XUI.h">
       <Filter>XUI\XFrameWork</Filter>
     </ClInclude>
+    <ClInclude Include="XUI\XFrameWork\XCtrls\XEdit.hpp">
+      <Filter>XUI\XFrameWork\XCtrls</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

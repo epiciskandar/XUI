@@ -11,7 +11,7 @@ class CXImage : public CXElement , virtual public IXImage
 	XClass;
 
 	XProperty(File);
-    XProperty(Offset);
+	XProperty(Offset);
 
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
@@ -27,24 +27,23 @@ public:
 
 inline VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
+	__super::On_CXMsg_Paint(msg);
 	CRect rect;
 	GetRect(rect);
-    CPoint pt;
-    GetOffset (pt);
+	CPoint pt;
+	GetOffset (pt);
 
 	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
-        int x = m_img.GetWidth(), y = m_img.GetHeight();
-        if (pt.x <= x && pt.x > 0 && pt.y <= y && pt.y >0)
-        {
-            m_img.Draw(msg.drawDevice.dc,-pt.x,-pt.y,-1,-1,rect);
-        }
-        else
-        {
-            m_img.Draw(msg.drawDevice.dc,0,0,-1,-1,rect);
-        }        
-
-		_SendXMsg(msg);
+		int x = m_img.GetWidth(), y = m_img.GetHeight();
+		if (pt.x <= x && pt.x > 0 && pt.y <= y && pt.y >0)
+		{
+			m_img.Draw(msg.drawDevice.dc,-pt.x,-pt.y,-1,-1,rect);
+		}
+		else
+		{
+			m_img.Draw(msg.drawDevice.dc,0,0,-1,-1,rect);
+		}
 	}
 	msg.msgHandled = TRUE;
 }

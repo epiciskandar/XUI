@@ -82,4 +82,31 @@ public:
 		return rect;
 	}
 
+	static ElementRef GetElementByHWND(ElementRef root,HWND hWndSearch)
+	{
+		XNodeRef child;
+		root->GetFirstChild(child);
+		while (child)
+		{
+			ATL::CWindow* pWnd = dynamic_cast<ATL::CWindow*>(child.GetPointer());
+			if (pWnd)
+			{
+				if (pWnd->m_hWnd == hWndSearch)
+				{
+					return XElementRef(child);
+				}
+			}
+			else
+			{
+				ElementRef finding = GetElementByHWND(child,hWndSearch);
+				if (finding)
+				{
+					return finding;
+				}
+			}
+			child->GetRSibling(child);
+		}
+		return nullptr;
+	}
+
 };

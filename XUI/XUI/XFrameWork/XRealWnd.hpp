@@ -59,6 +59,7 @@ public:
 		//, WM_CREATE
 		, 0x00AE
 		, 0x00AF
+		, WM_CTLCOLOREDIT
 		)
 	END_MSG_MAP();
 
@@ -87,6 +88,7 @@ protected:
 	LRESULT _Translate_WM_LBUTTONUP(WPARAM wParam,LPARAM lParam);
 	LRESULT _Translate_WM_LBUTTONDBLCLK(WPARAM wParam,LPARAM lParam);
 	LRESULT _Translate_WM_CLOSE(WPARAM wParam,LPARAM lParam);
+	LRESULT _Translate_WM_CTLCOLOREDIT(WPARAM wParam,LPARAM lParam);
 
 	//--------------------------------//
 
@@ -130,6 +132,7 @@ inline LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM
 		XMsgTranslater(WM_LBUTTONUP,	_Translate_WM_LBUTTONUP);
 		XMsgTranslater(WM_LBUTTONDBLCLK,_Translate_WM_LBUTTONDBLCLK);
 		XMsgTranslater(WM_CLOSE,		_Translate_WM_CLOSE);
+		XMsgTranslater(WM_CTLCOLOREDIT, _Translate_WM_CTLCOLOREDIT);
 	}
 
 	return 0;
@@ -371,6 +374,12 @@ inline LRESULT CXRealWnd::_Translate_MOUSEMOVE_MSG( WPARAM wParam,CPoint pointIn
 	URP(wParam);
 	ElementRef currHoverElement;
 	ElementUtil::GetElementByPoint(pointInClient,this,currHoverElement);
+	if (currHoverElement)
+	{
+		CString id;
+		id = currHoverElement->GetID();
+		XLOG(_T("mouse test at %s\n"),id);
+	}
 	if (currHoverElement != m_currFocusElement)
 	{
 		if (m_currFocusElement)
@@ -448,5 +457,21 @@ inline LRESULT CXRealWnd::_Translate_WM_CLOSE( WPARAM wParam,LPARAM lParam )
 	URP(wParam,lParam);
 	CXMsg_RealWndClosing msg;
 	ProcessXMessage(msg);
+	return DefWindowProc();
+}
+
+LRESULT CXRealWnd::_Translate_WM_CTLCOLOREDIT( WPARAM wParam,LPARAM lParam )
+{
+	HDC hDC = (HDC)wParam;
+	HWND hWnd = (HWND)lParam;
+	ElementRef element = ElementUtil::GetElementByHWND(this,hWnd);
+	if (element)
+	{
+		CXMsg_OnCtlColor msg;
+		msg.hDC = hDC;
+		msg.hWnd = hWnd;
+		element->ProcessXMessage(msg);
+		return (LRESULT)msg.hBrush;
+	}
 	return DefWindowProc();
 }

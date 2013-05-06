@@ -5,6 +5,7 @@
 #include "XRealWnd.hpp"
 #include "XCtrls/XStatic.hpp"
 #include "XCtrls/XImage.hpp"
+#include "XCtrls/XEdit.hpp"
 
 #include "../TinyXML/tinyxml.h"
 
@@ -43,6 +44,7 @@ inline CXGaia::CXGaia()
 	RecordXClass(CXText);
 	RecordXClass(CXImage);
 	RecordXClass(CXFont);
+	RecordXClass(CXEdit);
 }
 
 inline XNodeRef CXGaia::Create( CString className )
