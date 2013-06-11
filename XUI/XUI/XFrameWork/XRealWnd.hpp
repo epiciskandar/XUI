@@ -133,6 +133,8 @@ inline LRESULT CXRealWnd::MessageTranslateFunc( UINT uMsg, WPARAM wParam, LPARAM
 		XMsgTranslater(WM_LBUTTONDBLCLK,_Translate_WM_LBUTTONDBLCLK);
 		XMsgTranslater(WM_CLOSE,		_Translate_WM_CLOSE);
 		XMsgTranslater(WM_CTLCOLOREDIT, _Translate_WM_CTLCOLOREDIT);
+	default:
+		SetMsgHandled(FALSE);
 	}
 
 	return 0;

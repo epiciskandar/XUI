@@ -3,7 +3,7 @@
 #include "XFont.hpp"
 
 class CXEdit : public CXElement , virtual public IXText
-	, public CEdit
+	, public CWindowImpl<CXEdit,CEdit>
 {
 	XClass;
 public:
@@ -12,8 +12,9 @@ public:
 	XProperty(XFont);
 
 	BEGIN_MSG_MAP_EX(CXEdit)
-		MSG_WM_ERASEBKGND(OnEraseBkgnd)
-		MSG_WM_PAINT(OnPaint)
+		//MSG_WM_ERASEBKGND(OnEraseBkgnd)
+		//MSG_WM_PAINT(OnPaint)
+		COMMAND_CODE_HANDLER(EN_CHANGE,OnEnChanged)
 	END_MSG_MAP()
 
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
@@ -26,6 +27,7 @@ public:
 	VOID _Create(HWND hWndParent);
 	BOOL OnEraseBkgnd(HDC hDC);
 	VOID OnPaint(HDC hDC);
+	LRESULT OnEnChanged(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,6 +122,7 @@ VOID CXEdit::On_CXMsg_OnCtlColor( CXMsg_OnCtlColor& arg )
 BOOL CXEdit::OnEraseBkgnd( HDC hDC )
 {
 	URP(hDC);
+	SetBkMode(hDC,TRANSPARENT);
 	return TRUE;
 }
 
@@ -127,4 +130,10 @@ VOID CXEdit::OnPaint( HDC hDC )
 {
 	URP(hDC);
 	hDC = hDC;
+}
+
+LRESULT CXEdit::OnEnChanged( WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled )
+{
+	URP(wNotifyCode,wID,hWndCtl,bHandled);
+	return 0;
 }

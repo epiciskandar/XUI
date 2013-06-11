@@ -80,6 +80,7 @@ VOID CXUI::Work()
 	MSG msg;
 	while ( GetMessage(&msg, NULL, 0, 0) > 0 )
 	{
+		XLOG(_T("%d\t%d\n"),msg.hwnd,msg.message);
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
