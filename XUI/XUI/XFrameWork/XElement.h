@@ -54,7 +54,7 @@ protected:
 	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);
 	VOID On_CXMsg_Layout(CXMsg_Layout& arg);
 	VOID On_CXMsg_Paint(CXMsg_Paint& arg);
-	VOID On_CXMsg_PaintElement(CXMsg_PaintElement& arg);
+	VOID On_CXMsg_RenderElement(CXMsg_RenderElement& arg);
 	VOID On_CXMsg_MouseEnter(CXMsg_MouseEnter& arg);
 	VOID On_CXMsg_MouseLeave(CXMsg_MouseLeave& arg);
 	VOID On_CXMsg_AttachDC(CXMsg_AttachDC& arg);

@@ -51,13 +51,13 @@ class CXMsg_Invalidate : public CXMsg
 	CRect	invalidRect;
 };
 
-class CXMsg_PaintElement : public CXMsg
+class CXMsg_RenderElement : public CXMsg
 {
-	XMessage(CXMsg_PaintElement);
+	XMessage(CXMsg_RenderElement);
 
 	BOOL	paintChildren;
 
-	CXMsg_PaintElement():paintChildren(FALSE){}
+	CXMsg_RenderElement():paintChildren(FALSE){}
 };
 
 class CXMsg_AttachDC : public CXMsg

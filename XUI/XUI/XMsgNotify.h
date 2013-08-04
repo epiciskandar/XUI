@@ -16,7 +16,7 @@ class CXMsg_GetRealWnd : public IXMsg
 	XRealWndRef wnd;
 	CXMsg_GetRealWnd()
 	{
-		msgDirection = MsgDirection::UpToRoot;
+		msgDirection = MsgDirection::Up;
 		msgPolicy = MsgDispatchPolicy::Processor;
 	}
 };

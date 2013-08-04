@@ -20,7 +20,7 @@ public:
 
 inline VOID CXText::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
-	XMsgTraceID(msg);
+	XMsgTraceWithID(msg);
 
 	__super::On_CXMsg_Paint(msg);
 

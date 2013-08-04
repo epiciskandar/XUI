@@ -20,7 +20,7 @@ public: \
 #define XMsgTrace(_msg,_id) ;
 #endif
 
-#define XMsgTraceID(_msg)	XMsgTrace(_msg,GetID())
+#define XMsgTraceWithID(_msg)	XMsgTrace(_msg,GetID())
 
 // define XMsg router
 #define BEGIN_XMSG_MAP(_msg) \
@@ -51,8 +51,7 @@ enum class MsgDispatchPolicy
 
 enum class MsgDirection
 {
-	UpToRoot,
-	UpToRootThenDown,
+	Up,
 	Down,
 };
 

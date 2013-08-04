@@ -25,7 +25,7 @@ XResult CXElement::ProcessXMessage( IXMsg& msg )
 		OnXMsg(CXMsg_Paint)
 		OnXMsg(CXMsg_MouseEnter)
 		OnXMsg(CXMsg_MouseLeave)
-		OnXMsg(CXMsg_PaintElement)
+		OnXMsg(CXMsg_RenderElement)
 		OnXMsg(CXMsg_AttachDC)
 		OnXMsg(CXMsg_FrameClick)
 		OnXMsg(CXMsg_RealWndClosing)
@@ -43,21 +43,11 @@ VOID CXElement::_SendXMsg( IXMsg& pMsg )
 
 	switch (pMsg.msgDirection)
 	{
-	case MsgDirection::UpToRoot:
-	case MsgDirection::UpToRootThenDown:
+	case MsgDirection::Up:
 		if (m_father)
 		{
 			ElementRef(XNodeRef(m_father))->ProcessXMessage(pMsg);
 		}
-		else
-		{
-			if (pMsg.msgDirection == MsgDirection::UpToRootThenDown)
-			{
-				pMsg.msgDirection = MsgDirection::Down;
-				_SendXMsg(pMsg);
-			}
-		}
-		break;
 		break;
 	case MsgDirection::Down:
 		for (auto i=m_children.begin(); i!=m_children.end(); ++i)
@@ -149,7 +139,7 @@ VOID CXElement::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 	URP(arg);
 	if (arg.name == Property::Size)
 	{
-		CXMsg_PaintElement msg;
+		CXMsg_RenderElement msg;
 		msg.paintChildren = FALSE;
 		ProcessXMessage(msg);
 	}
@@ -269,8 +259,9 @@ BOOL CXElement::_NeedPaint( const CXMsg_Paint& arg,CRect& paintingRect,CPoint& s
 	return FALSE;
 }
 
-VOID CXElement::On_CXMsg_PaintElement( CXMsg_PaintElement& arg )
+VOID CXElement::On_CXMsg_RenderElement( CXMsg_RenderElement& arg )
 {
+	XLOG(_T("Render Element %s\n"), GetID());
 	arg.msgHandled = TRUE;
 	if (!m_memDC)
 	{
@@ -339,7 +330,7 @@ VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 		}
 		m_memDC->ClearDrawDevice();
 
-		CXMsg_PaintElement msg;
+		CXMsg_RenderElement msg;
 		msg.paintChildren = FALSE;
 		ProcessXMessage(msg);
 	}

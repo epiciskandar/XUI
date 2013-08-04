@@ -6,7 +6,7 @@
       <XElement ID="TitleArea" Size="1,20" ToolTip="这里可以拖动" HitTest="2" Color="176,203,241" ExpandWidth="true" Align="top">
         <XElement ID="Close" Size="20,20" ToolTip="关闭？Alt+F4就关掉了" Align="right" Margin="0,0,5,0" Color="255,0,0"/>
       </XElement>
-      <XImage File="res:image.jpg" ExpandWidth="true" ExpandHeight="true">
+      <XImage ID="bkg" File="res:image.jpg" ExpandWidth="true" ExpandHeight="true">
         <XEdit ID="testEdit" Text="This is a edit" Color="0,0,127" Size="100,20" Margin="100,0,0,0"/>
       </XImage>
       <XElement ID="Foot" Size="1,20" Color="176,103,241" BorderColor="220,30,30" ExpandWidth="true" Align="bottom">
