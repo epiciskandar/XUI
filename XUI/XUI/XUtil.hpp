@@ -1,3 +1,7 @@
+//////////////////////////////////////////////////////////////////////////
+// some util funcs,to #define NO_XUI_UTIL to disable include
+
+#ifndef NO_XUI_UTIL
 #pragma once
 #include <shlobj.h>
 
@@ -112,3 +116,5 @@ namespace Util
 		}
 	}
 }
+
+#endif

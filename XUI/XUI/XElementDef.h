@@ -23,8 +23,8 @@ public:
 	virtual XResult	GetRSibling(XNodeRef& pSibling) = 0;
 	virtual XResult RemoveChild(XNodeRef pChild) = 0;
 	virtual XNodeRef GetFather() = 0;
-	virtual XResult RemoveFromTree() = 0; // pick it out from father node
-	virtual XResult RIPMySelf() = 0;
+	virtual XResult RemoveFromTree() = 0;	// pick it out from father node
+	virtual XResult RIPMySelf() = 0;		//! force destroy
 
 	virtual XResult IncreaseZOrder() = 0;
 	virtual XResult DecreaseZOrder() = 0;
@@ -76,13 +76,13 @@ public:
 
 	virtual XResult ProcessXMessage(IXMsg& msg) = 0;
 
-	virtual XResult Listen(XEar ear,DWORD& earID) = 0;
-	virtual XResult StopListen(DWORD earID) = 0;
-	virtual XResult Whisper(IXMsg& msg) = 0;
+	virtual XResult Listen(XEar ear,DWORD& earID) = 0;	// reg a XEar
+	virtual XResult StopListen(DWORD earID) = 0;		// unreg a XEar
+	virtual XResult Whisper(IXMsg& msg) = 0;			// whisper to XEars
 };
 typedef XPtr<IXElement> XElementRef;
 
-// ¶¥²ã´°¿Ú
+// Õæ´°¿Ú
 class IXRealWnd : virtual public  Util::Class::CRefCountImpl
 {
 public:

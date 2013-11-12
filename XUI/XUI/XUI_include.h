@@ -13,6 +13,8 @@ public:
 	virtual XResult TranslateResPath(CString& path) = 0;
 };
 
+// singleton, main
+
 class IXUI
 {
 public:
@@ -23,4 +25,5 @@ public:
 	virtual IXResPool& GetResPool() = 0;
 };
 
+// everything start here
 __declspec(dllexport) BOOL GetIXUI(IXUI** pXUI);
