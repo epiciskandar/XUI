@@ -56,7 +56,6 @@ class IXElement : virtual public Util::Class::CRefCountImpl
 public:
 	XProperty_Support(Position);
 	XProperty_Support(Size);
-	XProperty_Support(LayoutRect);
 	XProperty_Support(Rect);
 	XProperty_Support(LayoutType);
 	XProperty_Support(LayoutInvalid);

@@ -10,7 +10,7 @@ namespace Layouter
 		{
 		}
 		virtual VOID Push(ElementRef element) = 0;
-		virtual CSize Place(CPoint offset) = 0;
+		virtual CSize Place() = 0;
 	};
 
 	class CHorizonPlacer : public IBlockPlacer
@@ -40,16 +40,17 @@ namespace Layouter
 			}
 			BOOL expandwidth;
 			element->GetExpandWidth(expandwidth);
-			CSize size;
-			element->GetSize(size);
+			CRect rect;
+			element->GetOuterLayoutRect(rect);
 			if (!expandwidth)
 			{
-				m_containSize.cx += size.cx;
+				m_containSize.cx += rect.Width();
 			}
-			m_containSize.cy = MAX(m_containSize.cy,size.cy);
+			m_containSize.cy = MAX(m_containSize.cy,rect.Height());
 		}
-		CSize Place(CPoint offset)
+		CSize Place()
 		{
+			CPoint offset;
 			for (auto& i:m_leftElements)
 			{
 				_PlaceChild(i,offset);
@@ -68,24 +69,24 @@ namespace Layouter
 		}
 		VOID _PlaceChild(ElementRef element,CPoint& offset)
 		{
-			element->SetPosition(offset);
+			CRect rect;
+			element->GetOuterLayoutRect(rect);
+			rect.TopLeft() = offset;
 
 			BOOL expandWidth;
 			element->GetExpandWidth(expandWidth);
 			BOOL expandHeight;
 			element->GetExpandHeight(expandHeight);
-			CSize elementSize;
-			element->GetSize(elementSize);
 			if (expandWidth)
 			{
-				elementSize.cx = m_fatherSize.cx - m_containSize.cx;
+				rect.right = rect.left + m_fatherSize.cx - m_containSize.cx;
 			}
 			if (expandHeight)
 			{
-				elementSize.cy = m_fatherSize.cy;
+				rect.bottom = rect.top + m_fatherSize.cy;
 			}
-			element->SetSize(elementSize);
-			offset.x += elementSize.cx;
+			element->SetOuterLayoutRect(rect);
+			offset.x += rect.Width();
 		}
 	protected:
 		CSize	m_containSize;
@@ -122,16 +123,17 @@ namespace Layouter
 			}
 			BOOL expandHeight;
 			element->GetExpandHeight(expandHeight);
-			CSize size;
-			element->GetSize(size);
+			CRect rect;
+			element->GetOuterLayoutRect(rect);
 			if (!expandHeight)
 			{
-				m_containSize.cy += size.cy;
+				m_containSize.cy += rect.Height();
 			}
-			m_containSize.cx = MAX(m_containSize.cx,size.cx);
+			m_containSize.cx = MAX(m_containSize.cx,rect.Width());
 		}
-		CSize Place(CPoint offset)
+		CSize Place()
 		{
+			CPoint offset;
 			for (auto& i:m_topElements)
 			{
 				_PlaceChild(i,offset);
@@ -150,7 +152,9 @@ namespace Layouter
 		}
 		VOID _PlaceChild(ElementRef element,CPoint& offset)
 		{
-			element->SetPosition(offset);
+			CRect rect;
+			element->GetOuterLayoutRect(rect);
+			rect.TopLeft() = offset;
 
 			BOOL expandWidth;
 			element->GetExpandWidth(expandWidth);
@@ -160,14 +164,14 @@ namespace Layouter
 			element->GetSize(elementSize);
 			if (expandWidth)
 			{
-				elementSize.cx = m_fatherSize.cx;
+				rect.right = rect.left + m_fatherSize.cx;
 			}
 			if (expandHeight)
 			{
-				elementSize.cy = m_fatherSize.cy - m_containSize.cy;
+				rect.bottom = rect.top + m_fatherSize.cy - m_containSize.cy;
 			}
-			element->SetSize(elementSize);
-			offset.y += elementSize.cy;
+			element->SetOuterLayoutRect(rect);
+			offset.y += rect.Height();
 		}
 	protected:
 		CSize	m_containSize;
@@ -203,7 +207,7 @@ namespace Layouter
 			BOOL autoHeight = FALSE;
 			element->GetAutoHeight(autoHeight);
 			CRect elementRect;
-			element->GetLayoutRect(elementRect);
+			element->GetInnerLayoutRect(elementRect);
 			if (autoWidth)
 			{
 				elementRect.right = elementRect.left;
@@ -212,8 +216,6 @@ namespace Layouter
 			{
 				elementRect.bottom = elementRect.top;
 			}
-			CRect padding;
-			element->GetPadding(padding);
 			Property::ELayoutDirection direction;
 			direction = _GetElementLayoutDirection(element);
 
@@ -246,7 +248,7 @@ namespace Layouter
 				childNode->GetRSibling(childNode);
 			}
 
-			childContainSize = placer->Place(padding.TopLeft());
+			childContainSize = placer->Place();
 			delete placer;
 			//////////////////////////////////////////////////////////////////////////
 
@@ -260,7 +262,7 @@ namespace Layouter
 			}
 			if (autoWidth || autoHeight)
 			{
-				element->SetLayoutRect(elementRect);
+				element->SetInnerLayoutRect(elementRect);
 			}
 
 			return XResult_OK;

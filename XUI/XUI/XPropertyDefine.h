@@ -258,7 +258,8 @@ DefineProperty(ShowState,		BOOL,				FALSE);
 DefineProperty(LayoutType,		ELayoutType,		ELayoutType::Block);
 DefineProperty(LayoutInvalid,	BOOL,				TRUE);
 DefineProperty(LayoutDirection,	ELayoutDirection,	ELayoutDirection::Horizon);
-DefineProperty(LayoutRect,		CRect,				CRect());
+DefineProperty(InnerLayoutRect,	CRect,				CRect());	// size去除padding后的内部区域，用于计算排版
+DefineProperty(OuterLayoutRect,	CRect,				CRect());	// size加上margin后的区域，用于计算排版
 DefineProperty(Align,			EAlignType,			EAlignType::Left);
 DefineProperty(AutoWidth,		BOOL,				FALSE);
 DefineProperty(AutoHeight,		BOOL,				FALSE);

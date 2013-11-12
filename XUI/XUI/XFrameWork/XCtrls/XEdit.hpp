@@ -81,10 +81,4 @@ VOID CXEdit::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
 		GetText(text);
 		SetWindowText(text);
 	}
-	else if (arg.name == Property::LayoutRect)
-	{
-		CRect rect;
-		GetLayoutRect(rect);
-		rect = rect;
-	}
 }

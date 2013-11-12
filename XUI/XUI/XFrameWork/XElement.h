@@ -17,12 +17,12 @@ public:
 
 	XFakeProperty(Position);
 	XFakeProperty(Size);
-	XFakeProperty(LayoutRect);
 	XProperty(Rect);
 	XProperty(LayoutType);
 	XProperty(LayoutInvalid);
 	XProperty(LayoutDirection);
 	XProperty(Padding);
+	XProperty(Margin);
 	XProperty(Align);
 	XProperty(AutoWidth);
 	XProperty(AutoHeight);
@@ -35,7 +35,14 @@ public:
 	XProperty(ToolTip);
 	XProperty(Ghost);
 	XProperty(XFont);
-	XProperty(NeedRealPaint)
+	XProperty(NeedRealPaint);
+	//////////////////////////////////////////////////////////////////////////
+	// 排版专用属性，不暴露给外边.
+	XFakeProperty(InnerLayoutRect);
+	XFakeProperty(OuterLayoutRect);
+	//////////////////////////////////////////////////////////////////////////
+
+
 	virtual XResult Listen(XEar ear,DWORD& earID){return CXNotifier::Listen(ear,earID);};
 	virtual XResult StopListen(DWORD earID){return CXNotifier::StopListen(earID);};
 	virtual XResult Whisper(IXMsg& msg){return CXNotifier::Whisper(msg);};

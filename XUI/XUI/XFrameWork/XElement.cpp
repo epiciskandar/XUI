@@ -111,7 +111,7 @@ XResult CXElement::SetSize( Property::SizeType param )
 	return SetRect(rect);
 }
 
-XResult CXElement::GetLayoutRect( Property::LayoutRectType& value )
+XResult CXElement::GetInnerLayoutRect( Property::InnerLayoutRectType& value )
 {
 	GetRect(value);
 	CRect padding;
@@ -123,7 +123,7 @@ XResult CXElement::GetLayoutRect( Property::LayoutRectType& value )
 	return XResult_OK;
 }
 
-XResult CXElement::SetLayoutRect( Property::LayoutRectType param )
+XResult CXElement::SetInnerLayoutRect( Property::InnerLayoutRectType param )
 {
 	CRect padding;
 	GetPadding(padding);
@@ -131,6 +131,29 @@ XResult CXElement::SetLayoutRect( Property::LayoutRectType param )
 	param.right += padding.right;
 	param.top -= padding.top;
 	param.bottom += padding.bottom;
+	return SetSize(param.Size());
+}
+
+XResult CXElement::GetOuterLayoutRect( Property::OuterLayoutRectType& value )
+{
+	GetRect(value);
+	CRect margin;
+	GetMargin(margin);
+	value.left -= margin.left;
+	value.right += margin.right;
+	value.top -= margin.top;
+	value.bottom += margin.bottom;
+	return XResult_OK;
+}
+
+XResult CXElement::SetOuterLayoutRect( Property::OuterLayoutRectType param )
+{
+	CRect margin;
+	GetMargin(margin);
+	param.left += margin.left;
+	param.right -= margin.right;
+	param.top += margin.top;
+	param.bottom -= margin.bottom;
 	return SetSize(param.Size());
 }
 
