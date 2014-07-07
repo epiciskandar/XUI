@@ -141,6 +141,11 @@
     <ClInclude Include="XUI_include.h" />
     <ClInclude Include="XUtil.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="CxImage\CxImage\cximage.vcxproj">
+      <Project>{bdd01e30-1db2-47a7-9ebc-a1d4bbe8fd5a}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
