@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,13 +19,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>XUI\CXImage\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>CXImage\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\output\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>XUI\CXImage\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>CXImage\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\output\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -97,49 +97,49 @@
     <None Include="postbuild.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="XUI\Others\CBuffer.cpp" />
-    <ClCompile Include="XUI\TinyXML\tinystr.cpp" />
-    <ClCompile Include="XUI\TinyXML\tinyxml.cpp" />
-    <ClCompile Include="XUI\TinyXML\tinyxmlerror.cpp" />
-    <ClCompile Include="XUI\TinyXML\tinyxmlparser.cpp" />
-    <ClCompile Include="XUI\XFrameWork\XElement.cpp" />
-    <ClCompile Include="XUI\XFrameWork\XUI.cpp" />
+    <ClCompile Include="Others\CBuffer.cpp" />
+    <ClCompile Include="TinyXML\tinystr.cpp" />
+    <ClCompile Include="TinyXML\tinyxml.cpp" />
+    <ClCompile Include="TinyXML\tinyxmlerror.cpp" />
+    <ClCompile Include="TinyXML\tinyxmlparser.cpp" />
+    <ClCompile Include="XFrameWork\XElement.cpp" />
+    <ClCompile Include="XFrameWork\XUI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="XUI\IXMsg.h" />
-    <ClInclude Include="XUI\Others\BLog.hpp" />
-    <ClInclude Include="XUI\Others\CBuffer.h" />
-    <ClInclude Include="XUI\Others\CFile.hpp" />
-    <ClInclude Include="XUI\TinyXML\tinystr.h" />
-    <ClInclude Include="XUI\TinyXML\tinyxml.h" />
-    <ClInclude Include="XUI\XDefine.hpp" />
-    <ClInclude Include="XUI\XElementDef.h" />
-    <ClInclude Include="XUI\XFrameWork\XBase.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XCtrls\XEdit.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XCtrls\XFont.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XCtrls\XImage.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XCtrls\XStatic.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XDrawDevice.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XElement.h" />
-    <ClInclude Include="XUI\XFrameWork\XElementUtil.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XGaia.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XLayouter\Block.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XLayouter\Layouter.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XLayouter\LayouterBase.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XLayouter\Offset.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XMsg.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XNotifier.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XProperty.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XPropertyValue.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XRealWnd.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XResPool.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XTree.hpp" />
-    <ClInclude Include="XUI\XFrameWork\XUI.h" />
-    <ClInclude Include="XUI\XMsgNotify.h" />
-    <ClInclude Include="XUI\XPropertyDefine.h" />
-    <ClInclude Include="XUI\XSmartPtr.h" />
-    <ClInclude Include="XUI\XUI_include.h" />
-    <ClInclude Include="XUI\XUtil.hpp" />
+    <ClInclude Include="IXMsg.h" />
+    <ClInclude Include="Others\BLog.hpp" />
+    <ClInclude Include="Others\CBuffer.h" />
+    <ClInclude Include="Others\CFile.hpp" />
+    <ClInclude Include="TinyXML\tinystr.h" />
+    <ClInclude Include="TinyXML\tinyxml.h" />
+    <ClInclude Include="XDefine.hpp" />
+    <ClInclude Include="XElementDef.h" />
+    <ClInclude Include="XFrameWork\XBase.hpp" />
+    <ClInclude Include="XFrameWork\XCtrls\XEdit.hpp" />
+    <ClInclude Include="XFrameWork\XCtrls\XFont.hpp" />
+    <ClInclude Include="XFrameWork\XCtrls\XImage.hpp" />
+    <ClInclude Include="XFrameWork\XCtrls\XStatic.hpp" />
+    <ClInclude Include="XFrameWork\XDrawDevice.hpp" />
+    <ClInclude Include="XFrameWork\XElement.h" />
+    <ClInclude Include="XFrameWork\XElementUtil.hpp" />
+    <ClInclude Include="XFrameWork\XGaia.hpp" />
+    <ClInclude Include="XFrameWork\XLayouter\Block.hpp" />
+    <ClInclude Include="XFrameWork\XLayouter\Layouter.hpp" />
+    <ClInclude Include="XFrameWork\XLayouter\LayouterBase.hpp" />
+    <ClInclude Include="XFrameWork\XLayouter\Offset.hpp" />
+    <ClInclude Include="XFrameWork\XMsg.hpp" />
+    <ClInclude Include="XFrameWork\XNotifier.hpp" />
+    <ClInclude Include="XFrameWork\XProperty.hpp" />
+    <ClInclude Include="XFrameWork\XPropertyValue.hpp" />
+    <ClInclude Include="XFrameWork\XRealWnd.hpp" />
+    <ClInclude Include="XFrameWork\XResPool.hpp" />
+    <ClInclude Include="XFrameWork\XTree.hpp" />
+    <ClInclude Include="XFrameWork\XUI.h" />
+    <ClInclude Include="XMsgNotify.h" />
+    <ClInclude Include="XPropertyDefine.h" />
+    <ClInclude Include="XSmartPtr.h" />
+    <ClInclude Include="XUI_include.h" />
+    <ClInclude Include="XUtil.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
