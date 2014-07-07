@@ -38,23 +38,23 @@
     <ClCompile Include="XFrameWork\XUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TinyXML\tinyxmlparser.cpp">
-      <Filter>3rd\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="TinyXML\tinystr.cpp">
-      <Filter>3rd\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="TinyXML\tinyxml.cpp">
-      <Filter>3rd\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="TinyXML\tinyxmlerror.cpp">
-      <Filter>3rd\TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="Others\CBuffer.cpp">
-      <Filter>3rd</Filter>
-    </ClCompile>
     <ClCompile Include="XFrameWork\XElement.cpp">
       <Filter>XFrameWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Third\TinyXML\tinystr.cpp">
+      <Filter>3rd\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Third\TinyXML\tinyxml.cpp">
+      <Filter>3rd\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Third\TinyXML\tinyxmlerror.cpp">
+      <Filter>3rd\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Third\TinyXML\tinyxmlparser.cpp">
+      <Filter>3rd\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Third\CBuffer.cpp">
+      <Filter>3rd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,9 +74,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XSmartPtr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XUI_include.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XUtil.hpp">
@@ -144,6 +141,24 @@
     </ClInclude>
     <ClInclude Include="XFrameWork\XLayouter\Block.hpp">
       <Filter>XFrameWork\XLayouter</Filter>
+    </ClInclude>
+    <ClInclude Include="Third\TinyXML\tinystr.h">
+      <Filter>3rd\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="Third\TinyXML\tinyxml.h">
+      <Filter>3rd\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="Third\BLog.hpp">
+      <Filter>3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="Third\CBuffer.h">
+      <Filter>3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="Third\CFile.hpp">
+      <Filter>3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="XUI.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

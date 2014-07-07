@@ -7,7 +7,7 @@
 #include "XCtrls/XImage.hpp"
 #include "XCtrls/XEdit.hpp"
 
-#include "../TinyXML/tinyxml.h"
+#include "../Third/TinyXML/tinyxml.h"
 
 class CXGaia : public IXGaia
 {

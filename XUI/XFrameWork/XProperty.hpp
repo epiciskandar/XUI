@@ -2,7 +2,7 @@
 #include "XBase.hpp"
 #include "XTree.hpp"
 #include "XPropertyValue.hpp"
-#include "../Others/CBuffer.h"
+#include "../Third/CBuffer.h"
 #include "XCtrls\XFont.hpp"
 
 #include <map>

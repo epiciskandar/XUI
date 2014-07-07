@@ -1,7 +1,7 @@
 #pragma once
 #include "XTree.hpp"
 #include "XDrawDevice.hpp"
-#include "../IXMsg.h"
+#include "Header/IXMsg.h"
 
 class CXMsg : public IXMsg
 {

@@ -1,6 +1,5 @@
 #pragma once
 #include "XDefine.hpp"
-#include "XUtil.hpp"
 #include "XSmartPtr.h"
 #include "IXMsg.h"
 #include "XElementDef.h"

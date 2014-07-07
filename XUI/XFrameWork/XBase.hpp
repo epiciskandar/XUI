@@ -1,16 +1,16 @@
 #pragma once
-#include "../XUI_include.h"
+#include "../XUI.h"
 
 #include <list>
 #include <set>
 
-#include "../WTL/atlwinx.h"		// reflection
-#include "../WTL/atlframe.h"
-#include "../WTL/atlcrack.h"	// message handle
-#include "../WTL/atlctrls.h"
-#include "../Others/CFile.hpp"
+#include "../Third/WTL/atlwinx.h"		// reflection
+#include "../Third/WTL/atlframe.h"
+#include "../Third/WTL/atlcrack.h"	// message handle
+#include "../Third/WTL/atlctrls.h"
+#include "../Third/CFile.hpp"
 
-#include "../Others/BLog.hpp"
+#include "../Third/BLog.hpp"
 
 //////////////////////////////////////////////////////////////////////////
 

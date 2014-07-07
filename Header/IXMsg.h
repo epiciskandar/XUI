@@ -3,6 +3,7 @@
 
 #pragma once
 #include <list>
+#include <atlstr.h>
 
 #define XMessage(_name) \
 public: \

@@ -41,15 +41,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>CXImage\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir);$(ProjectDir)\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\output\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir);$(ProjectDir)\;$(VCInstallDir)PlatformSDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>CXImage\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir);$(ProjectDir)\;..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\output\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir);$(ProjectDir)\;$(VCInstallDir)PlatformSDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,11 +99,11 @@
     <None Include="postbuild.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Others\CBuffer.cpp" />
-    <ClCompile Include="TinyXML\tinystr.cpp" />
-    <ClCompile Include="TinyXML\tinyxml.cpp" />
-    <ClCompile Include="TinyXML\tinyxmlerror.cpp" />
-    <ClCompile Include="TinyXML\tinyxmlparser.cpp" />
+    <ClCompile Include="Third\CBuffer.cpp" />
+    <ClCompile Include="Third\TinyXML\tinystr.cpp" />
+    <ClCompile Include="Third\TinyXML\tinyxml.cpp" />
+    <ClCompile Include="Third\TinyXML\tinyxmlerror.cpp" />
+    <ClCompile Include="Third\TinyXML\tinyxmlparser.cpp" />
     <ClCompile Include="XFrameWork\XElement.cpp" />
     <ClCompile Include="XFrameWork\XUI.cpp" />
   </ItemGroup>
@@ -112,6 +114,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IXMsg.h" />
+    <ClInclude Include="Third\BLog.hpp" />
+    <ClInclude Include="Third\CBuffer.h" />
+    <ClInclude Include="Third\CFile.hpp" />
+    <ClInclude Include="Third\TinyXML\tinystr.h" />
+    <ClInclude Include="Third\TinyXML\tinyxml.h" />
     <ClInclude Include="XDefine.hpp" />
     <ClInclude Include="XElementDef.h" />
     <ClInclude Include="XFrameWork\XBase.hpp" />
@@ -138,7 +145,7 @@
     <ClInclude Include="XMsgNotify.h" />
     <ClInclude Include="XPropertyDefine.h" />
     <ClInclude Include="XSmartPtr.h" />
-    <ClInclude Include="XUI_include.h" />
+    <ClInclude Include="XUI.h" />
     <ClInclude Include="XUtil.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

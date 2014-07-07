@@ -59,13 +59,15 @@
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\output\$(Configuration)\</OutDir>
-    <LibraryPath>..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir);..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir);$(VCInstallDir)PlatformSDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\output\$(Configuration)\</OutDir>
-    <LibraryPath>..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir);..\VisualLeakDetector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir);$(VCInstallDir)PlatformSDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

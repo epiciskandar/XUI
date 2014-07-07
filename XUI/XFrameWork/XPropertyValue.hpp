@@ -3,7 +3,7 @@
 #include "XTree.hpp"
 
 #include <map>
-#include "..\WTL\atlmisc.h"
+#include "..\Third\WTL\atlmisc.h"
 
 class CChangable
 {
