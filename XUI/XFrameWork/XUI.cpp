@@ -89,8 +89,12 @@ __declspec(dllexport) BOOL GetIXUI(IXUI** pXUI)
 	return TRUE;
 }
 
-BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
-	URP(hModule,ul_reason_for_call,lpReserved);
+	URP(lpReserved);
+	if (ul_reason_for_call == DLL_THREAD_ATTACH)
+	{
+		DisableThreadLibraryCalls(hModule);
+	}
 	return TRUE;
 }

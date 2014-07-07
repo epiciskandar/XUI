@@ -103,9 +103,6 @@
     <ClInclude Include="XFrameWork\XTree.hpp">
       <Filter>XFrameWork</Filter>
     </ClInclude>
-    <ClInclude Include="XFrameWork\xui.h">
-      <Filter>XFrameWork</Filter>
-    </ClInclude>
     <ClInclude Include="XFrameWork\XBase.hpp">
       <Filter>XFrameWork</Filter>
     </ClInclude>
@@ -159,6 +156,9 @@
     </ClInclude>
     <ClInclude Include="XUtil.hpp">
       <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\xui.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
