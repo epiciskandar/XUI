@@ -1,4 +1,4 @@
-/* $Header: /cvs/maptools/cvsroot/libtiff/libtiff/tif_dumpmode.c,v 1.5.2.2 2010-06-08 18:50:42 bfriesen Exp $ */
+/* $Header: /cvsroot/osrs/libtiff/libtiff/tif_dumpmode.c,v 1.2 2000/01/28 15:08:10 warmerda Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -30,6 +30,7 @@
  * "Null" Compression Algorithm Support.
  */
 #include "tiffiop.h"
+#include <assert.h>
 
 /*
  * Encode a hunk of pixels.
@@ -45,7 +46,7 @@ DumpModeEncode(TIFF* tif, tidata_t pp, tsize_t cc, tsample_t s)
 		if (tif->tif_rawcc + n > tif->tif_rawdatasize)
 			n = tif->tif_rawdatasize - tif->tif_rawcc;
 
-		assert( n > 0 );
+                assert( n > 0 );
                 
 		/*
 		 * Avoid copy if client has setup raw
@@ -71,10 +72,8 @@ static int
 DumpModeDecode(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 {
 	(void) s;
-/*         fprintf(stderr,"DumpModeDecode: scanline %ld, expected %ld bytes, got %ld bytes\n", */
-/*                 (long) tif->tif_row, (long) tif->tif_rawcc, (long) cc); */
 	if (tif->tif_rawcc < cc) {
-		TIFFErrorExt(tif->tif_clientdata, tif->tif_name,
+		TIFFError(tif->tif_name,
 		    "DumpModeDecode: Not enough data for scanline %d",
 		    tif->tif_row);
 		return (0);
@@ -117,10 +116,3 @@ TIFFInitDumpMode(TIFF* tif, int scheme)
 	tif->tif_seek = DumpModeSeek;
 	return (1);
 }
-/*
- * Local Variables:
- * mode: c
- * c-basic-offset: 8
- * fill-column: 78
- * End:
- */

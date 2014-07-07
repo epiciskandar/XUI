@@ -69,7 +69,6 @@
 #include "jasper/jas_stream.h"
 #include "jasper/jas_image.h"
 #include "jasper/jas_string.h"
-#include "jasper/jas_debug.h"
 
 #include "jpg_cod.h"
 

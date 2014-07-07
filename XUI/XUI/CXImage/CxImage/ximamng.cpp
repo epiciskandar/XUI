@@ -2,7 +2,7 @@
  * File:	ximamng.cpp
  * Purpose:	Platform Independent MNG Image Class Loader and Writer
  * Author:	07/Aug/2001 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 6.0.0 02/Feb/2008
  */
 
 #include "ximamng.h"
@@ -16,14 +16,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 // memory allocation; data must be zeroed
 static mng_ptr
-mymngalloc( mng_size_t size )
+mymngalloc( mng_uint32 size )
 {
 	return (mng_ptr)calloc(1, size);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // memory deallocation
-static void mymngfree(mng_ptr p, mng_size_t size)
+static void mymngfree(mng_ptr p, mng_uint32 size)
 {
 	free(p);
 }
@@ -42,7 +42,7 @@ static mng_bool mymngreadstream(mng_handle mng, mng_ptr buffer, mng_uint32 size,
 {
 	mngstuff *mymng = (mngstuff *)mng_get_userdata(mng);
 	// read the requested amount of data from the file
-	*bytesread = mymng->file->Read( buffer, sizeof(uint8_t), size);
+	*bytesread = mymng->file->Read( buffer, sizeof(BYTE), size);
 	return MNG_TRUE;
 }
 
@@ -77,12 +77,12 @@ static mng_bool mymngprocessheader( mng_handle mng, mng_uint32 width, mng_uint32
 		mymng->nBkgndColor.rgbBlue = mng->iBGblue >> 8;
 	}
 
-	mymng->image = (uint8_t*)malloc(height * mymng->effwdt);
+	mymng->image = (BYTE*)malloc(height * mymng->effwdt);
 
 	// tell the mng decoder about our bit-depth choice
 #if CXIMAGE_SUPPORT_ALPHA
 	mng_set_canvasstyle( mng, MNG_CANVAS_RGB8_A8 );
-	mymng->alpha = (uint8_t*)malloc(height * width);
+	mymng->alpha = (BYTE*)malloc(height * width);
 #else
 	mng_set_canvasstyle( mng, MNG_CANVAS_BGR8);
 	mymng->alpha = NULL;
@@ -181,8 +181,6 @@ void CxImageMNG::SetCallbacks(mng_handle mng)
 	mng_setcb_getalphaline(mng, mymnggetalphaline);
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if CXIMAGE_SUPPORT_DECODE
-////////////////////////////////////////////////////////////////////////////////
 // can't use the CxImage implementation because it looses mnginfo
 bool CxImageMNG::Load(const TCHAR * imageFileName){
 	FILE* hFile;	//file handle to read the image
@@ -196,6 +194,8 @@ bool CxImageMNG::Load(const TCHAR * imageFileName){
 	return bOK;
 }
 ////////////////////////////////////////////////////////////////////////////////
+#if CXIMAGE_SUPPORT_DECODE
+////////////////////////////////////////////////////////////////////////////////
 bool CxImageMNG::Decode(CxFile *hFile)
 {
 	if (hFile == NULL) return false;
@@ -203,7 +203,7 @@ bool CxImageMNG::Decode(CxFile *hFile)
 	cx_try
 	{
 		// set up the mng decoder for our stream
-		hmng = mng_initialize(&mnginfo, (mng_memalloc)mymngalloc, (mng_memfree)mymngfree, MNG_NULL);
+		hmng = mng_initialize(&mnginfo, mymngalloc, mymngfree, MNG_NULL);
 		if (hmng == NULL) cx_throw("could not initialize libmng");			
 
 		// set the file we want to play
@@ -212,7 +212,7 @@ bool CxImageMNG::Decode(CxFile *hFile)
 		// Set the colorprofile, lcms uses this:
 		mng_set_srgb(hmng, MNG_TRUE );
 		// Set white as background color:
-		uint16_t Red,Green,Blue;
+		WORD Red,Green,Blue;
 		Red = Green = Blue = (255 << 8) + 255;
 		mng_set_bgcolor(hmng, Red, Green, Blue );
 		// If PNG Background is available, use it:
@@ -229,7 +229,7 @@ bool CxImageMNG::Decode(CxFile *hFile)
 
 		// read in the image
 		info.nNumFrames=0;
-		int32_t retval=MNG_NOERROR;
+		int retval=MNG_NOERROR;
 
 		retval = mng_readdisplay(hmng);
 
@@ -268,7 +268,7 @@ bool CxImageMNG::Decode(CxFile *hFile)
 		if (mnginfo.animation_enabled==0){
 			// select the frame
 			if (info.nFrame>=0 && info.nFrame<info.nNumFrames){
-				for (int32_t n=0;n<info.nFrame;n++) mng_display_resume(hmng);
+				for (int n=0;n<info.nFrame;n++) mng_display_resume(hmng);
 			} else cx_throw("Error: frame not present in MNG file");
 		}
 
@@ -317,12 +317,12 @@ bool CxImageMNG::Encode(CxFile *hFile)
 		mnginfo.height = head.biHeight;
 		mnginfo.width =  head.biWidth;
 
-		mnginfo.image = (uint8_t*)malloc(head.biSizeImage);
+		mnginfo.image = (BYTE*)malloc(head.biSizeImage);
 		if (mnginfo.image == NULL) cx_throw("could not allocate memory for MNG");
 		memcpy(mnginfo.image,info.pImage, head.biSizeImage);
 
 		// set up the mng decoder for our stream
-		hmng = mng_initialize(&mnginfo, (mng_memalloc)mymngalloc, (mng_memfree)mymngfree, MNG_NULL);
+		hmng = mng_initialize(&mnginfo, mymngalloc, mymngfree, MNG_NULL);
 		if (hmng == NULL) cx_throw("could not initialize libmng");			
 
 		mng_setcb_openstream(hmng, mymngopenstreamwrite );
@@ -344,13 +344,13 @@ bool CxImageMNG::Encode(CxFile *hFile)
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Writes a single PNG datastream
-void CxImageMNG::WritePNG( mng_handle hMNG, int32_t Frame, int32_t FrameCount )
+void CxImageMNG::WritePNG( mng_handle hMNG, int Frame, int FrameCount )
 {
 	mngstuff *mymng = (mngstuff *)mng_get_userdata(hMNG);
 	
-	int32_t OffsetX=0,OffsetY=0,OffsetW=mymng->width,OffsetH=mymng->height;
+	int OffsetX=0,OffsetY=0,OffsetW=mymng->width,OffsetH=mymng->height;
 
-	uint8_t *tmpbuffer = new uint8_t[ (mymng->effwdt+1) * mymng->height];
+	BYTE *tmpbuffer = new BYTE[ (mymng->effwdt+1) * mymng->height];
 	if( tmpbuffer == 0 ) return;
 
 	// Write DEFI chunk.
@@ -368,7 +368,7 @@ void CxImageMNG::WritePNG( mng_handle hMNG, int32_t Frame, int32_t FrameCount )
 	);
 
 	// transfer data, add Filterbyte:
-	for( int32_t Row=0; Row<OffsetH; Row++ ){
+	for( int Row=0; Row<OffsetH; Row++ ){
 		// First Byte in each Scanline is Filterbyte: Currently 0 -> No Filter.
 		tmpbuffer[Row*(mymng->effwdt+1)]=0; 
 		// Copy the scanline: (reverse order)
@@ -379,9 +379,9 @@ void CxImageMNG::WritePNG( mng_handle hMNG, int32_t Frame, int32_t FrameCount )
 	} 
 
 	// Compress data with ZLib (Deflate):
-	uint8_t *dstbuffer = new uint8_t[(mymng->effwdt+1)*OffsetH];
+	BYTE *dstbuffer = new BYTE[(mymng->effwdt+1)*OffsetH];
 	if( dstbuffer == 0 ) return;
-	uint32_t dstbufferSize=(mymng->effwdt+1)*OffsetH;
+	DWORD dstbufferSize=(mymng->effwdt+1)*OffsetH;
 
 	// Compress data:
 	if(Z_OK != compress2((Bytef *)dstbuffer,(ULONG *)&dstbufferSize,(const Bytef*)tmpbuffer,
@@ -396,7 +396,7 @@ void CxImageMNG::WritePNG( mng_handle hMNG, int32_t Frame, int32_t FrameCount )
 	delete [] dstbuffer;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int32_t CxImageMNG::Resume()
+long CxImageMNG::Resume()
 {
 	if (MNG_NEEDTIMERWAIT == mng_display_resume(hmng)){
 		if (info.pImage==NULL){

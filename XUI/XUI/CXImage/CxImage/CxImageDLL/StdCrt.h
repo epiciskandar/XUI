@@ -17,10 +17,6 @@
 #include <windows.h>
 
 // TODO: reference additional headers your program requires here
-#if defined(_WIN32_WCE) && (_WIN32_WCE < 0x501)
- #pragma comment(lib, "ccrtrtti.lib")
- #pragma comment(lib, "secchk.lib")
-#endif
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

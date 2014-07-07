@@ -2,7 +2,7 @@
  * File:	ximawbmp.cpp
  * Purpose:	Platform Independent WBMP Image Class Loader and Writer
  * 12/Jul/2002 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 6.0.0 02/Feb/2008
  */
 
 #include "ximawbmp.h"
@@ -24,9 +24,9 @@ bool CxImageWBMP::Decode(CxFile *hFile)
   {
 	ReadOctet(hFile, &wbmpHead.Type);
 
-	uint32_t dat;
+	DWORD dat;
 	ReadOctet(hFile, &dat);
-	wbmpHead.FixHeader = (uint8_t)dat;
+	wbmpHead.FixHeader = (BYTE)dat;
 
 	ReadOctet(hFile, &wbmpHead.ImageWidth);
 	ReadOctet(hFile, &wbmpHead.ImageHeight);
@@ -52,10 +52,10 @@ bool CxImageWBMP::Decode(CxFile *hFile)
 	if (!IsValid()) cx_throw("WBMP Create failed");
 	SetGrayPalette();
 
-	int32_t linewidth=(head.biWidth+7)/8;
+	int linewidth=(head.biWidth+7)/8;
     CImageIterator iter(this);
 	iter.Upset();
-    for (int32_t y=0; y < head.biHeight; y++){
+    for (long y=0; y < head.biHeight; y++){
 		hFile->Read(iter.GetRow(),linewidth,1);
 		iter.PrevRow();
     }
@@ -67,13 +67,13 @@ bool CxImageWBMP::Decode(CxFile *hFile)
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CxImageWBMP::ReadOctet(CxFile * hFile, uint32_t *data)
+bool CxImageWBMP::ReadOctet(CxFile * hFile, DWORD *data)
 {
-	uint8_t c;
+	BYTE c;
 	*data = 0;
 	do {
 		if (hFile->Eof()) return false;
-		c = (uint8_t)hFile->GetC();
+		c = (BYTE)hFile->GetC();
 		*data <<= 7;
 		*data |= (c & 0x7F);
 	} while ((c&0x80)!=0);
@@ -106,25 +106,25 @@ bool CxImageWBMP::Encode(CxFile * hFile)
 	WriteOctet(hFile,wbmpHead.ImageWidth);
 	WriteOctet(hFile,wbmpHead.ImageHeight);
     // Write the pixels
-	int32_t linewidth=(wbmpHead.ImageWidth+7)/8;
+	int linewidth=(wbmpHead.ImageWidth+7)/8;
     CImageIterator iter(this);
 	iter.Upset();
-    for (uint32_t y=0; y < wbmpHead.ImageHeight; y++){
+    for (DWORD y=0; y < wbmpHead.ImageHeight; y++){
 		hFile->Write(iter.GetRow(),linewidth,1);
 		iter.PrevRow();
     }
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CxImageWBMP::WriteOctet(CxFile * hFile, const uint32_t data)
+bool CxImageWBMP::WriteOctet(CxFile * hFile, const DWORD data)
 {
-	int32_t ns = 0;
+	int ns = 0;
 	while (data>>(ns+7)) ns+=7;
 	while (ns>0){
-		if (!hFile->PutC(0x80 | (uint8_t)(data>>ns))) return false;
+		if (!hFile->PutC(0x80 | (BYTE)(data>>ns))) return false;
 		ns-=7;
 	}
-	if (!(hFile->PutC((uint8_t)(0x7F & data)))) return false;
+	if (!(hFile->PutC((BYTE)(0x7F & data)))) return false;
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 // ximage.cpp : main implementation file
 /* 07/08/2001 v1.00 - Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 6.0.0 02/Feb/2008
  */
 
 #include "ximage.h"
@@ -11,7 +11,7 @@
 /**
  * Initialize the internal structures
  */
-void CxImage::Startup(uint32_t imagetype)
+void CxImage::Startup(DWORD imagetype)
 {
 	//init pointers
 	pDib = pSelection = pAlpha = NULL;
@@ -25,11 +25,10 @@ void CxImage::Startup(uint32_t imagetype)
 	info.nAlphaMax = 255;
 	info.nBkgndIndex = -1;
 	info.bEnabled = true;
-	info.nJpegScale = 1;
 	SetXDPI(CXIMAGE_DEFAULT_DPI);
 	SetYDPI(CXIMAGE_DEFAULT_DPI);
 
-	int16_t test = 1;
+	short test = 1;
 	info.bLittleEndianHost = (*((char *) &test) == 1);
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +36,7 @@ void CxImage::Startup(uint32_t imagetype)
  * Empty image constructor
  * \param imagetype: (optional) set the image format, see ENUM_CXIMAGE_FORMATS
  */
-CxImage::CxImage(uint32_t imagetype)
+CxImage::CxImage(DWORD imagetype)
 {
 	Startup(imagetype);
 }
@@ -53,7 +52,7 @@ bool CxImage::Destroy()
 	//free this only if it's valid and it's not a ghost
 	if (info.pGhost==NULL){
 		if (ppLayers) { 
-			for(int32_t n=0; n<info.nNumLayers;n++){ delete ppLayers[n]; }
+			for(long n=0; n<info.nNumLayers;n++){ delete ppLayers[n]; }
 			delete [] ppLayers; ppLayers=0; info.nNumLayers = 0;
 		}
 		if (pSelection) {free(pSelection); pSelection=0;}
@@ -68,7 +67,7 @@ bool CxImage::DestroyFrames()
 {
 	if (info.pGhost==NULL) {
 		if (ppFrames) {
-			for (int32_t n=0; n<info.nNumFrames; n++) { delete ppFrames[n]; }
+			for (long n=0; n<info.nNumFrames; n++) { delete ppFrames[n]; }
 			delete [] ppFrames; ppFrames = NULL; info.nNumFrames = 0;
 		}
 		return true;
@@ -83,7 +82,7 @@ bool CxImage::DestroyFrames()
  * \param wBpp: bit per pixel, can be 1, 4, 8, 24
  * \param imagetype: (optional) set the image format, see ENUM_CXIMAGE_FORMATS
  */
-CxImage::CxImage(uint32_t dwWidth, uint32_t dwHeight, uint32_t wBpp, uint32_t imagetype)
+CxImage::CxImage(DWORD dwWidth, DWORD dwHeight, DWORD wBpp, DWORD imagetype)
 {
 	Startup(imagetype);
 	Create(dwWidth,dwHeight,wBpp,imagetype);
@@ -125,17 +124,17 @@ void CxImage::Copy(const CxImage &src, bool copypixels, bool copyselection, bool
 	//copy the pixels and the palette, or at least copy the palette only.
 	if (copypixels && pDib && src.pDib) memcpy(pDib,src.pDib,GetSize());
 	else SetPalette(src.GetPalette());
-	int32_t nSize = head.biWidth * head.biHeight;
+	long nSize = head.biWidth * head.biHeight;
 	//copy the selection
 	if (copyselection && src.pSelection){
 		if (pSelection) free(pSelection);
-		pSelection = (uint8_t*)malloc(nSize);
+		pSelection = (BYTE*)malloc(nSize);
 		memcpy(pSelection,src.pSelection,nSize);
 	}
 	//copy the alpha channel
 	if (copyalpha && src.pAlpha){
 		if (pAlpha) free(pAlpha);
-		pAlpha = (uint8_t*)malloc(nSize);
+		pAlpha = (BYTE*)malloc(nSize);
 		memcpy(pAlpha,src.pAlpha,nSize);
 	}
 }
@@ -167,7 +166,7 @@ CxImage& CxImage::operator = (const CxImage& isrc)
  * \param imagetype: (optional) set the image format, see ENUM_CXIMAGE_FORMATS
  * \return pointer to the internal pDib object; NULL if an error occurs.
  */
-void* CxImage::Create(uint32_t dwWidth, uint32_t dwHeight, uint32_t wBpp, uint32_t imagetype)
+void* CxImage::Create(DWORD dwWidth, DWORD dwHeight, DWORD wBpp, DWORD imagetype)
 {
 	// destroy the existing image (if any)
 	if (!Destroy())
@@ -185,8 +184,9 @@ void* CxImage::Create(uint32_t dwWidth, uint32_t dwHeight, uint32_t wBpp, uint32
     else if (wBpp <= 8)	wBpp = 8;
     else				wBpp = 24;
 
-	// limit memory requirements
-	if ((((float)dwWidth*(float)dwHeight*(float)wBpp)/8.0f) > (float)CXIMAGE_MAX_MEMORY)
+	// limit memory requirements (and also a check for bad parameters)
+	if (((dwWidth*dwHeight*wBpp)>>3) > CXIMAGE_MAX_MEMORY ||
+		((dwWidth*dwHeight*wBpp)/wBpp) != (dwWidth*dwHeight))
 	{
 		strcpy(info.szLastError,"CXIMAGE_MAX_MEMORY exceeded");
 		return NULL;
@@ -213,7 +213,7 @@ void* CxImage::Create(uint32_t dwWidth, uint32_t dwHeight, uint32_t wBpp, uint32
     head.biWidth = dwWidth;		// fill in width from parameter
     head.biHeight = dwHeight;	// fill in height from parameter
     head.biPlanes = 1;			// must be 1
-    head.biBitCount = (uint16_t)wBpp;		// from parameter
+    head.biBitCount = (WORD)wBpp;		// from parameter
     head.biCompression = BI_RGB;    
     head.biSizeImage = info.dwEffWidth * dwHeight;
 //    head.biXPelsPerMeter = 0; See SetXDPI
@@ -252,17 +252,17 @@ void* CxImage::Create(uint32_t dwWidth, uint32_t dwHeight, uint32_t wBpp, uint32
 /**
  * \return pointer to the image pixels. <b> USE CAREFULLY </b>
  */
-uint8_t* CxImage::GetBits(uint32_t row)
+BYTE* CxImage::GetBits(DWORD row)
 { 
 	if (pDib){
 		if (row) {
-			if (row<(uint32_t)head.biHeight){
-				return ((uint8_t*)pDib + *(uint32_t*)pDib + GetPaletteSize() + (info.dwEffWidth * row));
+			if (row<(DWORD)head.biHeight){
+				return ((BYTE*)pDib + *(DWORD*)pDib + GetPaletteSize() + (info.dwEffWidth * row));
 			} else {
 				return NULL;
 			}
 		} else {
-			return ((uint8_t*)pDib + *(uint32_t*)pDib + GetPaletteSize());
+			return ((BYTE*)pDib + *(DWORD*)pDib + GetPaletteSize());
 		}
 	}
 	return NULL;
@@ -271,7 +271,7 @@ uint8_t* CxImage::GetBits(uint32_t row)
 /**
  * \return the size in bytes of the internal pDib object
  */
-int32_t CxImage::GetSize()
+long CxImage::GetSize()
 {
 	return head.biSize + head.biSizeImage + GetPaletteSize();
 }
@@ -280,7 +280,7 @@ int32_t CxImage::GetSize()
  * Checks if the coordinates are inside the image
  * \return true if x and y are both inside the image
  */
-bool CxImage::IsInside(int32_t x, int32_t y)
+bool CxImage::IsInside(long x, long y)
 {
   return (0<=y && y<head.biHeight && 0<=x && x<head.biWidth);
 }
@@ -290,7 +290,7 @@ bool CxImage::IsInside(int32_t x, int32_t y)
  * - for indexed images, the output color is set by the palette entries.
  * - for RGB images, the output color is a shade of gray.
  */
-void CxImage::Clear(uint8_t bval)
+void CxImage::Clear(BYTE bval)
 {
 	if (pDib == 0) return;
 
@@ -298,7 +298,7 @@ void CxImage::Clear(uint8_t bval)
 		if (bval > 0) bval = 255;
 	}
 	if (GetBpp() == 4){
-		bval = (uint8_t)(17*(0x0F & bval));
+		bval = (BYTE)(17*(0x0F & bval));
 	}
 
 	memset(info.pImage,bval,head.biSizeImage);
@@ -356,57 +356,57 @@ void CxImage::Ghost(const CxImage *from)
 /**
  * turns a 16 or 32 bit bitfield image into a RGB image
  */
-void CxImage::Bitfield2RGB(uint8_t *src, uint32_t redmask, uint32_t greenmask, uint32_t bluemask, uint8_t bpp)
+void CxImage::Bitfield2RGB(BYTE *src, DWORD redmask, DWORD greenmask, DWORD bluemask, BYTE bpp)
 {
 	switch (bpp){
 	case 16:
 	{
-		uint32_t ns[3]={0,0,0};
+		DWORD ns[3]={0,0,0};
 		// compute the number of shift for each mask
-		for (int32_t i=0;i<16;i++){
+		for (int i=0;i<16;i++){
 			if ((redmask>>i)&0x01) ns[0]++;
 			if ((greenmask>>i)&0x01) ns[1]++;
 			if ((bluemask>>i)&0x01) ns[2]++;
 		}
 		ns[1]+=ns[0]; ns[2]+=ns[1];	ns[0]=8-ns[0]; ns[1]-=8; ns[2]-=8;
 		// dword aligned width for 16 bit image
-		int32_t effwidth2=(((head.biWidth + 1) / 2) * 4);
-		uint16_t w;
-		int32_t y2,y3,x2,x3;
-		uint8_t *p=info.pImage;
+		long effwidth2=(((head.biWidth + 1) / 2) * 4);
+		WORD w;
+		long y2,y3,x2,x3;
+		BYTE *p=info.pImage;
 		// scan the buffer in reverse direction to avoid reallocations
-		for (int32_t y=head.biHeight-1; y>=0; y--){
+		for (long y=head.biHeight-1; y>=0; y--){
 			y2=effwidth2*y;
 			y3=info.dwEffWidth*y;
-			for (int32_t x=head.biWidth-1; x>=0; x--){
+			for (long x=head.biWidth-1; x>=0; x--){
 				x2 = 2*x+y2;
 				x3 = 3*x+y3;
-				w = (uint16_t)(src[x2]+256*src[1+x2]);
-				p[  x3]=(uint8_t)((w & bluemask)<<ns[0]);
-				p[1+x3]=(uint8_t)((w & greenmask)>>ns[1]);
-				p[2+x3]=(uint8_t)((w & redmask)>>ns[2]);
+				w = (WORD)(src[x2]+256*src[1+x2]);
+				p[  x3]=(BYTE)((w & bluemask)<<ns[0]);
+				p[1+x3]=(BYTE)((w & greenmask)>>ns[1]);
+				p[2+x3]=(BYTE)((w & redmask)>>ns[2]);
 			}
 		}
 		break;
 	}
 	case 32:
 	{
-		uint32_t ns[3]={0,0,0};
+		DWORD ns[3]={0,0,0};
 		// compute the number of shift for each mask
-		for (int32_t i=8;i<32;i+=8){
+		for (int i=8;i<32;i+=8){
 			if (redmask>>i) ns[0]++;
 			if (greenmask>>i) ns[1]++;
 			if (bluemask>>i) ns[2]++;
 		}
 		// dword aligned width for 32 bit image
-		int32_t effwidth4 = head.biWidth * 4;
-		int32_t y4,y3,x4,x3;
-		uint8_t *p=info.pImage;
+		long effwidth4 = head.biWidth * 4;
+		long y4,y3,x4,x3;
+		BYTE *p=info.pImage;
 		// scan the buffer in reverse direction to avoid reallocations
-		for (int32_t y=head.biHeight-1; y>=0; y--){
+		for (long y=head.biHeight-1; y>=0; y--){
 			y4=effwidth4*y;
 			y3=info.dwEffWidth*y;
-			for (int32_t x=head.biWidth-1; x>=0; x--){
+			for (long x=head.biWidth-1; x>=0; x--){
 				x4 = 4*x+y4;
 				x3 = 3*x+y3;
 				p[  x3]=src[ns[2]+x4];
@@ -430,7 +430,7 @@ void CxImage::Bitfield2RGB(uint8_t *src, uint32_t redmask, uint32_t greenmask, u
  * \param bFlipImage: tune this parameter if the image is upsidedown
  * \return true if everything is ok
  */
-bool CxImage::CreateFromArray(uint8_t* pArray,uint32_t dwWidth,uint32_t dwHeight,uint32_t dwBitsperpixel, uint32_t dwBytesperline, bool bFlipImage)
+bool CxImage::CreateFromArray(BYTE* pArray,DWORD dwWidth,DWORD dwHeight,DWORD dwBitsperpixel, DWORD dwBytesperline, bool bFlipImage)
 {
 	if (pArray==NULL) return false;
 	if (!((dwBitsperpixel==1)||(dwBitsperpixel==4)||(dwBitsperpixel==8)||
@@ -444,13 +444,13 @@ bool CxImage::CreateFromArray(uint8_t* pArray,uint32_t dwWidth,uint32_t dwHeight
 	if (dwBitsperpixel==32) AlphaCreate();
 #endif //CXIMAGE_SUPPORT_ALPHA
 
-	uint8_t *dst,*src;
+	BYTE *dst,*src;
 
-	for (uint32_t y = 0; y<dwHeight; y++) {
+	for (DWORD y = 0; y<dwHeight; y++) {
 		dst = info.pImage + (bFlipImage?(dwHeight-1-y):y) * info.dwEffWidth;
 		src = pArray + y * dwBytesperline;
 		if (dwBitsperpixel==32){
-			for(uint32_t x=0;x<dwWidth;x++){
+			for(DWORD x=0;x<dwWidth;x++){
 				*dst++=src[0];
 				*dst++=src[1];
 				*dst++=src[2];
@@ -469,7 +469,7 @@ bool CxImage::CreateFromArray(uint8_t* pArray,uint32_t dwWidth,uint32_t dwHeight
 /**
  * \sa CreateFromArray
  */
-bool CxImage::CreateFromMatrix(uint8_t** ppMatrix,uint32_t dwWidth,uint32_t dwHeight,uint32_t dwBitsperpixel, uint32_t dwBytesperline, bool bFlipImage)
+bool CxImage::CreateFromMatrix(BYTE** ppMatrix,DWORD dwWidth,DWORD dwHeight,DWORD dwBitsperpixel, DWORD dwBytesperline, bool bFlipImage)
 {
 	if (ppMatrix==NULL) return false;
 	if (!((dwBitsperpixel==1)||(dwBitsperpixel==4)||(dwBitsperpixel==8)||
@@ -483,14 +483,14 @@ bool CxImage::CreateFromMatrix(uint8_t** ppMatrix,uint32_t dwWidth,uint32_t dwHe
 	if (dwBitsperpixel==32) AlphaCreate();
 #endif //CXIMAGE_SUPPORT_ALPHA
 
-	uint8_t *dst,*src;
+	BYTE *dst,*src;
 
-	for (uint32_t y = 0; y<dwHeight; y++) {
+	for (DWORD y = 0; y<dwHeight; y++) {
 		dst = info.pImage + (bFlipImage?(dwHeight-1-y):y) * info.dwEffWidth;
 		src = ppMatrix[y];
 		if (src){
 			if (dwBitsperpixel==32){
-				for(uint32_t x=0;x<dwWidth;x++){
+				for(DWORD x=0;x<dwWidth;x++){
 					*dst++=src[0];
 					*dst++=src[1];
 					*dst++=src[2];
@@ -510,13 +510,13 @@ bool CxImage::CreateFromMatrix(uint8_t** ppMatrix,uint32_t dwWidth,uint32_t dwHe
 /**
  * \return lightness difference between elem1 and elem2
  */
-int32_t CxImage::CompareColors(const void *elem1, const void *elem2)
+int CxImage::CompareColors(const void *elem1, const void *elem2)
 {
 	RGBQUAD* c1 = (RGBQUAD*)elem1;
 	RGBQUAD* c2 = (RGBQUAD*)elem2;
 
-	int32_t g1 = (int32_t)RGB2GRAY(c1->rgbRed,c1->rgbGreen,c1->rgbBlue);
-	int32_t g2 = (int32_t)RGB2GRAY(c2->rgbRed,c2->rgbGreen,c2->rgbBlue);
+	int g1 = (int)RGB2GRAY(c1->rgbRed,c1->rgbGreen,c1->rgbBlue);
+	int g2 = (int)RGB2GRAY(c2->rgbRed,c2->rgbGreen,c2->rgbBlue);
 	
 	return (g1-g2);
 }

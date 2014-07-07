@@ -2,7 +2,7 @@
  * File:	ximaraw.cpp
  * Purpose:	Platform Independent RAW Image Class Loader
  * 16/Dec/2007 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 6.0.0 02/Feb/2008
  * 
  * CxImageRAW (c) May/2006 pdw63
  *
@@ -84,9 +84,7 @@ bool CxImageRAW::Decode(CxFile *hFile)
 	if (dcr.opt.use_camera_matrix && dcr.cmatrix[0][0] > 0.25) {
 		memcpy (dcr.rgb_cam, dcr.cmatrix, sizeof dcr.cmatrix);
 		dcr.raw_color = 0;
-	} else {
-      dcr.opt.use_camera_wb = 1;
-    }
+	}
 
 	// allocate memory for the image
 	dcr.image = (ushort (*)[4]) calloc (dcr.iheight*dcr.iwidth, sizeof *dcr.image);
@@ -104,7 +102,7 @@ bool CxImageRAW::Decode(CxFile *hFile)
 	// post processing
 	if (dcr.zero_is_bad) dcr_remove_zeroes(&dcr);
 
-	dcr_bad_pixels(&dcr,dcr.opt.bpfile);
+	dcr_bad_pixels(&dcr);
 
 	if (dcr.opt.dark_frame) dcr_subtract (&dcr,dcr.opt.dark_frame);
 
@@ -113,8 +111,6 @@ bool CxImageRAW::Decode(CxFile *hFile)
 	if (dcr.opt.user_qual >= 0) dcr.quality = dcr.opt.user_qual;
 
 	if (dcr.opt.user_black >= 0) dcr.black = dcr.opt.user_black;
-
-	if (dcr.opt.user_sat >= 0) dcr.maximum = dcr.opt.user_sat;
 
 #ifdef COLORCHECK
 	dcr_colorcheck(&dcr);
@@ -141,7 +137,7 @@ bool CxImageRAW::Decode(CxFile *hFile)
 	}
 
 	if (dcr.mix_green) {
-		int32_t i;
+		long i;
 		for (dcr.colors=3, i=0; i < dcr.height*dcr.width; i++) {
 			dcr.image[i][1] = (dcr.image[i][1] + dcr.image[i][3]) >> 1;
 		}
@@ -180,7 +176,7 @@ bool CxImageRAW::Decode(CxFile *hFile)
 	uchar lut[0x10000];
 	if (dcr.opt.output_bps == 8) dcr_gamma_lut (&dcr, lut);
 
-	int32_t c, row, col, soff, rstep, cstep;
+	long c, row, col, soff, rstep, cstep;
 	soff  = dcr_flip_index (&dcr, 0, 0);
 	cstep = dcr_flip_index (&dcr, 0, 1) - soff;
 	rstep = dcr_flip_index (&dcr, 1, 0) - dcr_flip_index (&dcr, 0, dcr.width);
@@ -192,13 +188,9 @@ bool CxImageRAW::Decode(CxFile *hFile)
 				for (c=0; c < dcr.colors; c++) ppm2[col*dcr.colors+c] = dcr.image[soff][c];
 		}
 		if (dcr.opt.output_bps == 16 && !dcr.opt.output_tiff && htons(0x55aa) != 0x55aa)
-#if defined(_LINUX) || defined(__APPLE__)
-			swab ((char*)ppm2, (char*)ppm2, dcr.width*dcr.colors*2);
-#else
 			_swab ((char*)ppm2, (char*)ppm2, dcr.width*dcr.colors*2);
-#endif
 
-		uint32_t size = dcr.width * (dcr.colors*dcr.opt.output_bps/8);
+		DWORD size = dcr.width * (dcr.colors*dcr.opt.output_bps/8);
 		RGBtoBGR(ppm,size);
 		memcpy(GetBits(dcr.height - 1 - row), ppm, min(size,GetEffWidth()));
 	}
@@ -218,103 +210,6 @@ bool CxImageRAW::Decode(CxFile *hFile)
 	/* that's it */
 	return true;
 }
-
-#if CXIMAGE_SUPPORT_EXIF
-bool CxImageRAW::GetExifThumbnail(const TCHAR *filename, const TCHAR *outname, int32_t type)
-{	
-	DCRAW  dcr;
-
-	CxIOFile file;
-	if (!file.Open(filename, _T("rb"))) 
-		return false;
-
-  cx_try
-  {
-	// initialization
-	dcr_init_dcraw(&dcr);
-
-	dcr.opt.user_qual = GetCodecOption(CXIMAGE_FORMAT_RAW) & 0x03;
-
-	// setup variables for debugging
-	char szClass[] = "CxImageRAW";
-	dcr.ifname = szClass;
-	dcr.sz_error = info.szLastError;
-
-	// setup library options, see dcr_print_manual for the available switches
-	// call dcr_parse_command_line_options(&dcr,0,0,0) to set default options
-	// if (dcr_parse_command_line_options(&dcr,argc,argv,&arg))
-	if (dcr_parse_command_line_options(&dcr,0,0,0)){
-		cx_throw("CxImageRAW: unknown option");
-	}
-
-	// set return point for error handling
-	if (setjmp (dcr.failure)) {
-		cx_throw("");
-	}
-
-	// install file manager
-	CxFileRaw src(&file,&dcr);
-
-	// check file header
-	dcr_identify(&dcr);
-
-	if(!dcr.is_raw){
-		cx_throw("CxImageRAW: not a raw image");
-	}
-
-	if (dcr.load_raw == NULL) {
-		cx_throw("CxImageRAW: missing raw decoder");
-	}
-
-	// THUMB.
-	if (dcr.thumb_offset != 0)
-	{
- 		FILE* file = _tfopen(outname, _T("wb"));
-		DCRAW* p = &dcr;
-		dcr_fseek(dcr.obj_, dcr.thumb_offset, SEEK_SET);
-		dcr.write_thumb(&dcr, file);
-		fclose(file);
-
-		// Read in the thumbnail to resize and rotate.
-		CxImage image(outname, CXIMAGE_FORMAT_UNKNOWN);
-	    if (image.IsValid())
-	    {
-#if CXIMAGE_SUPPORT_TRANSFORMATION
-			// Resizing.
-      		if (image.GetWidth() > 256 || image.GetHeight() > 256)
-		    {
-				float amount = 256.0f / max(image.GetWidth(), image.GetHeight());
-				image.Resample((int32_t)(image.GetWidth() * amount), (int32_t)(image.GetHeight() * amount), 0);
-		    }
-			// Rotation.
-			if (p->flip != 0)
-		    	image.RotateExif(p->flip);
-#endif
-#if CXIMAGE_SUPPORT_ENCODE && CXIMAGE_SUPPORT_JPG
-			return image.Save(outname, CXIMAGE_FORMAT_JPG);
-#endif
-		}
-	}
-	else
-	{
-		cx_throw("No thumbnail!");
-	}
-
-	dcr_cleanup_dcraw(&dcr);
-
-  } cx_catch {
-
-	dcr_cleanup_dcraw(&dcr);
-
-	if (strcmp(message,"")) strncpy(info.szLastError,message,255);
-	if (info.nEscape == -1 && info.dwType == CXIMAGE_FORMAT_RAW) return true;
-	return false;
-  }
-	/* that's it */
-	return true;
-}
-#endif //CXIMAGE_SUPPORT_EXIF
-
 ////////////////////////////////////////////////////////////////////////////////
 #endif //CXIMAGE_SUPPORT_DECODE
 ////////////////////////////////////////////////////////////////////////////////

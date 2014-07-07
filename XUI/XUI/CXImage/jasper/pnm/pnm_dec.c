@@ -79,7 +79,6 @@
 #include "jasper/jas_types.h"
 #include "jasper/jas_stream.h"
 #include "jasper/jas_image.h"
-#include "jasper/jas_debug.h"
 
 #include "pnm_cod.h"
 

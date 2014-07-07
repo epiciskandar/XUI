@@ -2,7 +2,7 @@
   dcr.c is a command-line program to test libdcr.
 
   based on dcraw.c -- Dave Coffin's raw photo decoder
-  Copyright 1997-2008 by Dave Coffin, dcoffin a cybercom o net
+  Copyright 1997-2007 by Dave Coffin, dcoffin a cybercom o net
 
   This is a command-line ANSI C program to convert raw photos from
   any digital camera on any computer running any operating system.
@@ -17,21 +17,18 @@
   part of this license. No use of any covered code is authorized hereunder except under
   this disclaimer.
 
-  No license is required to download and use libdcr.  However,
-  to lawfully redistribute libdcr, you must either (a) offer, at
+  No license is required to download and use dcr.c.  However,
+  to lawfully redistribute dcr, you must either (a) offer, at
   no extra charge, full source code for all executable files
   containing RESTRICTED functions, (b) distribute this code under
   the GPL Version 2 or later, (c) remove all RESTRICTED functions,
   re-implement them, or copy them from an earlier, unrestricted
-  revision of dcraw.c, or (d) purchase a license from the author
+  Revision of dcraw.c, or (d) purchase a license from the author
   of dcraw.c.
 
-  --------------------------------------------------------------------------------
-
-  dcraw.c home page: http://cybercom.net/~dcoffin/dcraw/
-  libdcr  home page: http://www.xdp.it/libdcr/
-
- */
+  The functions that process Foveon images have been RESTRICTED since
+  dcraw.c Revision 1.237.  All other code remains free for all uses.
+*/
 
 #include <ctype.h>
 #include <errno.h>
@@ -315,7 +312,7 @@ next:
 
 		if (dcr.zero_is_bad) dcr_remove_zeroes(&dcr);
 
-		dcr_bad_pixels(&dcr,dcr.opt.bpfile);
+		dcr_bad_pixels(&dcr);
 
 		if (dcr.opt.dark_frame) dcr_subtract (&dcr,dcr.opt.dark_frame);
 
@@ -324,8 +321,6 @@ next:
 		if (dcr.opt.user_qual >= 0) dcr.quality = dcr.opt.user_qual;
 
 		if (dcr.opt.user_black >= 0) dcr.black = dcr.opt.user_black;
-
-		if (dcr.opt.user_sat >= 0) dcr.maximum = dcr.opt.user_sat;
 
 #ifdef COLORCHECK
 		dcr_colorcheck(&dcr);

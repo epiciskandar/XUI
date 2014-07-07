@@ -157,6 +157,10 @@ SOURCE=.\deflate.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\gzio.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\infback.c
 # End Source File
 # Begin Source File

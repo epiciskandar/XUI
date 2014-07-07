@@ -39,10 +39,6 @@
 #include <afxcmn.h>			// MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
-#if defined(_WIN32_WCE) && (_WIN32_WCE < 0x501)
- #pragma comment(lib, "ccrtrtti.lib")
- #pragma comment(lib, "secchk.lib")
-#endif
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

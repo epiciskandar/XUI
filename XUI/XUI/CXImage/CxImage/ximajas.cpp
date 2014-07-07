@@ -2,7 +2,7 @@
  * File:	ximajas.cpp
  * Purpose:	Platform Independent JasPer Image Class Loader and Writer
  * 12/Apr/2003 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 6.0.0 02/Feb/2008
  */
 
 #include "ximajas.h"
@@ -12,15 +12,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 #if CXIMAGE_SUPPORT_DECODE
 ////////////////////////////////////////////////////////////////////////////////
-bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
+bool CxImageJAS::Decode(CxFile *hFile, DWORD imagetype)
 {
 	if (hFile == NULL) return false;
 
 	jas_image_t *image=0;
 	jas_stream_t *in=0;
 	jas_matrix_t **bufs=0;
-	int32_t i,error=0;
-	int32_t fmt;
+	long i,error=0;
+	int fmt;
 	//jas_setdbglevel(0);
 
   cx_try
@@ -69,7 +69,7 @@ bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
 	//if (fmt<0)
 	//	cx_throw("error: unknowm format");
 
-	int32_t x,y,w,h,depth,cmptno;
+	long x,y,w,h,depth,cmptno;
 
 	w = jas_image_cmptwidth(image,0);
 	h = jas_image_cmptheight(image,0);
@@ -114,7 +114,7 @@ bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
 		}
 	}
 
-	int32_t nshift = (depth>8) ? (depth-8) : 0;
+	int nshift = (depth>8) ? (depth-8) : 0;
 
 	if (image->numcmpts_==3 &&
 		image->cmpts_[0]->width_ == image->cmpts_[1]->width_ &&
@@ -135,9 +135,9 @@ bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
 			}
 
 			for (x=0; x<w; x++){
-				c.rgbRed   = (uint8_t)((jas_matrix_getv(bufs[0], x)>>nshift));
-				c.rgbGreen = (uint8_t)((jas_matrix_getv(bufs[1], x)>>nshift));
-				c.rgbBlue  = (uint8_t)((jas_matrix_getv(bufs[2], x)>>nshift));
+				c.rgbRed   = (BYTE)((jas_matrix_getv(bufs[0], x)>>nshift));
+				c.rgbGreen = (BYTE)((jas_matrix_getv(bufs[1], x)>>nshift));
+				c.rgbBlue  = (BYTE)((jas_matrix_getv(bufs[2], x)>>nshift));
 				SetPixelColor(x,h-1-y,c);
 			}
 		}
@@ -157,7 +157,7 @@ bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
 			for (y=0; y<h; y++) {
 				jas_image_readcmpt(image, cmptno, 0, y, w, 1, bufs[0]);
 				for (x=0; x<w; x++){
-					SetPixelIndex(x,h-1-y,(uint8_t)((jas_matrix_getv(bufs[0], x)>>nshift)));
+					SetPixelIndex(x,h-1-y,(BYTE)((jas_matrix_getv(bufs[0], x)>>nshift)));
 				}
 			}
 		}
@@ -187,7 +187,7 @@ bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
 ////////////////////////////////////////////////////////////////////////////////
 #if CXIMAGE_SUPPORT_ENCODE
 ////////////////////////////////////////////////////////////////////////////////
-bool CxImageJAS::Encode(CxFile * hFile, uint32_t imagetype)
+bool CxImageJAS::Encode(CxFile * hFile, DWORD imagetype)
 {
 	if (EncodeSafeCheck(hFile)) return false;
 
@@ -199,7 +199,7 @@ bool CxImageJAS::Encode(CxFile * hFile, uint32_t imagetype)
 	jas_image_t *image=0;
 	jas_stream_t *out=0;
 	jas_matrix_t *cmpts[3];
-	int32_t x,y,yflip,error=0;
+	long x,y,yflip,error=0;
 	uint_fast16_t cmptno, numcmpts=0;
 	jas_image_cmptparm_t cmptparms[3], *cmptparm;
 
@@ -296,7 +296,7 @@ bool CxImageJAS::Encode(CxFile * hFile, uint32_t imagetype)
 		if (head.biClrUsed==0) cx_throw("PGX can save only GrayScale images");
 	}
 #endif
-	int32_t outfmt = jas_image_strtofmt(szfmt);
+	int outfmt = jas_image_strtofmt(szfmt);
 
 	char szoutopts[32];
 	sprintf(szoutopts,"rate=%.3f", info.fQuality/100.0f);

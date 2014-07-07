@@ -72,10 +72,6 @@
 
 #include <jasper/jas_config.h>
 
-#if defined(_WIN32_WCE)
-  #include <stdlib_extras.h>
-#endif
-
 #if !defined(JAS_CONFIGURE)
 
 #if defined(WIN32) || defined(HAVE_WINDOWS_H)

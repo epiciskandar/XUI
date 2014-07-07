@@ -141,6 +141,10 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\fax3sm_winnt.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\tif_aux.c
 # End Source File
 # Begin Source File
@@ -150,10 +154,6 @@ SOURCE=.\tif_close.c
 # Begin Source File
 
 SOURCE=.\tif_codec.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\tif_color.c
 # End Source File
 # Begin Source File
 
@@ -186,10 +186,6 @@ SOURCE=.\tif_error.c
 # Begin Source File
 
 SOURCE=.\tif_fax3.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\tif_fax3sm.c
 # End Source File
 # Begin Source File
 
