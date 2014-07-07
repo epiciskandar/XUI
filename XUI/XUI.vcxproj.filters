@@ -13,26 +13,20 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="XUI">
-      <UniqueIdentifier>{eed0bd75-7158-4dbc-8b80-c198be384887}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="XUI\XFrameWork">
-      <UniqueIdentifier>{cc8f9f66-ecca-45e7-89dc-ffd7dd275c54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="XUI\XFrameWork\XCtrls">
-      <UniqueIdentifier>{b868909a-3f72-4948-8b66-55f13606c0ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="XUI\XFrameWork\XLayouter">
-      <UniqueIdentifier>{08563b0a-6599-4ffe-a9b2-05fe3b4b533e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="XUI\XFrameWork\3rd">
+    <Filter Include="3rd">
       <UniqueIdentifier>{6d20dff5-9e7b-4e51-a276-b71a479223dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="XUI\XFrameWork\3rd\TinyXML">
+    <Filter Include="3rd\TinyXML">
       <UniqueIdentifier>{0d633fb1-4689-44be-a6a6-bc86cbb56d23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="XUI\Include">
-      <UniqueIdentifier>{ddf0d67d-4b2d-4720-823f-199058f0df7d}</UniqueIdentifier>
+    <Filter Include="XFrameWork">
+      <UniqueIdentifier>{cc8f9f66-ecca-45e7-89dc-ffd7dd275c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XFrameWork\XCtrls">
+      <UniqueIdentifier>{b868909a-3f72-4948-8b66-55f13606c0ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XFrameWork\XLayouter">
+      <UniqueIdentifier>{08563b0a-6599-4ffe-a9b2-05fe3b4b533e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,114 +35,36 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Others\CBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TinyXML\tinystr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TinyXML\tinyxml.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TinyXML\tinyxmlerror.cpp">
+    <ClCompile Include="XFrameWork\XUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TinyXML\tinyxmlparser.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>3rd\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML\tinystr.cpp">
+      <Filter>3rd\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML\tinyxml.cpp">
+      <Filter>3rd\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML\tinyxmlerror.cpp">
+      <Filter>3rd\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Others\CBuffer.cpp">
+      <Filter>3rd</Filter>
     </ClCompile>
     <ClCompile Include="XFrameWork\XElement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="XFrameWork\XUI.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>XFrameWork</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IXMsg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Others\BLog.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Others\CBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Others\CFile.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TinyXML\tinystr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TinyXML\tinyxml.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="XDefine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XElementDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XBase.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XCtrls\XEdit.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XCtrls\XFont.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XCtrls\XImage.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XCtrls\XStatic.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XDrawDevice.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XElementUtil.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XGaia.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XLayouter\Block.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XLayouter\Layouter.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XLayouter\LayouterBase.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XLayouter\Offset.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XMsg.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XNotifier.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XProperty.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XPropertyValue.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XRealWnd.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XResPool.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XTree.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XMsgNotify.h">
@@ -165,6 +81,69 @@
     </ClInclude>
     <ClInclude Include="XUtil.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XElementUtil.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XGaia.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XMsg.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XNotifier.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XProperty.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XPropertyValue.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XRealWnd.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XResPool.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XTree.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\xui.h">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XBase.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XDrawDevice.hpp">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XElement.h">
+      <Filter>XFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XCtrls\XEdit.hpp">
+      <Filter>XFrameWork\XCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XCtrls\XFont.hpp">
+      <Filter>XFrameWork\XCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XCtrls\XImage.hpp">
+      <Filter>XFrameWork\XCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XCtrls\XStatic.hpp">
+      <Filter>XFrameWork\XCtrls</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XLayouter\Layouter.hpp">
+      <Filter>XFrameWork\XLayouter</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XLayouter\LayouterBase.hpp">
+      <Filter>XFrameWork\XLayouter</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XLayouter\Offset.hpp">
+      <Filter>XFrameWork\XLayouter</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XLayouter\Block.hpp">
+      <Filter>XFrameWork\XLayouter</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

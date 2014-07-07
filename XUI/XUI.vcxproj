@@ -106,12 +106,12 @@
     <ClCompile Include="XFrameWork\XUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="CxImage\CxImage\cximage.vcxproj">
+      <Project>{bdd01e30-1db2-47a7-9ebc-a1d4bbe8fd5a}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="IXMsg.h" />
-    <ClInclude Include="Others\BLog.hpp" />
-    <ClInclude Include="Others\CBuffer.h" />
-    <ClInclude Include="Others\CFile.hpp" />
-    <ClInclude Include="TinyXML\tinystr.h" />
-    <ClInclude Include="TinyXML\tinyxml.h" />
     <ClInclude Include="XDefine.hpp" />
     <ClInclude Include="XElementDef.h" />
     <ClInclude Include="XFrameWork\XBase.hpp" />
@@ -134,17 +134,12 @@
     <ClInclude Include="XFrameWork\XRealWnd.hpp" />
     <ClInclude Include="XFrameWork\XResPool.hpp" />
     <ClInclude Include="XFrameWork\XTree.hpp" />
-    <ClInclude Include="XFrameWork\XUI.h" />
+    <ClInclude Include="XFrameWork\xui.h" />
     <ClInclude Include="XMsgNotify.h" />
     <ClInclude Include="XPropertyDefine.h" />
     <ClInclude Include="XSmartPtr.h" />
     <ClInclude Include="XUI_include.h" />
     <ClInclude Include="XUtil.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="CxImage\CxImage\cximage.vcxproj">
-      <Project>{bdd01e30-1db2-47a7-9ebc-a1d4bbe8fd5a}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
