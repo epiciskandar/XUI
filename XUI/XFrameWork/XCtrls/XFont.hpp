@@ -4,7 +4,6 @@
 class CXFont : public CFont
     ,public CXProperter
 {
-    XClass;
 public:
     CString GetFontName() {return _fontName;}
     INT GetFontSize() {return _fontSize;}

@@ -5,9 +5,9 @@
 
 namespace Layouter
 {
-	class CLayouter : public Util::Class::CRefCountImpl
+	class CLayouter : public IXRef
 	{
-		XClass;
+		RefcountImpl;
 	public:
 		virtual Property::ELayoutType MyType() = 0;
 		virtual XResult Layout(XSmartPtr<CXElement> element) = 0;

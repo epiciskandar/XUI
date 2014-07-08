@@ -29,7 +29,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	GetIXUI(&pXUI);
 	pXUI->Initialize(hInstance);
 	Prepare();
-	pXUI->GetGaia().SetListenerRegister(std::bind(
+	pXUI->GetGaia().RegListener(std::bind(
 		&CXUIListenerRegister::OnCreateElement,
 		listernerRegister,std::placeholders::_1));
 
@@ -37,7 +37,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	pXUI->GetResPool().TranslateResPath(xmlPath);
 	XNodeRef xmlNode = pXUI->GetGaia().CreateFromXML(xmlPath);
 
-	XRealWndRef wnd = xmlNode;
+	XPtr<IXRealWnd> wnd = xmlNode;
 	if (wnd)
 	{
 		wnd->Create();

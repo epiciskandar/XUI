@@ -39,7 +39,6 @@ namespace Property
 
 class CXProperty
 {
-	XClass;
 public:
 	SupportType(m_propertyMap,CPropertyValue<CString>);
 	SupportType(m_propertyMap,CPropertyValue<DWORD>);

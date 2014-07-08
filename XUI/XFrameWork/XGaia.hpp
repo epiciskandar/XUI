@@ -11,12 +11,11 @@
 
 class CXGaia : public IXGaia
 {
-	XClass;
 	XSingleton(CXGaia);
 public:
 	XNodeRef Create(CString className) override;
 	XNodeRef CreateFromXML(CString xmlFile) override;
-	XResult SetListenerRegister(ListenerRegister reger) override;
+	XResult RegListener(ListenerRegister reger) override;
 	XNodeRef ParseXMLNode(TiXmlElement* pElement);
 	XResult ParseAndSetParams(XNodeRef node,const TiXmlElement* pElement);
 	XResult ParseAndSetProperter(XNodeRef properter,const TiXmlElement* proplement);
@@ -191,7 +190,7 @@ inline XResult CXGaia::ParseAndSetParams( XNodeRef node,const TiXmlElement* pEle
 	return XResult_OK;
 }
 
-inline XResult CXGaia::SetListenerRegister( ListenerRegister reger )
+inline XResult CXGaia::RegListener( ListenerRegister reger )
 {
 	m_listenRegisterFunc = reger;
 	return XResult_OK;

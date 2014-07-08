@@ -6,7 +6,6 @@
 
 class CXNotifier
 {
-	XClass;
 public:
 	XResult Listen(XEar ear,DWORD& earID)
 	{

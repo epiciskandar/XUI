@@ -13,7 +13,7 @@ class CXMsg_GetRealWnd : public IXMsg
 {
 	XMessage(CXMsg_GetRealWnd);
 
-	XRealWndRef wnd;
+	XPtr<IXRealWnd> wnd;
 	CXMsg_GetRealWnd()
 	{
 		msgDirection = MsgDirection::Up;

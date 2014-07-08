@@ -4,33 +4,27 @@
 
 #pragma once
 #include <wtypes.h>
+#include <atomic>
 
-namespace Util
+class IXRef
 {
-	namespace Class
-	{
-		class CRefCountImpl
-		{
-		public:
-			ULONG STDMETHODCALLTYPE AddRef()
-			{
-				return InterlockedIncrement(&m_refCount);
-			}
-			ULONG STDMETHODCALLTYPE Release()
-			{
-				unsigned long ul = 0;
-				if ((ul = InterlockedDecrement(&m_refCount)) == 0)
-				{
-					delete this;
-				}
-				return ul;
-			}
-			unsigned long m_refCount;
-			CRefCountImpl():m_refCount(0){}
-			virtual ~CRefCountImpl(){};
-		};
-	}
-}
+public:
+	virtual int AddRef() = 0;
+	virtual int Release() = 0;
+};
+
+#define RefcountImpl \
+public: int AddRef() \
+	{return ++m_refCount;} \
+int Release() \
+	{int ret=--m_refCount; if (ret<=0){delete this;} return ret;} \
+private: \
+	std::atomic<int> m_refCount = 0;
+
+#define RefCountImplAt(_class) \
+public: \
+	int AddRef(){return _class::AddRef();} \
+	int Release(){return _class::Release();}
 
 //////////////////////////////////////////////////////////////////////////
 // define smart pointer

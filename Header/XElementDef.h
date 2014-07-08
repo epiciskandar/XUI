@@ -6,7 +6,7 @@ class IXNode;
 typedef XPtr<IXNode> XNodeRef;
 
 // 所有可操作元素基类，用于对象树的维护
-class IXNode : virtual public Util::Class::CRefCountImpl
+class IXNode : public IXRef
 {
 public:
 	virtual XResult SetID(CString id) = 0;
@@ -41,7 +41,7 @@ class IXGaia
 public:
 	virtual XNodeRef Create(CString className) = 0;
 	virtual XNodeRef CreateFromXML(CString xmlFile) = 0;
-	virtual XResult SetListenerRegister(ListenerRegister reger) = 0;
+	virtual XResult RegListener(ListenerRegister reger) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ public:
 typedef std::function<XResult(IXMsg& msg)> XEar;
 
 // 所有可绘制元素基类
-class IXElement : virtual public Util::Class::CRefCountImpl
+class IXElement : public IXRef
 {
 public:
 	XProperty_Support(Position);
@@ -82,8 +82,9 @@ public:
 };
 typedef XPtr<IXElement> XElementRef;
 
-// 真窗口
-class IXRealWnd : virtual public  Util::Class::CRefCountImpl
+
+
+class IXRealWnd : public IXRef
 {
 public:
 	XProperty_Support(Title);
@@ -91,22 +92,24 @@ public:
 	XProperty_Support(WinExStyle);
 	XProperty_SupportGet(HWnd);
 	XProperty_Support(CenterWindow);
+	XProperty_Support(Visible);
+	XProperty_Support(BorderArea);
 
 	virtual XResult Create(HWND hwndParent=0) = 0;
 };
-typedef XPtr<IXRealWnd> XRealWndRef;
 
-// 图片
-class IXImage : virtual public  Util::Class::CRefCountImpl
+
+
+class IXImage : public IXRef
 {
 public:
 	XProperty_Support(File);
 	XProperty_Support(Offset);
 };
-typedef XPtr<IXImage> XImageRef;
 
-// 文本
-class IXText : virtual public  Util::Class::CRefCountImpl
+
+
+class IXText : public IXRef
 {
 public:
 	XProperty_Support(Text);
@@ -115,12 +118,12 @@ public:
 };
 typedef XPtr<IXText> IXTextRef;
 
-// 编辑框
-class IXEdit : virtual public Util::Class::CRefCountImpl
+
+
+class IXEdit : public IXRef
 {
 public:
 	XProperty_Support(Text);
 	XProperty_Support(TextColor);
 	XProperty_Support(XFont);
 };
-typedef XPtr<IXEdit> XEditRef;

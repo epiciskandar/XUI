@@ -5,7 +5,7 @@
 class CXEdit : public CXElement , virtual public IXText
 	, public CWindowImpl<CXEdit,CEdit>
 {
-	XClass;
+	RefCountImplAt(CXElement);
 public:
 	XProperty(Text);
 	XProperty(TextColor);

@@ -10,7 +10,7 @@ class CXElement
 	, public CXTreeNode
 	, public CXNotifier
 {
-	XClass;
+	RefCountImplAt(CXTreeNode);
 public:
 	CXElement();
 	~CXElement();

@@ -5,7 +5,6 @@
 
 class CXResPool : public IXResPool
 {
-	XClass;
 	XSingleton(CXResPool);
 public:
 	XResult SetResDir(CString prefix,CString dirPath) override;

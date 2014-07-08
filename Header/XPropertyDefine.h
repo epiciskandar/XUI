@@ -114,5 +114,7 @@ namespace Property
 	DefineProperty(FontSize, INT, 11);
 	DefineProperty(Offset, CPoint, CPoint(0, 0));
 	DefineProperty(XFont, XNodeRef, nullptr);
+	DefineProperty(Visible, BOOL, TRUE);
+	DefineProperty(BorderArea, CRect, CRect());
 
 }

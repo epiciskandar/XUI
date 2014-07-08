@@ -4,7 +4,7 @@
 
 class CXText : public CXElement , virtual public IXText
 {
-	XClass;
+	RefCountImplAt(CXElement);
 public:
 	XProperty(Text);
 	XProperty(TextColor);

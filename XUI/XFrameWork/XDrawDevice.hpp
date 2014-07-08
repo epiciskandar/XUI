@@ -45,8 +45,9 @@ protected:
 	BOOL	m_autoDelete;
 };
 
-class CGDIMemDC : public CMemoryDC , public Util::Class::CRefCountImpl
+class CGDIMemDC : public CMemoryDC , public IXRef
 {
+	RefcountImpl;
 public:
 	CGDIMemDC(HDC hDC, RECT& rcPaint):CMemoryDC(hDC,rcPaint)
 	{}

@@ -8,7 +8,7 @@
 
 class CXImage : public CXElement , virtual public IXImage
 {
-	XClass;
+	RefCountImplAt(CXElement);
 
 	XProperty(File);
 	XProperty(Offset);

@@ -38,7 +38,7 @@ class CXRealWnd :
 	public CWindowImpl<CXRealWnd>,
 	virtual public IXRealWnd
 {
-	XClass;
+	RefCountImplAt(CXElement);
 	//DECLARE_WND_CLASS_EX(_T("XUIWnd1"),CS_HREDRAW|CS_VREDRAW|CS_DROPSHADOW, COLOR_WINDOW);
 public:
 	CXRealWnd();
@@ -46,7 +46,7 @@ public:
 
 	BEGIN_MSG_MAP_EX(CXRealWnd)
 		MSG_WM_DESTROY(OnDestroy)
-		TranslateToXMessage( MessageTranslateFunc 
+		TranslateToXMessage(MessageTranslateFunc
 		, WM_PAINT
 		, WM_SIZE
 		, WM_NCHITTEST
@@ -61,17 +61,20 @@ public:
 		, 0x00AF
 		, WM_CTLCOLOREDIT
 		)
+		;
 	END_MSG_MAP();
 
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
-	XProperty(Title)
-	XProperty(WinStyle)
-	XProperty(WinExStyle)
-	XFakeProperty_Get(HWnd)
-	XProperty(CenterWindow)
+	XProperty(Title);
+	XProperty(WinStyle);
+	XProperty(WinExStyle);
+	XFakeProperty_Get(HWnd);
+	XProperty(CenterWindow);
+	XProperty(Visible);
+	XProperty(BorderArea);
 
-	XResult Create(HWND hwndParent=0) override;
+	XResult Create(HWND hwndParent = 0) override;
 
 protected:
 	LRESULT MessageTranslateFunc(UINT uMsg, WPARAM wParam, LPARAM lParam);

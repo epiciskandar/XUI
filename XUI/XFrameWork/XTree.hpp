@@ -3,7 +3,7 @@
 
 class CXTreeNode : public IXNode
 {
-	XClass;
+	RefcountImpl;
 public:
 	CXTreeNode();
 	virtual ~CXTreeNode();
