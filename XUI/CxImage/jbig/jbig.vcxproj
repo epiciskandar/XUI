@@ -59,10 +59,14 @@
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <PreprocessorDefinitions>_LIB;WIN32;_DEBUG;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Unicode_Debug\</AssemblerListingLocation>
-      <PrecompiledHeaderOutputFile>.\Unicode_Debug\jbig.pch</PrecompiledHeaderOutputFile>
-      <ObjectFileName>.\Unicode_Debug\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Unicode_Debug\</ProgramDataBaseFileName>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <ObjectFileName>
+      </ObjectFileName>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ResourceCompile>
@@ -88,10 +92,14 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_LIB;WIN32;NDEBUG;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Unicode_Release\</AssemblerListingLocation>
-      <PrecompiledHeaderOutputFile>.\Unicode_Release\jbig.pch</PrecompiledHeaderOutputFile>
-      <ObjectFileName>.\Unicode_Release\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Unicode_Release\</ProgramDataBaseFileName>
+      <AssemblerListingLocation>
+      </AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <ObjectFileName>
+      </ObjectFileName>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
       <Culture>0x0809</Culture>

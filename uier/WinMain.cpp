@@ -41,9 +41,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	if (wnd)
 	{
 		wnd->Create();
-		HWND hWnd = 0;
-		wnd->GetHWnd(hWnd);
-		ShowWindow(hWnd,SW_SHOW);
+		wnd->SetVisible(true);
 
 		pXUI->Work();
 

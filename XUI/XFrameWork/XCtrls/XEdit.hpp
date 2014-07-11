@@ -2,6 +2,8 @@
 #include "../XElement.h"
 #include "XFont.hpp"
 
+// 每次输入时都能有个反馈?比如闪烁
+
 class CXEdit : public CXElement , virtual public IXText
 	, public CWindowImpl<CXEdit,CEdit>
 {

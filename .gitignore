@@ -3,9 +3,9 @@
 *.opensdf
 *.sdf
 *.user
+*.obj
+*.idb
+*.pdb
 *Debug*
 *Release*
 *intermediate*
-!/XUI/XUI/cximage/*
-/XUI/XUI/CXImage/CxImageFull_vc10.sdf
-/XUI/XUI/CXImage/CxImageFull_vc10.v11.suo
