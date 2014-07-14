@@ -41,7 +41,6 @@ class CXMsg_Paint : public CXMsg
 	XMessage(CXMsg_Paint);
 
 	CXDrawDevice	drawDevice;
-	CPoint			offsetFix;
 };
 
 class CXMsg_Invalidate : public CXMsg

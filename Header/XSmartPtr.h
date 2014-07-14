@@ -121,7 +121,17 @@ public:
 		return m_ptr;
 	}
 
+	PointerType* operator&()
+	{
+		return &m_ptr;
+	}
+
 	PointerType GetPointer() const
+	{
+		return m_ptr;
+	}
+
+	operator PointerType() const
 	{
 		return m_ptr;
 	}

@@ -1,5 +1,5 @@
 #include "XUI.h"
-//#include "../../../VisualLeakDetector/include/vld.h"
+#include "VisualLeakDetector/include/vld.h"
 //#define XUI_TRACEMSG
 #define XUI_DEBUGCONSOLE
 

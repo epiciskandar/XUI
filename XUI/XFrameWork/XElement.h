@@ -49,14 +49,16 @@ public:
 
 	// XMsg的接收入口函数
 	virtual XResult ProcessXMessage(IXMsg& msg);
+	virtual VOID MsgDown(IXMsg& msg);
+	virtual VOID MsgUp(IXMsg& msg);
 
 	XResult SetXMLProperty( CString name,CString value );
 
 	Property::CXProperty& GetPrpertyRef()	{return m_property;};
+	VOID GetRectInClientCoord(CRect& rect);
+	BOOL PaintCheck(CRect invalidRect, CRect& paintSrcRect, CPoint& paintDstOffset);
 
 protected:
-	VOID _SendXMsg(IXMsg& pMsg);
-
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);
 	VOID On_CXMsg_Layout(CXMsg_Layout& arg);
@@ -68,10 +70,8 @@ protected:
 	VOID On_CXMsg_FrameClick(CXMsg_FrameClick& arg);
 	VOID On_CXMsg_RealWndClosing(CXMsg_RealWndClosing& arg);
 protected:
-	BOOL _NeedPaint(const CXMsg_Paint& arg,CRect& paintingRect,CPoint& srcPt);
-protected:
-	Property::CXProperty	m_property;
-	BOOL	m_isLayouting;
+	Property::CXProperty	m_property;		// 属性集合，所有属性都存在这里
+	BOOL	m_isLayouting = FALSE;			// 在排版过程中不触发大小改变等事件
 	CToolTipCtrl	m_toolTip;
 	XPtr<CGDIMemDC>	m_memDC;
 };

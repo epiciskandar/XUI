@@ -100,7 +100,6 @@ namespace Property
 	DefineProperty(ExpandWidth, BOOL, FALSE);
 	DefineProperty(ExpandHeight, BOOL, FALSE);
 	DefineProperty(SizeLimit, CRect, CRect(-1, -1, -1, -1));
-	DefineProperty(BorderFix, BOOL, FALSE);
 	DefineProperty(File, CString, _T(""));
 	DefineProperty(ImageWidth, DWORD, 0);
 	DefineProperty(HitTest, DWORD, HTCLIENT);
@@ -116,5 +115,14 @@ namespace Property
 	DefineProperty(XFont, XNodeRef, nullptr);
 	DefineProperty(Visible, BOOL, TRUE);
 	DefineProperty(BorderArea, CRect, CRect());
+	DefineProperty(IsLayerWin, BOOL, FALSE);
+	DefineProperty(HasWinBorder, BOOL, TRUE);
+	DefineProperty(HasSysBar, BOOL, TRUE);
+	DefineProperty(Maximizable, BOOL, TRUE);
+	DefineProperty(Minimizable, BOOL, TRUE);
+	DefineProperty(Disabled, BOOL, FALSE);
+	DefineProperty(IsToolWnd, BOOL, FALSE);
+	DefineProperty(IsPopupWnd, BOOL, FALSE);
+	DefineProperty(Sizable, BOOL, FALSE);
 
 }

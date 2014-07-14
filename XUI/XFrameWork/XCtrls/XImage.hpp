@@ -29,16 +29,17 @@ inline VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
 	__super::On_CXMsg_Paint(msg);
 	CRect rect;
-	GetRect(rect);
-	CPoint pt;
-	GetOffset (pt);
+	rect = ElementUtil::GetElementRectInClientCoord(this);
+	CPoint imgOffset;
+	GetOffset (imgOffset);
 
 	if (msg.drawDevice.IsRectNeedRePaint(rect))
 	{
-		int x = m_img.GetWidth(), y = m_img.GetHeight();
-		if (pt.x <= x && pt.x > 0 && pt.y <= y && pt.y >0)
+		int imgWidth = m_img.GetWidth(), imgHeight = m_img.GetHeight();
+		if (imgOffset.x <= imgWidth && imgOffset.x > 0 
+			&& imgOffset.y <= imgHeight && imgOffset.y >0)
 		{
-			m_img.Draw(msg.drawDevice.dc,-pt.x,-pt.y,-1,-1,rect);
+			m_img.Draw(msg.drawDevice.dc,-imgOffset.x,-imgOffset.y,-1,-1,rect);
 		}
 		else
 		{

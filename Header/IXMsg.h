@@ -45,18 +45,6 @@ public: \
 #define END_XMSG_MAP \
 }
 
-enum class MsgDispatchPolicy
-{
-	BroadCast,
-	Processor,	// stop automatically while sb. processed
-};
-
-enum class MsgDirection
-{
-	Up,
-	Down,
-};
-
 class IXMsg
 {
 	XMessage(IXMsg);
@@ -64,14 +52,9 @@ public:
 	BOOL	msgHandled;
 	LRESULT	msgRet;
 
-	MsgDispatchPolicy	msgPolicy;
-	MsgDirection		msgDirection;
-
 	IXMsg()
 		: msgHandled(FALSE)
 		, msgRet(0)
-		, msgPolicy(MsgDispatchPolicy::BroadCast)
-		, msgDirection(MsgDirection::Down)
 	{};
 
 	CString msgName;

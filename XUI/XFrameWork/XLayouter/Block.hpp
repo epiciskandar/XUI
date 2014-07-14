@@ -71,7 +71,7 @@ namespace Layouter
 		{
 			CRect rect;
 			element->GetOuterLayoutRect(rect);
-			rect.TopLeft() = offset;
+			rect.OffsetRect(offset);
 
 			BOOL expandWidth;
 			element->GetExpandWidth(expandWidth);
@@ -154,7 +154,7 @@ namespace Layouter
 		{
 			CRect rect;
 			element->GetOuterLayoutRect(rect);
-			rect.TopLeft() = offset;
+			rect.OffsetRect(offset);
 
 			BOOL expandWidth;
 			element->GetExpandWidth(expandWidth);

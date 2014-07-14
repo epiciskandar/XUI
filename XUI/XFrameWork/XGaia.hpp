@@ -2,7 +2,7 @@
 #include "XTree.hpp"
 #include <map>
 
-#include "XRealWnd.hpp"
+#include "XRealWnd.h"
 #include "XCtrls/XStatic.hpp"
 #include "XCtrls/XImage.hpp"
 #include "XCtrls/XEdit.hpp"

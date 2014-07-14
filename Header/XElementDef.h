@@ -75,6 +75,8 @@ public:
 	XProperty_Support(XFont);
 
 	virtual XResult ProcessXMessage(IXMsg& msg) = 0;
+	virtual VOID MsgDown(IXMsg& msg) = 0;
+	virtual VOID MsgUp(IXMsg& msg) = 0;
 
 	virtual XResult Listen(XEar ear,DWORD& earID) = 0;	// reg a XEar
 	virtual XResult StopListen(DWORD earID) = 0;		// unreg a XEar
@@ -88,12 +90,19 @@ class IXRealWnd : public IXRef
 {
 public:
 	XProperty_Support(Title);
-	XProperty_Support(WinStyle);
-	XProperty_Support(WinExStyle);
 	XProperty_SupportGet(HWnd);
 	XProperty_Support(CenterWindow);
 	XProperty_Support(Visible);
 	XProperty_Support(BorderArea);
+	XProperty_Support(IsLayerWin);
+	XProperty_Support(HasWinBorder);
+	XProperty_Support(HasSysBar);
+	XProperty_Support(Maximizable);
+	XProperty_Support(Minimizable);
+	XProperty_Support(Disabled);
+	XProperty_Support(IsToolWnd);
+	XProperty_Support(IsPopupWnd);
+	XProperty_Support(Sizable);
 
 	virtual XResult Create(HWND hwndParent=0) = 0;
 };

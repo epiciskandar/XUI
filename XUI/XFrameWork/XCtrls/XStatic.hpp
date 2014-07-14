@@ -33,7 +33,6 @@ inline VOID CXText::On_CXMsg_Paint(CXMsg_Paint& msg)
 
 	CRect rect;
 	GetRect(rect);
-	rect.OffsetRect(msg.offsetFix);
 	CString text;
 	GetText(text);
 

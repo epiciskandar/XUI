@@ -56,6 +56,9 @@
     <ClCompile Include="Third\CBuffer.cpp">
       <Filter>3rd</Filter>
     </ClCompile>
+    <ClCompile Include="XFrameWork\XRealWnd.cpp">
+      <Filter>XFrameWork</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IXMsg.h">
@@ -92,9 +95,6 @@
       <Filter>XFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="XFrameWork\XPropertyValue.hpp">
-      <Filter>XFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="XFrameWork\XRealWnd.hpp">
       <Filter>XFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="XFrameWork\XResPool.hpp">
@@ -159,6 +159,9 @@
     </ClInclude>
     <ClInclude Include="XFrameWork\xui.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XFrameWork\XRealWnd.h">
+      <Filter>XFrameWork</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

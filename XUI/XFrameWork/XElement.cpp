@@ -2,18 +2,13 @@
 #include "XElement.h"
 #include "XLayouter/Layouter.hpp"
 
-CXElement::CXElement() : m_isLayouting(FALSE)
-	, m_memDC(nullptr)
+CXElement::CXElement()
 {
 
 }
 
 CXElement::~CXElement()
 {
-	if (m_memDC)
-	{
-		m_memDC = nullptr;
-	}
 }
 
 XResult CXElement::ProcessXMessage( IXMsg& msg )
@@ -30,39 +25,31 @@ XResult CXElement::ProcessXMessage( IXMsg& msg )
 		OnXMsg(CXMsg_FrameClick)
 		OnXMsg(CXMsg_RealWndClosing)
 	END_XMSG_MAP;
-	_SendXMsg(msg);
 	return XResult_OK;
 }
 
-VOID CXElement::_SendXMsg( IXMsg& pMsg )
+VOID CXElement::MsgDown(IXMsg& msg)
 {
-	if (pMsg.msgPolicy==MsgDispatchPolicy::Processor && pMsg.msgHandled)
+	for (auto& i:m_children)
 	{
-		return;
+		XPtr<IXElement> pChildElement(i);
+		if (pChildElement)
+		{
+			pChildElement->ProcessXMessage(msg);
+			pChildElement->MsgDown(msg);
+		}
 	}
+}
 
-	switch (pMsg.msgDirection)
+VOID CXElement::MsgUp(IXMsg& msg)
+{
+	ProcessXMessage(msg);
+	XPtr<IXNode> pFatherNode(m_father);
+	XPtr<IXElement> pFather(pFatherNode);
+	if (pFather)
 	{
-	case MsgDirection::Up:
-		if (m_father)
-		{
-			ElementRef(XNodeRef(m_father))->ProcessXMessage(pMsg);
-		}
-		break;
-	case MsgDirection::Down:
-		for (auto i=m_children.begin(); i!=m_children.end(); ++i)
-		{
-			if (pMsg.msgPolicy==MsgDispatchPolicy::Processor && pMsg.msgHandled)
-			{
-				return;
-			}
-			XSmartPtr<CXElement> pElement = *i;
-			pElement->ProcessXMessage( pMsg );
-		}
-		break;
-	default:
-		WTF;
-		break;
+		pFather->ProcessXMessage(msg);
+		pFather->MsgUp(msg);
 	}
 }
 
@@ -131,7 +118,7 @@ XResult CXElement::SetInnerLayoutRect( Property::InnerLayoutRectType param )
 	param.right += padding.right;
 	param.top -= padding.top;
 	param.bottom += padding.bottom;
-	return SetSize(param.Size());
+	return SetRect(param);
 }
 
 XResult CXElement::GetOuterLayoutRect( Property::OuterLayoutRectType& value )
@@ -143,6 +130,14 @@ XResult CXElement::GetOuterLayoutRect( Property::OuterLayoutRectType& value )
 	value.right += margin.right;
 	value.top -= margin.top;
 	value.bottom += margin.bottom;
+	if (value.left < 0)
+	{
+		value.OffsetRect(-value.left, 0);
+	}
+	if (value.top < 0)
+	{
+		value.OffsetRect(0, -value.top);
+	}
 	return XResult_OK;
 }
 
@@ -154,7 +149,8 @@ XResult CXElement::SetOuterLayoutRect( Property::OuterLayoutRectType param )
 	param.right -= margin.right;
 	param.top += margin.top;
 	param.bottom -= margin.bottom;
-	return SetSize(param.Size());
+	XLOG(L"set element %s rect(%d,%d,%d,%d)\n", m_ID, param.left, param.right, param.top, param.bottom);
+	return SetRect(param);
 }
 
 VOID CXElement::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
@@ -176,8 +172,6 @@ VOID CXElement::On_CXMsg_SizeChanged( CXMsg_SizeChanged& arg )
 
 VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 {
-	URP(arg);
-
 	if (m_isLayouting)
 	{
 		return;
@@ -246,37 +240,30 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 		CXMsg_Layout msg;
 		ProcessXMessage(msg);
 	}
-	CRect paintingRect;
-	CPoint srcPt;
+	CRect paintSrcRect;
+	CPoint dstPt;
 
-	if (_NeedPaint(arg,paintingRect,srcPt))
+	if (PaintCheck(arg.drawDevice.invalidRect,paintSrcRect,dstPt))
 	{
-		arg.drawDevice.dc.BitBlt(paintingRect.left,paintingRect.top,paintingRect.Width(),paintingRect.Height(),
-			m_memDC->m_hDC,srcPt.x,srcPt.y,SRCCOPY);
+		arg.drawDevice.dc.BitBlt(dstPt.x,dstPt.y,paintSrcRect.Width(),paintSrcRect.Height(),
+			m_memDC->m_hDC,paintSrcRect.left,paintSrcRect.top,SRCCOPY);
 	}
 
-	CPoint point;
-	GetPosition(point);
-	CPoint oriOffset = arg.offsetFix;
-	arg.offsetFix += point;
-
-	_SendXMsg(arg);
-	arg.offsetFix = oriOffset;
+	MsgDown(arg);
 
 	arg.msgHandled = TRUE;
 }
 
-BOOL CXElement::_NeedPaint( const CXMsg_Paint& arg,CRect& paintingRect,CPoint& srcPt )
+BOOL CXElement::PaintCheck( CRect invalidRect, CRect& paintSrcRect, CPoint& paintDstOffset)
 {
 	CRect rect;
-	GetRect(rect);
-	rect.OffsetRect(arg.offsetFix);
+	GetRectInClientCoord(rect);
 
 	if (m_memDC && 
-		paintingRect.IntersectRect(arg.drawDevice.invalidRect,rect))
+		paintSrcRect.IntersectRect(invalidRect, rect))
 	{
-		srcPt = paintingRect.TopLeft();
-		srcPt -= rect.TopLeft();
+		paintDstOffset = paintSrcRect.TopLeft();
+		paintSrcRect.OffsetRect(-paintSrcRect.left,-paintSrcRect.top);
 		return TRUE;
 	}
 	return FALSE;
@@ -323,7 +310,7 @@ VOID CXElement::On_CXMsg_RenderElement( CXMsg_RenderElement& arg )
 
 	if (arg.paintChildren)
 	{
-		_SendXMsg(arg);
+		MsgDown(arg);
 	}
 
 	SetNeedRealPaint(updated);
@@ -331,7 +318,7 @@ VOID CXElement::On_CXMsg_RenderElement( CXMsg_RenderElement& arg )
 	{
 		CXMsg_Invalidate msg;
 		msg.invalidRect = ElementUtil::GetElementRectInClientCoord(this);
-		_SendXMsg(msg);
+		MsgDown(msg);
 	}
 }
 
@@ -373,7 +360,7 @@ VOID CXElement::On_CXMsg_MouseEnter( CXMsg_MouseEnter& arg )
 	if (XSUCCEEDED(GetToolTip(toolTip)))
 	{
 		CXMsg_GetRealWnd msg;
-		_SendXMsg(msg);
+		MsgUp(msg);
 		if (!msg.wnd)
 		{
 			return;
@@ -454,10 +441,10 @@ VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
 
 XResult CXElement::SetXMLProperty( CString name,CString value )
 {
-	XMLConvert_Begin(name,value)
-		XMLFakeConvert(Position,Property::CXMLConverter_CPoint)
-		XMLFakeConvert(Size,	Property::CXMLConverter_CSize)
-		XMLFakeConvert(ID,		Property::CXMLConverter_CString)
+	XMLConvert_Begin(name, value)
+		XMLFakeConvert(Position, Property::CXMLConverter_CPoint)
+		XMLFakeConvert(Size, Property::CXMLConverter_CSize)
+		XMLFakeConvert(ID, Property::CXMLConverter_CString)
 
 		XMLConverter(Rect)
 		XMLConverter(Text)
@@ -478,7 +465,7 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLConverter(ExpandWidth)
 		XMLConverter(ExpandHeight)
 		XMLConverter(SizeLimit)
-		XMLConverter(BorderFix)
+		XMLConverter(Sizable)
 		XMLConverter(File)
 		XMLConverter(ImageWidth)
 		XMLConverter(HitTest)
@@ -489,7 +476,28 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLConverter(FontName)
 		XMLConverter(FontSize)
 		XMLConverter(Offset)
+		XMLConverter(IsLayerWin)
+		XMLConverter(HasWinBorder)
+		XMLConverter(HasSysBar)
+		XMLConverter(Maximizable)
+		XMLConverter(Minimizable)
+		XMLConverter(Disabled)
+		XMLConverter(IsToolWnd)
+		XMLConverter(IsPopupWnd)
 	XMLConvert_End
 
 	return XResult_OK;
+}
+
+VOID CXElement::GetRectInClientCoord(CRect& rect)
+{
+	GetRect(rect);
+	XPtr<IXElement> ptr = GetFather();
+	while (ptr)
+	{
+		CPoint pos;
+		ptr->GetPosition(pos);
+		rect.OffsetRect(pos);
+		ptr = XPtr<IXNode>(ptr)->GetFather();
+	}
 }
