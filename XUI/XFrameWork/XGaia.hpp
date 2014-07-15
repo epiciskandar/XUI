@@ -99,7 +99,7 @@ inline XNodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 		return nullptr;
 	}
 	XNodeRef node;
-	CString strClassName = _T("C");
+	CString strClassName = _T("CX");
 	strClassName += strClass;
 	node = Create(strClassName);
 	if (!node)
@@ -176,7 +176,7 @@ inline XResult CXGaia::ParseAndSetParams( XNodeRef node,const TiXmlElement* pEle
 			while (childElement)
 			{
 				CString name = childElement->Value();
-				CString className = _T("C") + name;
+				CString className = _T("CX") + name;
 				XNodeRef propNode = Create(className);
 				if (propNode)
 				{

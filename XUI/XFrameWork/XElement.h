@@ -18,6 +18,7 @@ public:
 	XFakeProperty(Position);
 	XFakeProperty(Size);
 	XProperty(Rect);
+	XProperty(SizeLimit);
 	XProperty(LayoutType);
 	XProperty(LayoutInvalid);
 	XProperty(LayoutDirection);
@@ -40,6 +41,9 @@ public:
 	// 排版专用属性，不暴露给外边.
 	XFakeProperty(InnerLayoutRect);
 	XFakeProperty(OuterLayoutRect);
+	VOID CheckSizeLimit(CSize& size);
+	VOID CheckOuterSizeLimit(CSize& size);
+	VOID CheckInnerSizeLimit(CSize& size);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -56,7 +60,7 @@ public:
 
 	Property::CXProperty& GetPrpertyRef()	{return m_property;};
 	VOID GetRectInClientCoord(CRect& rect);
-	BOOL PaintCheck(CRect invalidRect, CRect& paintSrcRect, CPoint& paintDstOffset);
+	BOOL PaintCheck(CRect invalidRect, CRect& paintDstRect, CPoint& paintSrcPt);
 
 protected:
 	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);

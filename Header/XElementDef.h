@@ -56,6 +56,7 @@ class IXElement : public IXRef
 public:
 	XProperty_Support(Position);
 	XProperty_Support(Size);
+	XProperty_Support(SizeLimit);
 	XProperty_Support(Rect);
 	XProperty_Support(LayoutType);
 	XProperty_Support(LayoutInvalid);

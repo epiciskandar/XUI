@@ -1,5 +1,7 @@
 #pragma once
 #include "Header/XPropertyDefine.h"
+#include "XFrameWork/XProperty.hpp"
+#include <stdlib.h>
 
 namespace Property
 {
@@ -101,6 +103,48 @@ namespace Property
 		{
 			CSize size;
 			_stscanf_s(value, _T("%d,%d"), &size.cx, &size.cy);
+			return size;
+		}
+		static CSize ConvertToValue(LPCTSTR name, CString value, Property::CXProperty& prop)
+		{
+			URP(name);
+			CSize size(0,0);
+			CString subValue;
+			int pos = 0;
+			subValue = value.Tokenize(L",", pos);
+			subValue = subValue.MakeLower();
+			if (pos != -1)
+			{
+				if (subValue == L"auto")
+				{
+					prop.SetProperty(Property::AutoWidth, TRUE);
+				}
+				else if (subValue == L"expand")
+				{
+					prop.SetProperty(Property::ExpandWidth, TRUE);
+				}
+				else
+				{
+					size.cx = std::wcstol(subValue,nullptr,10);
+				}
+				subValue = value.Tokenize(L",", pos);
+				subValue = subValue.MakeLower();
+				if (pos != -1)
+				{
+					if (subValue == L"auto")
+					{
+						prop.SetProperty(Property::AutoHeight, TRUE);
+					}
+					else if (subValue == L"expand")
+					{
+						prop.SetProperty(Property::ExpandHeight, TRUE);
+					}
+					else
+					{
+						size.cy = std::wcstol(subValue, nullptr, 10);
+					}
+				}
+			}
 			return size;
 		}
 	};

@@ -63,7 +63,7 @@ VOID CXEdit::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 VOID CXEdit::_Create(HWND hWndParent)
 {
 	CRect rect;
-	rect = ElementUtil::GetElementRectInClientCoord(this);
+	GetRectInClientCoord(rect);
 	Create(hWndParent,rect,nullptr,WS_CHILD);
 	CXMsg_PropertyChanged msg;
 	msg.name = Property::Text;

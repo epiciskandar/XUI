@@ -29,7 +29,7 @@ inline VOID CXImage::On_CXMsg_Paint(CXMsg_Paint& msg)
 {
 	__super::On_CXMsg_Paint(msg);
 	CRect rect;
-	rect = ElementUtil::GetElementRectInClientCoord(this);
+	GetRectInClientCoord(rect);
 	CPoint imgOffset;
 	GetOffset (imgOffset);
 

@@ -101,12 +101,24 @@ XResult CXElement::SetSize( Property::SizeType param )
 XResult CXElement::GetInnerLayoutRect( Property::InnerLayoutRectType& value )
 {
 	GetRect(value);
+	value.OffsetRect(-value.left, -value.top); // 不需要当前元素的位置信息
+	CSize size = value.Size();
+	CheckSizeLimit(size);
+	value.Size() = size;
 	CRect padding;
 	GetPadding(padding);
 	value.left += padding.left;
 	value.right -= padding.right;
+	if (value.right < value.left)
+	{
+		value.right = value.left;
+	}
 	value.top += padding.top;
 	value.bottom -= padding.bottom;
+	if (value.bottom < value.top)
+	{
+		value.bottom = value.top;
+	}
 	return XResult_OK;
 }
 
@@ -124,6 +136,10 @@ XResult CXElement::SetInnerLayoutRect( Property::InnerLayoutRectType param )
 XResult CXElement::GetOuterLayoutRect( Property::OuterLayoutRectType& value )
 {
 	GetRect(value);
+	value.OffsetRect(-value.left, -value.top); // 不需要当前元素的位置信息
+	CSize size = value.Size();
+	CheckSizeLimit(size);
+	value.Size() = size;
 	CRect margin;
 	GetMargin(margin);
 	value.left -= margin.left;
@@ -151,6 +167,76 @@ XResult CXElement::SetOuterLayoutRect( Property::OuterLayoutRectType param )
 	param.bottom -= margin.bottom;
 	XLOG(L"set element %s rect(%d,%d,%d,%d)\n", m_ID, param.left, param.right, param.top, param.bottom);
 	return SetRect(param);
+}
+
+VOID CXElement::CheckSizeLimit(CSize& size)
+{
+	CRect sizeLimit;
+	GetSizeLimit(sizeLimit);
+	if (sizeLimit.left >= 0)	size.cx = MAX(size.cx, sizeLimit.left);
+	if (sizeLimit.right >= 0)	size.cx = MIN(size.cx, sizeLimit.right);
+	if (sizeLimit.top >= 0)	size.cy = MAX(size.cy, sizeLimit.top);
+	if (sizeLimit.bottom >= 0)	size.cy = MIN(size.cy, sizeLimit.bottom);
+}
+
+VOID CXElement::CheckOuterSizeLimit(CSize& size)
+{
+	CRect sizeLimit;
+	GetSizeLimit(sizeLimit);
+	CRect margin;
+	GetMargin(margin);
+	CSize smallestSize(sizeLimit.left, sizeLimit.top);
+	if (smallestSize.cx >= 0)
+	{
+		smallestSize.cx += margin.left + margin.right;
+		size.cx = MAX(MAX(smallestSize.cx, 0), size.cx);
+	}
+	if (smallestSize.cy >= 0)
+	{
+		smallestSize.cy += margin.top + margin.bottom;
+		size.cy = MAX(MAX(smallestSize.cy, 0), size.cy);
+	}
+	CSize biggestSize(sizeLimit.right, sizeLimit.bottom);
+	if (biggestSize.cx >= 0)
+	{
+		biggestSize.cx += margin.left + margin.right;
+		size.cx = MIN(biggestSize.cx, size.cx);
+	}
+	if (biggestSize.cy >= 0)
+	{
+		biggestSize.cy += margin.top + margin.bottom;
+		size.cy = MIN(biggestSize.cy, size.cy);
+	}
+}
+
+VOID CXElement::CheckInnerSizeLimit(CSize& size)
+{
+	CRect sizeLimit;
+	GetSizeLimit(sizeLimit);
+	CRect padding;
+	GetPadding(padding);
+	CSize smallestSize(sizeLimit.left, sizeLimit.top);
+	if (smallestSize.cx >= 0)
+	{
+		smallestSize.cx += padding.left + padding.right;
+		size.cx = MAX(MAX(smallestSize.cx, 0), size.cx);
+	}
+	if (smallestSize.cy >= 0)
+	{
+		smallestSize.cy += padding.top + padding.bottom;
+		size.cy = MAX(MAX(smallestSize.cy, 0), size.cy);
+	}
+	CSize biggestSize(sizeLimit.right, sizeLimit.bottom);
+	if (biggestSize.cx >= 0)
+	{
+		biggestSize.cx += padding.left + padding.right;
+		size.cx = MIN(biggestSize.cx, size.cx);
+	}
+	if (biggestSize.cy >= 0)
+	{
+		biggestSize.cy += padding.top + padding.bottom;
+		size.cy = MIN(biggestSize.cy, size.cy);
+	}
 }
 
 VOID CXElement::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
@@ -240,13 +326,13 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 		CXMsg_Layout msg;
 		ProcessXMessage(msg);
 	}
-	CRect paintSrcRect;
-	CPoint dstPt;
+	CRect paintDstRect;
+	CPoint srcOffset;
 
-	if (PaintCheck(arg.drawDevice.invalidRect,paintSrcRect,dstPt))
+	if (PaintCheck(arg.drawDevice.invalidRect,paintDstRect,srcOffset))
 	{
-		arg.drawDevice.dc.BitBlt(dstPt.x,dstPt.y,paintSrcRect.Width(),paintSrcRect.Height(),
-			m_memDC->m_hDC,paintSrcRect.left,paintSrcRect.top,SRCCOPY);
+		arg.drawDevice.dc.BitBlt(paintDstRect.left,paintDstRect.top,paintDstRect.right,paintDstRect.bottom,
+			m_memDC->m_hDC,srcOffset.x, srcOffset.y, SRCCOPY);
 	}
 
 	MsgDown(arg);
@@ -254,16 +340,16 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 	arg.msgHandled = TRUE;
 }
 
-BOOL CXElement::PaintCheck( CRect invalidRect, CRect& paintSrcRect, CPoint& paintDstOffset)
+BOOL CXElement::PaintCheck(CRect invalidRect, CRect& paintDstRect, CPoint& paintSrcPt)
 {
 	CRect rect;
 	GetRectInClientCoord(rect);
 
 	if (m_memDC && 
-		paintSrcRect.IntersectRect(invalidRect, rect))
+		paintDstRect.IntersectRect(invalidRect, rect))
 	{
-		paintDstOffset = paintSrcRect.TopLeft();
-		paintSrcRect.OffsetRect(-paintSrcRect.left,-paintSrcRect.top);
+		paintSrcPt = paintDstRect.TopLeft();
+		paintSrcPt -= rect.TopLeft();
 		return TRUE;
 	}
 	return FALSE;
@@ -317,7 +403,7 @@ VOID CXElement::On_CXMsg_RenderElement( CXMsg_RenderElement& arg )
 	if (updated)
 	{
 		CXMsg_Invalidate msg;
-		msg.invalidRect = ElementUtil::GetElementRectInClientCoord(this);
+		GetRectInClientCoord(msg.invalidRect);
 		MsgDown(msg);
 	}
 }
@@ -420,14 +506,20 @@ VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
 	CString& propName = _name; \
 	CString& propValue = _value; \
 
-#define XMLFakeConvert(_name,_converter) \
+#define XMLAdvancedConvert(_name,_converter) \
 	if (Property::_name == propName) \
 	{ \
-		return Set##_name(_converter::ConvertToValue(propValue)); \
+		Set##_name(_converter::ConvertToValue(propName, propValue, m_property)); \
+	}else
+
+#define XMLFakeConverter(_name, _converter) \
+	if (Property::_name == propName) \
+	{ \
+		Set##_name(_converter::ConvertToValue(propValue)); \
 	}else
 
 #define GetConverter(_name) Property::_name##XMLConverterType
-#define XMLConverter(_name) \
+#define XMLParse(_name) \
 	if(Property::_name == propName) \
 	{ \
 		m_property.SetProperty(propName,GetConverter(_name)::ConvertToValue(propValue)); \
@@ -442,48 +534,49 @@ VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
 XResult CXElement::SetXMLProperty( CString name,CString value )
 {
 	XMLConvert_Begin(name, value)
-		XMLFakeConvert(Position, Property::CXMLConverter_CPoint)
-		XMLFakeConvert(Size, Property::CXMLConverter_CSize)
-		XMLFakeConvert(ID, Property::CXMLConverter_CString)
+		XMLFakeConverter(Position, Property::CXMLConverter_CPoint)
+		XMLFakeConverter(ID, Property::CXMLConverter_CString)
+		XMLAdvancedConvert(Size, Property::CXMLConverter_CSize)
 
-		XMLConverter(Rect)
-		XMLConverter(Text)
-		XMLConverter(Title)
-		XMLConverter(Color)
-		XMLConverter(TextColor)
-		XMLConverter(BorderColor)
-		XMLConverter(BorderWidth)
-		XMLConverter(WinStyle)
-		XMLConverter(WinExStyle)
-		XMLConverter(CenterWindow)
-		XMLConverter(ShowState)
-		XMLConverter(LayoutType)
-		XMLConverter(LayoutDirection)
-		XMLConverter(Align)
-		XMLConverter(AutoWidth)
-		XMLConverter(AutoHeight)
-		XMLConverter(ExpandWidth)
-		XMLConverter(ExpandHeight)
-		XMLConverter(SizeLimit)
-		XMLConverter(Sizable)
-		XMLConverter(File)
-		XMLConverter(ImageWidth)
-		XMLConverter(HitTest)
-		XMLConverter(Margin)
-		XMLConverter(Padding)
-		XMLConverter(Ghost)
-		XMLConverter(ToolTip)
-		XMLConverter(FontName)
-		XMLConverter(FontSize)
-		XMLConverter(Offset)
-		XMLConverter(IsLayerWin)
-		XMLConverter(HasWinBorder)
-		XMLConverter(HasSysBar)
-		XMLConverter(Maximizable)
-		XMLConverter(Minimizable)
-		XMLConverter(Disabled)
-		XMLConverter(IsToolWnd)
-		XMLConverter(IsPopupWnd)
+		XMLParse(Rect)
+		XMLParse(SizeLimit)
+		XMLParse(Text)
+		XMLParse(Title)
+		XMLParse(Color)
+		XMLParse(TextColor)
+		XMLParse(BorderColor)
+		XMLParse(BorderWidth)
+		XMLParse(WinStyle)
+		XMLParse(WinExStyle)
+		XMLParse(CenterWindow)
+		XMLParse(ShowState)
+		XMLParse(LayoutType)
+		XMLParse(LayoutDirection)
+		XMLParse(Align)
+		XMLParse(AutoWidth)
+		XMLParse(AutoHeight)
+		XMLParse(ExpandWidth)
+		XMLParse(ExpandHeight)
+		XMLParse(SizeLimit)
+		XMLParse(Sizable)
+		XMLParse(File)
+		XMLParse(ImageWidth)
+		XMLParse(HitTest)
+		XMLParse(Margin)
+		XMLParse(Padding)
+		XMLParse(Ghost)
+		XMLParse(ToolTip)
+		XMLParse(FontName)
+		XMLParse(FontSize)
+		XMLParse(Offset)
+		XMLParse(IsLayerWin)
+		XMLParse(HasWinBorder)
+		XMLParse(HasSysBar)
+		XMLParse(Maximizable)
+		XMLParse(Minimizable)
+		XMLParse(Disabled)
+		XMLParse(IsToolWnd)
+		XMLParse(IsPopupWnd)
 	XMLConvert_End
 
 	return XResult_OK;

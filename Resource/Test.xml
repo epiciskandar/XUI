@@ -1,21 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--位置排版属性应当与style分离-->
 <XUI version="1">
-  <XRealWnd ID="10086" Title="Test" AutoWidth="true" AutoHeight="true" Sizable="true" HasWinBorder="false" HasSysBar="false">
-    <XElement ID="WindowBkg" ToolTip="这里无法拖动" Color="30,30,30" BorderColor="0,121,203" Size="280,260" Padding="1,1,1,1">
-      <XElement ID="TitleArea" Size="1,20" ToolTip="这里可以拖动" HitTest="2" Color="176,203,241" ExpandWidth="true" Align="top">
-        <XElement ID="Close" Size="20,20" ToolTip="关闭？Alt+F4就关掉了" Align="right" Margin="0,0,5,0" Color="255,0,0"/>
-      </XElement>
-      <XImage ID="bkg" File="res:image.png" ExpandWidth="true" ExpandHeight="true">
-        <XEdit ID="testEdit" Text="This is a edit" Color="0,0,127" Size="100,20" Margin="100,0,0,0"/>
-      </XImage>
-      <XElement ID="Foot" Size="1,20" Color="176,103,241" BorderColor="220,30,30" ExpandWidth="true" Align="bottom">
-        <XText ID="testStatic"  Ghost="false" Text="test汉字" ToolTip="看毛" Size="100,1" Color="127,127,127" ExpandHeight="true" FontName="宋体" FontSize="11">
+  <RealWnd ID="10086" Title="Test" Size="auto,auto" Sizable="true" HasWinBorder="false" HasSysBar="false">
+    <Element ID="WindowBkg" ToolTip="这里无法拖动" Color="30,30,30" BorderColor="0,121,203" Size="280,260" Padding="1,1,1,1">
+      <Element ID="TitleArea" Size="expand,20" ToolTip="这里可以拖动" HitTest="2" Color="176,203,241" Align="top">
+        <Element ID="Close" Size="20,20" ToolTip="关闭？Alt+F4就关掉了" Align="right" Margin="0,1,5,0" Color="255,0,0"/>
+      </Element>
+      <Image ID="bkg" File="res:image.png" Size="expand,expand">
+        <Edit ID="testEdit" Text="This is a edit" Color="0,0,127" Size="100,20" Margin="100,0,0,0"/>
+      </Image>
+      <Element ID="Foot" Size="expand,20" Color="176,103,241" BorderColor="220,30,30" Padding="1,1,1,1" Align="bottom">
+        <Text ID="testStatic"  Ghost="false" Text="test汉字" ToolTip="看毛" Size="100,expand" Color="127,127,127" FontName="宋体" FontSize="11">
           <Property>
-            <XFont ID="XFont" FontName="微软雅黑" FontSize="20"/>
+            <Font ID="XFont" FontName="微软雅黑" FontSize="20"/>
           </Property>
-        </XText>
-      </XElement>
-    </XElement>
-  </XRealWnd>
+        </Text>
+      </Element>
+    </Element>
+  </RealWnd>
 </XUI>

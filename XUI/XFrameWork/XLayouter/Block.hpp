@@ -16,9 +16,8 @@ namespace Layouter
 	class CHorizonPlacer : public IBlockPlacer
 	{
 	public:
-		CHorizonPlacer(CSize size)
-			: m_hasExpandElement(FALSE)
-			, m_fatherSize(size)
+		CHorizonPlacer(CRect fatherRect)
+			: m_fatherRect(fatherRect)
 		{}
 		VOID Push(ElementRef element)
 		{
@@ -44,34 +43,39 @@ namespace Layouter
 			element->GetOuterLayoutRect(rect);
 			if (!expandwidth)
 			{
-				m_containSize.cx += rect.Width();
+				m_smallestNeedSize.cx += rect.Width();
 			}
-			m_containSize.cy = MAX(m_containSize.cy,rect.Height());
+			else
+			{
+				++m_expandElementCount;
+			}
+			m_smallestNeedSize.cy = MAX(m_smallestNeedSize.cy, rect.Height());
 		}
 		CSize Place()
 		{
-			CPoint offset;
+			CPoint offset(m_fatherRect.TopLeft());
 			for (auto& i:m_leftElements)
 			{
 				_PlaceChild(i,offset);
 			}
-			if (m_fatherSize.cx > m_containSize.cx)
+			if (m_fatherRect.Width() > m_smallestNeedSize.cx)
 			{
-				offset.x += m_fatherSize.cx - m_containSize.cx;
+				offset.x += m_fatherRect.Width() - m_smallestNeedSize.cx;
 			}
 			for (auto& i:m_rightElements)
 			{
 				_PlaceChild(i,offset);
 			}
 
-			m_containSize.cx = offset.x;
-			return m_containSize;
+			m_smallestNeedSize.cx = offset.x;
+			return m_smallestNeedSize;
 		}
 		VOID _PlaceChild(ElementRef element,CPoint& offset)
 		{
 			CRect rect;
 			element->GetOuterLayoutRect(rect);
-			rect.OffsetRect(offset);
+			rect.OffsetRect(-rect.left, -rect.top);	// 归位到(0,0)
+			rect.OffsetRect(offset);	// 放置到正确位置
 
 			BOOL expandWidth;
 			element->GetExpandWidth(expandWidth);
@@ -79,29 +83,46 @@ namespace Layouter
 			element->GetExpandHeight(expandHeight);
 			if (expandWidth)
 			{
-				rect.right = rect.left + m_fatherSize.cx - m_containSize.cx;
+				INT remainWidth = m_fatherRect.Width() - m_smallestNeedSize.cx;
+				if (remainWidth < 0)
+				{
+					remainWidth = 0;
+				}
+				if (m_expandElementCount == 1)
+				{
+					rect.right = rect.left + remainWidth;
+				}
+				else
+				{
+					rect.right = rect.left + remainWidth / m_expandElementCount;
+					--m_expandElementCount;
+				}
+				CSize size = rect.Size();
+				element->CheckSizeLimit(size);	// 这里可能SizeLimit，会有大小限制
+				remainWidth += rect.Width() - size.cx;
+				rect.right = rect.left + size.cx;
+				rect.bottom = rect.top + size.cy;	// 理论上这行应当没实际作用
 			}
 			if (expandHeight)
 			{
-				rect.bottom = rect.top + m_fatherSize.cy;
+				rect.bottom = rect.top + m_fatherRect.Height();
 			}
 			element->SetOuterLayoutRect(rect);
 			offset.x += rect.Width();
 		}
 	protected:
-		CSize	m_containSize;
-		CSize	m_fatherSize;
+		CSize	m_smallestNeedSize;
+		CRect	m_fatherRect;
 		std::list<ElementRef> m_leftElements;
 		std::list<ElementRef> m_rightElements;
-		BOOL	m_hasExpandElement;
+		UINT	m_expandElementCount = 0;
 	};
 
 	class CVerticalPlacer : public IBlockPlacer
 	{
 	public:
-		CVerticalPlacer(CSize size)
-			: m_hasExpandElement(FALSE)
-			, m_fatherSize(size)
+		CVerticalPlacer(CRect fatherRect)
+			: m_fatherRect(fatherRect)
 		{}
 		VOID Push(ElementRef element)
 		{
@@ -127,58 +148,75 @@ namespace Layouter
 			element->GetOuterLayoutRect(rect);
 			if (!expandHeight)
 			{
-				m_containSize.cy += rect.Height();
+				m_smallestNeedSize.cy += rect.Height();
 			}
-			m_containSize.cx = MAX(m_containSize.cx,rect.Width());
+			else
+			{
+				++m_expandElementCount;
+			}
+			m_smallestNeedSize.cx = MAX(m_smallestNeedSize.cx, rect.Width());
 		}
 		CSize Place()
 		{
-			CPoint offset;
-			for (auto& i:m_topElements)
+			CPoint offset(m_fatherRect.TopLeft());
+			for (auto& i : m_topElements)
 			{
-				_PlaceChild(i,offset);
+				_PlaceChild(i, offset);
 			}
-			if (m_fatherSize.cy > m_containSize.cy)
+			for (auto& i : m_bottomElements)
 			{
-				offset.y += m_fatherSize.cy - m_containSize.cy;
-			}
-			for (auto& i:m_bottomElements)
-			{
-				_PlaceChild(i,offset);
+				_PlaceChild(i, offset);
 			}
 
-			m_containSize.cy = offset.y;
-			return m_containSize;
+			m_smallestNeedSize.cy = offset.y;
+			return m_smallestNeedSize;
 		}
-		VOID _PlaceChild(ElementRef element,CPoint& offset)
+		VOID _PlaceChild(ElementRef element, CPoint& offset)
 		{
 			CRect rect;
 			element->GetOuterLayoutRect(rect);
-			rect.OffsetRect(offset);
+			rect.OffsetRect(-rect.left, -rect.top);	// 归位到(0,0)
+			rect.OffsetRect(offset);	// 放置到正确位置
 
 			BOOL expandWidth;
 			element->GetExpandWidth(expandWidth);
 			BOOL expandHeight;
 			element->GetExpandHeight(expandHeight);
-			CSize elementSize;
-			element->GetSize(elementSize);
-			if (expandWidth)
-			{
-				rect.right = rect.left + m_fatherSize.cx;
-			}
 			if (expandHeight)
 			{
-				rect.bottom = rect.top + m_fatherSize.cy - m_containSize.cy;
+				INT remainHeight = m_fatherRect.Height() - m_smallestNeedSize.cy;
+				if (remainHeight < 0)
+				{
+					remainHeight = 0;
+				}
+				if (m_expandElementCount == 1)
+				{
+					rect.bottom = rect.top + remainHeight;
+				}
+				else
+				{
+					rect.bottom = rect.top + remainHeight / m_expandElementCount;
+					--m_expandElementCount;
+				}
+				CSize size = rect.Size();
+				element->CheckSizeLimit(size);	// 这里可能SizeLimit，会有大小限制
+				remainHeight += rect.Height() - size.cy;
+				rect.right = rect.left + size.cx;	// 理论上这行应当没实际作用
+				rect.bottom = rect.top + size.cy;
+			}
+			if (expandWidth)
+			{
+				rect.right = rect.left + m_fatherRect.Width();
 			}
 			element->SetOuterLayoutRect(rect);
 			offset.y += rect.Height();
 		}
 	protected:
-		CSize	m_containSize;
-		CSize	m_fatherSize;
+		CSize	m_smallestNeedSize;
+		CRect	m_fatherRect;
 		std::list<ElementRef> m_topElements;
 		std::list<ElementRef> m_bottomElements;
-		BOOL	m_hasExpandElement;
+		UINT	m_expandElementCount = 0;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -226,10 +264,10 @@ namespace Layouter
 			switch (direction)
 			{
 			case Property::ELayoutDirection::Horizon:
-				placer = new CHorizonPlacer(elementRect.Size());
+				placer = new CHorizonPlacer(elementRect);
 				break;
 			case Property::ELayoutDirection::Vertical:
-				placer = new CVerticalPlacer(elementRect.Size());
+				placer = new CVerticalPlacer(elementRect);
 				break;
 			default:
 				break;

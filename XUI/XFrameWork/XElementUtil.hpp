@@ -63,24 +63,6 @@ public:
 			return XResult_NotFound;
 		}
 	}
-	static CRect GetElementRectInClientCoord(ElementRef element)
-	{
-		CRect rect;
-		if (element)
-		{
-			element->GetRect(rect);
-			element = element->GetFather();
-			while (element)
-			{
-				CPoint position;
-				element->GetPosition(position);
-				rect.OffsetRect(position);
-				element = element->GetFather();
-			}
-		}
-
-		return rect;
-	}
 
 	static ElementRef GetElementByHWND(ElementRef root,HWND hWndSearch)
 	{
