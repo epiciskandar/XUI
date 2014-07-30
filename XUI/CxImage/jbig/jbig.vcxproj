@@ -59,14 +59,8 @@
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <PreprocessorDefinitions>_LIB;WIN32;_DEBUG;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>
-      </AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>
       </PrecompiledHeaderOutputFile>
-      <ObjectFileName>
-      </ObjectFileName>
-      <ProgramDataBaseFileName>
-      </ProgramDataBaseFileName>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ResourceCompile>
@@ -92,14 +86,9 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_LIB;WIN32;NDEBUG;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>
-      </AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>
       </PrecompiledHeaderOutputFile>
-      <ObjectFileName>
-      </ObjectFileName>
-      <ProgramDataBaseFileName>
-      </ProgramDataBaseFileName>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
       <Culture>0x0809</Culture>
