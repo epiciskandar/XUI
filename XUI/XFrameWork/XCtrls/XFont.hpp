@@ -1,14 +1,15 @@
 #pragma once
-#include "../XBase.hpp"
-#include "../XPropertyValue.hpp"
+#include "XFrameWork/XBase.hpp"
+
 class CXFont : public CFont
-    ,public CXProperter
+	, public CXTreeNode
+	, public IXMLPropertyParsable
 {
 public:
     CString GetFontName() {return _fontName;}
     INT GetFontSize() {return _fontSize;}
     void SetFont(CString fontName, INT fontSize);
-    XResult SetXMLProperty( CString name,CString value ) override;
+	XResult SetXMLProperty(LPCTSTR name, LPCTSTR value) override;
     void ChangeWork();
     CXFont& operator=(const CXFont& rhs)
     {
@@ -31,17 +32,18 @@ inline void CXFont::ChangeWork()
     }    
 }
 
-inline XResult CXFont::SetXMLProperty( CString name,CString value )//Set Class Property
+inline XResult CXFont::SetXMLProperty(LPCTSTR name, LPCTSTR value)//Set Class Property
 {
-	if (name == _T("ID"))
+	CString strName(name);
+	if (strName == _T("ID"))
 	{
 		SetID(value);
 	}
-    if (name == _T("FontName"))
+	if (strName == _T("FontName"))
     {
         _fontName = value;
     }
-    else if (name == _T("FontSize"))
+	else if (strName == _T("FontSize"))
     {
         _fontSize = StrToInt(value);
     }

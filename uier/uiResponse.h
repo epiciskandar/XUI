@@ -59,7 +59,7 @@ public:
 	{
 		URP(msg);
 		CXMsg_GetRealWnd msg_GetHWnd;
-		m_uiElement->ProcessXMessage(msg_GetHWnd);
+		m_uiElement->MsgUp(msg_GetHWnd);
 		if (msg_GetHWnd.wnd)
 		{
 			HWND hWnd = 0;

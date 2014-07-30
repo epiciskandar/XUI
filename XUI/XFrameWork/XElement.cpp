@@ -4,23 +4,25 @@
 
 CXElement::CXElement()
 {
-
+	m_property = new Property::CXProperty;
 }
 
 CXElement::~CXElement()
 {
+	if (m_property)
+	{
+		delete m_property;
+	}
 }
 
 XResult CXElement::ProcessXMessage( IXMsg& msg )
 {
 	BEGIN_XMSG_MAP(msg)
-		OnXMsg(CXMsg_PropertyChanged)
 		OnXMsg(CXMsg_SizeChanged)
 		OnXMsg(CXMsg_Layout)
 		OnXMsg(CXMsg_Paint)
 		OnXMsg(CXMsg_MouseEnter)
 		OnXMsg(CXMsg_MouseLeave)
-		OnXMsg(CXMsg_RenderElement)
 		OnXMsg(CXMsg_AttachDC)
 		OnXMsg(CXMsg_FrameClick)
 		OnXMsg(CXMsg_RealWndClosing)
@@ -239,18 +241,6 @@ VOID CXElement::CheckInnerSizeLimit(CSize& size)
 	}
 }
 
-VOID CXElement::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
-{
-	URP(arg);
-	if (arg.name == Property::Size)
-	{
-		CXMsg_RenderElement msg;
-		msg.paintChildren = FALSE;
-		ProcessXMessage(msg);
-	}
-	return;
-}
-
 VOID CXElement::On_CXMsg_SizeChanged( CXMsg_SizeChanged& arg )
 {
 	URP(arg);
@@ -310,15 +300,6 @@ VOID CXElement::On_CXMsg_Layout( CXMsg_Layout& arg )
 
 VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 {
-	URP(arg);
-	BOOL bGhost = FALSE;
-	GetGhost (bGhost);
-	BOOL needRealPaint;
-	GetNeedRealPaint(needRealPaint);
-	if (bGhost || !needRealPaint) //Ghost 属性为真 跳过绘制
-	{
-		return;
-	}
 	BOOL layoutInvalid = TRUE;
 	GetLayoutInvalid(layoutInvalid);
 	if (layoutInvalid)
@@ -326,24 +307,53 @@ VOID CXElement::On_CXMsg_Paint( CXMsg_Paint& arg )
 		CXMsg_Layout msg;
 		ProcessXMessage(msg);
 	}
-	CRect paintDstRect;
-	CPoint srcOffset;
 
-	if (PaintCheck(arg.drawDevice.invalidRect,paintDstRect,srcOffset))
+	BOOL invalid = FALSE;
+	GetInvalid(invalid);
+	if (invalid)
 	{
-		arg.drawDevice.dc.BitBlt(paintDstRect.left,paintDstRect.top,paintDstRect.right,paintDstRect.bottom,
-			m_memDC->m_hDC,srcOffset.x, srcOffset.y, SRCCOPY);
+		Render();
+		SetInvalid(FALSE);
 	}
+	Paint(arg);
 
 	MsgDown(arg);
 
 	arg.msgHandled = TRUE;
 }
 
+VOID CXElement::Paint( CXMsg_Paint& arg )
+{
+	BOOL bGhost = FALSE;
+	GetGhost(bGhost);
+	BOOL needRealPaint;
+	GetNeedRealPaint(needRealPaint);
+	if (bGhost || !needRealPaint) //Ghost 属性为真 跳过绘制
+	{
+		return;
+	}
+	CRect paintDstRect;
+	CPoint srcOffset;
+
+	if (PaintCheck(arg.drawDevice.invalidRect, paintDstRect, srcOffset))
+	{
+		arg.drawDevice.dc.BitBlt(paintDstRect.left, paintDstRect.top
+			, paintDstRect.Width(), paintDstRect.Height(),
+			m_memDC->m_hDC, srcOffset.x, srcOffset.y, SRCCOPY);
+	}
+}
+
 BOOL CXElement::PaintCheck(CRect invalidRect, CRect& paintDstRect, CPoint& paintSrcPt)
 {
 	CRect rect;
 	GetRectInClientCoord(rect);
+	XPtr<CXElement> pFatherElement(GetFather());
+	if (pFatherElement)
+	{
+		CRect fatherRect;
+		pFatherElement->GetRectInClientCoord(fatherRect);
+		rect.IntersectRect(rect, fatherRect);
+	}
 
 	if (m_memDC && 
 		paintDstRect.IntersectRect(invalidRect, rect))
@@ -355,10 +365,9 @@ BOOL CXElement::PaintCheck(CRect invalidRect, CRect& paintDstRect, CPoint& paint
 	return FALSE;
 }
 
-VOID CXElement::On_CXMsg_RenderElement( CXMsg_RenderElement& arg )
+VOID CXElement::Render()
 {
 	XLOG(_T("Render Element %s\n"), GetID());
-	arg.msgHandled = TRUE;
 	if (!m_memDC)
 	{
 		return;
@@ -394,18 +403,7 @@ VOID CXElement::On_CXMsg_RenderElement( CXMsg_RenderElement& arg )
 		updated = TRUE;
 	}
 
-	if (arg.paintChildren)
-	{
-		MsgDown(arg);
-	}
-
 	SetNeedRealPaint(updated);
-	if (updated)
-	{
-		CXMsg_Invalidate msg;
-		GetRectInClientCoord(msg.invalidRect);
-		MsgDown(msg);
-	}
 }
 
 VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
@@ -426,9 +424,7 @@ VOID CXElement::On_CXMsg_AttachDC( CXMsg_AttachDC& arg )
 		}
 		m_memDC->ClearDrawDevice();
 
-		CXMsg_RenderElement msg;
-		msg.paintChildren = FALSE;
-		ProcessXMessage(msg);
+		SetNeedRealPaint(TRUE);
 	}
 	else
 	{
@@ -503,13 +499,13 @@ VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
 // define XML converters
 #define XMLConvert_Begin(_name,_value) \
 { \
-	CString& propName = _name; \
-	CString& propValue = _value; \
+	CString propName = _name; \
+	LPCTSTR propValue = _value; \
 
 #define XMLAdvancedConvert(_name,_converter) \
 	if (Property::_name == propName) \
 	{ \
-		Set##_name(_converter::ConvertToValue(propName, propValue, m_property)); \
+		Set##_name(_converter::ConvertToValue(propName, propValue, *m_property)); \
 	}else
 
 #define XMLFakeConverter(_name, _converter) \
@@ -522,20 +518,28 @@ VOID CXElement::On_CXMsg_RealWndClosing( CXMsg_RealWndClosing& arg )
 #define XMLParse(_name) \
 	if(Property::_name == propName) \
 	{ \
-		m_property.SetProperty(propName,GetConverter(_name)::ConvertToValue(propValue)); \
-		CXMsg_PropertyChanged msg; \
-		msg.name = propName; \
-		ProcessXMessage(msg); \
+		m_property->SetProperty(propName,GetConverter(_name)::ConvertToValue(propValue)); \
+	}else
+
+#define XMLParseToType(_name,_type) \
+	if(Property::_name == propName){ \
+		m_property->SetProperty(propName,(_type)GetConverter(_name)::ConvertToValue(propValue)); \
 	}else
 
 #define XMLConvert_End	{} \
 }
 
-XResult CXElement::SetXMLProperty( CString name,CString value )
+XResult CXElement::SetXMLProperty( LPCTSTR name,LPCTSTR value )
 {
 	XMLConvert_Begin(name, value)
 		XMLFakeConverter(Position, Property::CXMLConverter_CPoint)
 		XMLFakeConverter(ID, Property::CXMLConverter_CString)
+
+		if (!m_property)
+		{
+			return XResult_Fail;
+		}
+		// 下面的都需要property对象
 		XMLAdvancedConvert(Size, Property::CXMLConverter_CSize)
 
 		XMLParse(Rect)
@@ -550,9 +554,9 @@ XResult CXElement::SetXMLProperty( CString name,CString value )
 		XMLParse(WinExStyle)
 		XMLParse(CenterWindow)
 		XMLParse(ShowState)
-		XMLParse(LayoutType)
-		XMLParse(LayoutDirection)
-		XMLParse(Align)
+		XMLParseToType(LayoutType, INT)
+		XMLParseToType(LayoutDirection, INT)
+		XMLParseToType(Align, INT)
 		XMLParse(AutoWidth)
 		XMLParse(AutoHeight)
 		XMLParse(ExpandWidth)
@@ -593,4 +597,61 @@ VOID CXElement::GetRectInClientCoord(CRect& rect)
 		rect.OffsetRect(pos);
 		ptr = XPtr<IXNode>(ptr)->GetFather();
 	}
+}
+
+XResult CXElement::GetLayoutType(Property::ELayoutType& type)
+{
+	type = Property::LayoutTypeDefaultValue;
+	if (m_property)
+	{
+		return m_property->GetProperty(Property::LayoutType, (int&)type);
+	}
+	return XResult_Fail;
+}
+
+XResult CXElement::SetLayoutType(Property::ELayoutType type)
+{
+	if (m_property)
+	{
+		return m_property->SetProperty(Property::LayoutType, (int)type);
+	}
+	return XResult_Fail;
+}
+
+XResult CXElement::GetLayoutDirection(Property::ELayoutDirection& direction)
+{
+	direction = Property::LayoutDirectionDefaultValue;
+	if (m_property)
+	{
+		return m_property->GetProperty(Property::LayoutDirection, (int&)direction);
+	}
+	return XResult_Fail;
+}
+
+XResult CXElement::SetLayoutDirection(Property::ELayoutDirection direction)
+{
+	if (m_property)
+	{
+		return m_property->GetProperty(Property::LayoutDirection, (int&)direction);
+	}
+	return XResult_Fail;
+}
+
+XResult CXElement::GetAlign(Property::EAlignType& type)
+{
+	type = Property::AlignDefaultValue;
+	if (m_property)
+	{
+		return m_property->GetProperty(Property::Align, (int&)type);
+	}
+	return XResult_Fail;
+}
+
+XResult CXElement::SetAlign(Property::EAlignType type)
+{
+	if (m_property)
+	{
+		return m_property->GetProperty(Property::Align, (int&)type);
+	}
+	return XResult_Fail;
 }

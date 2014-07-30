@@ -1,6 +1,6 @@
 #pragma once
-#include "Header/XPropertyDefine.h"
-#include "XFrameWork/XProperty.hpp"
+#include "Header/IXProperty.h"
+#include "XFrameWork/XProperty/XProperty.h"
 #include <stdlib.h>
 
 namespace Property
@@ -105,7 +105,7 @@ namespace Property
 			_stscanf_s(value, _T("%d,%d"), &size.cx, &size.cy);
 			return size;
 		}
-		static CSize ConvertToValue(LPCTSTR name, CString value, Property::CXProperty& prop)
+		static CSize ConvertToValue(LPCTSTR name, CString value, IXProperty& prop)
 		{
 			URP(name);
 			CSize size(0,0);

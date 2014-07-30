@@ -1,5 +1,6 @@
 #pragma once
 #include "XTree.hpp"
+#include "XFrameWork/IXMLParsable.h"
 #include <map>
 
 #include "XRealWnd.h"
@@ -7,7 +8,7 @@
 #include "XCtrls/XImage.hpp"
 #include "XCtrls/XEdit.hpp"
 
-#include "../Third/TinyXML/tinyxml.h"
+#include "Third/TinyXML/tinyxml.h"
 
 class CXGaia : public IXGaia
 {
@@ -56,7 +57,7 @@ inline XNodeRef CXGaia::Create( CString className )
 	}
 	else
 	{
-		WTF;
+		WTF;	// no such element
 	}
 	return nullptr;
 }
@@ -106,20 +107,28 @@ inline XNodeRef CXGaia::ParseXMLNode( TiXmlElement* pElement )
 	{
 		return nullptr;
 	}
-	ParseAndSetParams(node,pElement);
-	TiXmlNode* pChild = pElement->FirstChild();
-	while (pChild)
+	XPtr<IXMLParsable> pParsableObj(node);
+	if (pParsableObj)
 	{
-		TiXmlElement* pChildElement = pChild->ToElement();
-		if (pChildElement)
+		pParsableObj->ParseXml(pElement);
+	}
+	else
+	{
+		ParseAndSetParams(node, pElement);
+		TiXmlNode* pChild = pElement->FirstChild();
+		while (pChild)
 		{
-			XNodeRef childNode = ParseXMLNode(pChildElement);
-			if (childNode)
+			TiXmlElement* pChildElement = pChild->ToElement();
+			if (pChildElement)
 			{
-				node->AppendChild(childNode);
+				XNodeRef childNode = ParseXMLNode(pChildElement);
+				if (childNode)
+				{
+					node->AppendChild(childNode);
+				}
 			}
+			pChild = pChild->NextSiblingElement();
 		}
-		pChild = pChild->NextSiblingElement();
 	}
 	if (m_listenRegisterFunc)
 	{
@@ -181,7 +190,12 @@ inline XResult CXGaia::ParseAndSetParams( XNodeRef node,const TiXmlElement* pEle
 				if (propNode)
 				{
 					ParseAndSetProperter(propNode,childElement);
-					element->GetPrpertyRef().SetProperty(name,propNode);
+					IXProperty* prop=nullptr;
+					element->GetProperty(prop);
+					if (prop)
+					{
+						prop->SetProperty(name,propNode);
+					}
 				}
 				childElement = childElement->NextSiblingElement();
 			}
@@ -196,7 +210,7 @@ inline XResult CXGaia::RegListener( ListenerRegister reger )
 	return XResult_OK;
 }
 
-inline XResult CXGaia::ParseAndSetProperter( XNodeRef properterNode,const TiXmlElement* proplement )
+inline XResult CXGaia::ParseAndSetProperter( XNodeRef node,const TiXmlElement* proplement )
 {
 	const TiXmlElement* pchildElement = proplement->ToElement();
 	const TiXmlAttribute* pchildAttr = pchildElement->FirstAttribute();
@@ -207,7 +221,7 @@ inline XResult CXGaia::ParseAndSetProperter( XNodeRef properterNode,const TiXmlE
 		CString value;
 		Util::String::UTF8ToUnicode(valueA,value);
 
-		XSmartPtr<CXProperter> properter(properterNode);
+		IXMLPropertyParsable* properter = dynamic_cast<IXMLPropertyParsable*>(node.GetPointer());
 		if (properter)
 		{
 			properter->SetXMLProperty(key,value);

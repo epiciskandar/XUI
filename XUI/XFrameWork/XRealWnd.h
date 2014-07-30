@@ -46,6 +46,9 @@ public:
 
 	XProperty(Title);
 	XFakeProperty_Get(HWnd);
+	XFakeProperty(Size);
+	XFakeProperty(Rect);
+	XFakeProperty(WindowPos);
 	XProperty(CenterWindow);
 	XProperty(Visible);
 	XProperty(BorderArea);
@@ -80,7 +83,6 @@ protected:
 
 	//--------------------------------//
 
-	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_AppendElement(CXMsg_AppendElement& arg);
 	VOID On_CXMsg_Invalidate(CXMsg_Invalidate& arg);
 	VOID On_CXMsg_GetRealWnd(CXMsg_GetRealWnd& arg);

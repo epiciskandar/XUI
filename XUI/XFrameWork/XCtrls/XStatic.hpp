@@ -13,69 +13,50 @@ public:
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
 public:
-	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
+	virtual VOID Render();
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-inline VOID CXText::On_CXMsg_Paint(CXMsg_Paint& msg)
+inline VOID CXText::Render()
 {
-	XMsgTraceWithID(msg);
-
-	__super::On_CXMsg_Paint(msg);
-
-	BOOL bGhost = FALSE;
-	GetGhost(bGhost);
-	if (bGhost) //Ghost 属性为真 跳过绘制
-	{
-		return;
-	}
+	CXElement::Render();
 
 	CRect rect;
 	GetRect(rect);
 	CString text;
 	GetText(text);
 
+	COLORREF color;
+	GetColor(color);
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 1, color);
 
-	if (msg.drawDevice.IsRectNeedRePaint(rect))
+	XNodeRef fontNode;
+	GetXFont(fontNode);
+	XPtr<CXFont> font(fontNode);
+	if (font && font->GetFontName() != _T(""))
 	{
-		COLORREF color;
-		GetColor(color);
-		CPen pen;
-		pen.CreatePen(PS_SOLID,1,color);
-		
-		XNodeRef fontNode;
-		GetXFont(fontNode);
-		XPtr<CXFont> font(fontNode);
-		if (font && font->GetFontName() != _T(""))
-		{
-			/* 修改字体 */
-			font->ChangeWork();    
-			msg.drawDevice.dc.SelectFont (font->m_hFont);
-		 }
-
-
-		CGDIHandleSwitcher switcher(msg.drawDevice.dc,pen,FALSE);
-		DRAWTEXTPARAMS params;
-		ZeroMemory(&params,sizeof(params));
-		params.cbSize = sizeof(params);
-		msg.drawDevice.dc.DrawTextEx(
-			text.GetBuffer(text.GetLength()),
-			text.GetLength(),
-			rect,DT_CENTER | DT_SINGLELINE | DT_VCENTER,
-			&params);
-		text.ReleaseBuffer();
+		/* 修改字体 */
+		font->ChangeWork();
+		m_memDC->SelectFont(font->m_hFont);
 	}
-	msg.msgHandled = TRUE;
+
+
+	CGDIHandleSwitcher switcher(*m_memDC, pen, FALSE);
+	DRAWTEXTPARAMS params;
+	ZeroMemory(&params, sizeof(params));
+	params.cbSize = sizeof(params);
+	m_memDC->DrawTextEx(
+		text.GetBuffer(text.GetLength()),
+		text.GetLength(),
+		rect, DT_CENTER | DT_SINGLELINE | DT_VCENTER,
+		&params);
+	text.ReleaseBuffer();
 }
 
 inline XResult CXText::ProcessXMessage( IXMsg& msg )
 {
 	__super::ProcessXMessage(msg);
-	
-	BEGIN_XMSG_MAP(msg)
-		OnXMsg(CXMsg_Paint);
-	END_XMSG_MAP;
-
 	return XResult_OK;
 }

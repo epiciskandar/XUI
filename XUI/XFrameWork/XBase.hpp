@@ -33,3 +33,37 @@ public: \
 	static ClassName& GetInstance(){static ClassName _instance;return _instance;};
 
 #define XLOG(...)	blog::CBLog::GetInstance().Logf(DeviceMask_All,__VA_ARGS__)
+
+
+//////////////////////////////////////////////////////////////////////////
+
+// define property functions
+#define XProperty_Get(_name) \
+	virtual XResult Get##_name (Property::_name##Type& value){ \
+		if (m_property){ \
+			value = Property::_name##DefaultValue; \
+			return m_property->GetProperty(L#_name,value); \
+		} \
+		else return XResult_Fail; \
+	}
+
+#define XProperty_Set(_name) \
+public: \
+	virtual XResult Set##_name (Property::_name##Type param){ \
+		if (m_property){ \
+			return m_property->SetProperty(L#_name,param); \
+		}\
+		else return XResult_Fail; \
+	}
+
+#define XProperty(_name) \
+	XProperty_Get(_name) \
+	XProperty_Set(_name)
+
+#define XFakeProperty_Get(_name) \
+	virtual XResult Get##_name (Property::_name##Type& value);
+#define XFakeProperty_Set(_name) \
+	virtual XResult Set##_name (Property::_name##Type param);
+#define XFakeProperty(_name) \
+	XFakeProperty_Get(_name); \
+	XFakeProperty_Set(_name);

@@ -9,7 +9,8 @@ class CXEdit : public CXElement , virtual public IXText
 {
 	RefCountImplAt(CXElement);
 public:
-	XProperty(Text);
+	XFakeProperty_Set(Text);
+	XProperty_Get(Text);
 	XProperty(TextColor);
 	XProperty(XFont);
 
@@ -19,7 +20,6 @@ public:
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
 
 public:
-	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_AttachDC(CXMsg_AttachDC& arg);
 	VOID _Create(HWND hWndParent);
 };
@@ -31,7 +31,6 @@ inline XResult CXEdit::ProcessXMessage( IXMsg& msg )
 	__super::ProcessXMessage(msg);
 	
 	BEGIN_XMSG_MAP(msg)
-		OnXMsg(CXMsg_PropertyChanged);
 		OnXMsg(CXMsg_AttachDC);
 	END_XMSG_MAP;
 
@@ -65,22 +64,19 @@ VOID CXEdit::_Create(HWND hWndParent)
 	CRect rect;
 	GetRectInClientCoord(rect);
 	Create(hWndParent,rect,nullptr,WS_CHILD);
-	CXMsg_PropertyChanged msg;
-	msg.name = Property::Text;
-	On_CXMsg_PropertyChanged(msg);
+	CString text;
+	GetText(text);
+	SetWindowText(text);
 	ShowWindow(SW_SHOW);
 }
 
-VOID CXEdit::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
+XResult CXEdit::SetText(Property::TextType param)
 {
+	m_property->SetProperty(Property::Text, param);
 	if (!IsWindow())
 	{
-		return;
+		return XResult_NotHandled;
 	}
-	if (arg.name == Property::Text)
-	{
-		CString text;
-		GetText(text);
-		SetWindowText(text);
-	}
+	SetWindowText(param);
+	return XResult_OK;
 }

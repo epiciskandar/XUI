@@ -58,6 +58,15 @@ public:
 			m_ptr->AddRef();
 		}
 	}
+	template <typename T2>
+	XSmartPtr(T2* rhs)
+	{
+		m_ptr = dynamic_cast<const PointerType>(rhs);
+		if (m_ptr)
+		{
+			m_ptr->AddRef();
+		}
+	}
 	virtual ~XSmartPtr(){if(m_ptr){m_ptr->Release();}}
 
 	XSmartPtr operator=(const XSmartPtr& rhs)
@@ -82,6 +91,20 @@ public:
 			m_ptr->Release();
 		}
 		m_ptr = dynamic_cast<PointerType>(rhs.GetPointer());
+		if (m_ptr)
+		{
+			m_ptr->AddRef();
+		}
+		return *this;
+	}
+	template <typename T2>
+	XSmartPtr operator=(T2* rhs)
+	{
+		if (m_ptr)
+		{
+			m_ptr->Release();
+		}
+		m_ptr = dynamic_cast<PointerType>(rhs);
 		if (m_ptr)
 		{
 			m_ptr->AddRef();

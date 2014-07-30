@@ -41,3 +41,25 @@ class CXMsg_RealWndClosing : public IXMsg
 {
 	XMessage(CXMsg_RealWndClosing);
 };
+
+class CXMsg_MouseAction : public IXMsg
+{
+	XMessage(CXMsg_MouseAction);
+
+	enum class MouseButton
+	{
+		Left,
+		Middle,
+		Right
+	};
+	enum class Action
+	{
+		Down,
+		Up,
+		Click,
+		DblClick
+	};
+
+	MouseButton button = MouseButton::Left;
+	Action action = Action::Down;
+};

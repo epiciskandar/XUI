@@ -78,6 +78,7 @@ namespace Property
 	DefineProperty(Rect, CRect, CRect());
 	DefineProperty(Position, CPoint, CPoint());
 	DefineProperty(Size, CSize, CSize());
+	DefineProperty(Invalid, BOOL, TRUE);
 	DefineProperty(Text, CString, _T(""));
 	DefineProperty(Title, CString, _T(""));
 	DefineProperty(Color, COLORREF, 0);
@@ -88,6 +89,7 @@ namespace Property
 	DefineProperty(WinExStyle, DWORD, 0);
 	DefineProperty(HWnd, HWND, 0);
 	DefineProperty(CenterWindow, BOOL, TRUE);
+	DefineProperty(WindowPos, CPoint, CPoint());
 	DefineProperty(ShowState, BOOL, FALSE);
 	DefineProperty(LayoutType, ELayoutType, ELayoutType::Block);
 	DefineProperty(LayoutInvalid, BOOL, TRUE);

@@ -3,13 +3,14 @@
   <RealWnd ID="10086" Title="Test" Size="auto,auto" Sizable="true" HasWinBorder="false" HasSysBar="false">
     <Element ID="WindowBkg" ToolTip="这里无法拖动" Color="30,30,30" BorderColor="0,121,203" Size="280,260" Padding="1,1,1,1">
       <Element ID="TitleArea" Size="expand,20" ToolTip="这里可以拖动" HitTest="2" Color="176,203,241" Align="top">
-        <Element ID="Close" Size="20,20" ToolTip="关闭？Alt+F4就关掉了" Align="right" Margin="0,1,5,0" Color="255,0,0"/>
+        <Element ID="Close" Size="20,20" ToolTip="Alt+F4" Align="right" Margin="0,1,1,0" Color="45,45,48">
+		</Element>
       </Element>
       <Image ID="bkg" File="res:image.png" Size="expand,expand">
         <Edit ID="testEdit" Text="This is a edit" Color="0,0,127" Size="100,20" Margin="100,0,0,0"/>
       </Image>
       <Element ID="Foot" Size="expand,20" Color="176,103,241" BorderColor="220,30,30" Padding="1,1,1,1" Align="bottom">
-        <Text ID="testStatic"  Ghost="false" Text="test汉字" ToolTip="看毛" Size="100,expand" Color="127,127,127" FontName="宋体" FontSize="11">
+        <Text ID="testStatic"  Ghost="false" Text="test汉字" ToolTip="test hover" Size="100,expand" Color="127,127,127" FontName="宋体" FontSize="11">
           <Property>
             <Font ID="XFont" FontName="微软雅黑" FontSize="20"/>
           </Property>

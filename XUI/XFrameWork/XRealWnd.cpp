@@ -101,11 +101,7 @@ XResult CXRealWnd::Create(HWND hwndParent/*=0*/)
 	{
 		CRect wndRect;
 		GetWindowRect(wndRect);
-		wndRect.BottomRight() -= wndRect.TopLeft();
-		wndRect.TopLeft() = CPoint(0, 0);
-		m_ignorePropertyChange = TRUE;
-		SetRect(wndRect);
-		m_ignorePropertyChange = FALSE;
+		SetSize(wndRect.Size());
 
 		return XResult_OK;
 	}
@@ -136,7 +132,6 @@ XResult CXRealWnd::ProcessXMessage(IXMsg& msg)
 	CXElement::ProcessXMessage(msg);
 
 	BEGIN_XMSG_MAP(msg)
-		OnXMsg(CXMsg_PropertyChanged);
 		OnXMsg(CXMsg_AppendElement);
 		OnXMsg(CXMsg_Invalidate);
 		OnXMsg(CXMsg_GetRealWnd);
@@ -209,44 +204,85 @@ LRESULT CXRealWnd::_Translate_WM_Size(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-VOID CXRealWnd::On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg)
+XResult CXRealWnd::SetSize(Property::SizeType value)
 {
 	if (m_ignorePropertyChange)
 	{
-		return;
+		return XResult_NotHandled;
 	}
+	CRect windowRect;
+	GetRect(windowRect);
+	windowRect.right = windowRect.left + value.cx;
+	windowRect.bottom = windowRect.top + value.cy;
+	SetRect(windowRect);
+	m_property->SetProperty(Property::Size, value);
+	return XResult_OK;
+}
 
-	if (arg.name == Property::Rect)
-	{
-		HWND hWnd = 0;
-		GetHWnd(hWnd);
-		if (hWnd)
-		{
-			CRect rect;
-			GetRect(rect);
-			SetWindowPos(0, rect, SWP_NOZORDER);
-		}
-	}
-	else if (arg.name == Property::Size)
-	{
-		HWND hWnd = 0;
-		GetHWnd(hWnd);
-		if (hWnd)
-		{
-			CRect clientRect;
-			GetClientRect(clientRect);
-			CRect windowRect;
-			GetWindowRect(windowRect);
-			windowRect.right -= clientRect.Width();
-			windowRect.bottom -= clientRect.Height();
+XResult CXRealWnd::GetSize(Property::SizeType& value)
+{
+	CRect windowRect;
+	GetRect(windowRect);
+	value = windowRect.Size();
+	return XResult_OK;
+}
 
-			CSize size;
-			GetSize(size);
-			size.cx += windowRect.Width();
-			size.cy += windowRect.Height();
-			SetWindowPos(0, 0, 0, size.cx, size.cy, SWP_NOZORDER | SWP_NOMOVE);
+XResult CXRealWnd::SetRect(Property::RectType param)
+{
+	param.OffsetRect(-param.left, -param.top);
+	m_property->SetProperty(Property::Rect, param);
+	if (IsWindow())
+	{
+		CRect currRect;
+		GetRect(currRect);
+		UINT flag = SWP_NOACTIVATE|SWP_NOMOVE;
+		if (currRect.Size() == param.Size())
+		{
+			flag |= SWP_NOSIZE;
+			flag |= SWP_NOREDRAW;
 		}
+		CWindowImpl::SetWindowPos(0, param, flag);
 	}
+	return XResult_OK;
+}
+
+XResult CXRealWnd::GetRect(Property::RectType& value)
+{
+	if (IsWindow())
+	{
+		GetWindowRect(&value);
+		value.OffsetRect(-value.left, -value.top);
+	}
+	else
+	{
+		m_property->GetProperty(Property::Rect, value);
+	}
+	return XResult_OK;
+}
+
+XResult CXRealWnd::GetWindowPos(Property::WindowPosType& value)
+{
+	if (IsWindow())
+	{
+		CRect rect;
+		GetWindowRect(rect);
+		value = rect.TopLeft();
+		return XResult_OK;
+	}
+	return XResult_NotHandled;
+}
+
+XResult CXRealWnd::SetWindowPos(Property::WindowPosType param)
+{
+	if (IsWindow())
+	{
+		CRect rect;
+		rect.TopLeft() = param;
+		UINT flag = SWP_NOREDRAW | SWP_NOSIZE | SWP_NOACTIVATE;
+		CWindowImpl::SetWindowPos(0, &rect, flag);
+		return XResult_OK;
+	}
+	return XResult_NotHandled;
 }
 
 VOID CXRealWnd::On_CXMsg_AppendElement(CXMsg_AppendElement& arg)

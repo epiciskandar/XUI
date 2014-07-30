@@ -56,6 +56,7 @@ class IXElement : public IXRef
 public:
 	XProperty_Support(Position);
 	XProperty_Support(Size);
+	XProperty_Support(Invalid);
 	XProperty_Support(SizeLimit);
 	XProperty_Support(Rect);
 	XProperty_Support(LayoutType);
@@ -92,6 +93,7 @@ class IXRealWnd : public IXRef
 public:
 	XProperty_Support(Title);
 	XProperty_SupportGet(HWnd);
+	XProperty_Support(WindowPos);	// 窗口在windows中坐标
 	XProperty_Support(CenterWindow);
 	XProperty_Support(Visible);
 	XProperty_Support(BorderArea);

@@ -105,6 +105,7 @@
     <ClCompile Include="Third\TinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="Third\TinyXML\tinyxmlparser.cpp" />
     <ClCompile Include="XFrameWork\XElement.cpp" />
+    <ClCompile Include="XFrameWork\XProperty\XProperty.cpp" />
     <ClCompile Include="XFrameWork\XRealWnd.cpp" />
     <ClCompile Include="XFrameWork\XUI.cpp" />
   </ItemGroup>
@@ -137,8 +138,7 @@
     <ClInclude Include="XFrameWork\XLayouter\Offset.hpp" />
     <ClInclude Include="XFrameWork\XMsg.hpp" />
     <ClInclude Include="XFrameWork\XNotifier.hpp" />
-    <ClInclude Include="XFrameWork\XProperty.hpp" />
-    <ClInclude Include="XFrameWork\XPropertyValue.hpp" />
+    <ClInclude Include="XFrameWork\XProperty\XProperty.h" />
     <ClInclude Include="XFrameWork\XRealWnd.h" />
     <ClInclude Include="XFrameWork\XResPool.hpp" />
     <ClInclude Include="XFrameWork\XTree.hpp" />

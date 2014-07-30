@@ -10,7 +10,8 @@ class CXImage : public CXElement , virtual public IXImage
 {
 	RefCountImplAt(CXElement);
 
-	XProperty(File);
+	XFakeProperty_Set(File);
+	XProperty_Get(File);
 	XProperty(Offset);
 
 	virtual XResult ProcessXMessage(IXMsg& msg) override;
@@ -20,7 +21,6 @@ protected:
 
 public:
 	VOID On_CXMsg_Paint(CXMsg_Paint& msg);
-	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,30 +55,27 @@ inline XResult CXImage::ProcessXMessage( IXMsg& msg )
 	
 	BEGIN_XMSG_MAP(msg)
 		OnXMsg(CXMsg_Paint);
-		OnXMsg(CXMsg_PropertyChanged);
 	END_XMSG_MAP;
 
 	return XResult_OK;
 }
 
-inline VOID CXImage::On_CXMsg_PropertyChanged( CXMsg_PropertyChanged& arg )
+inline XResult CXImage::SetFile(Property::FileType param)
 {
-	if (arg.name == Property::File)
-	{
-		CString filePath;
-		GetFile(filePath);
-		CXResPool::GetInstance().TranslateResPath(filePath);
-		m_img.Load(filePath);
+	m_property->SetProperty(Property::File, param);
+	CString filePath(param);
+	CXResPool::GetInstance().TranslateResPath(filePath);
+	m_img.Load(filePath);
 
-		CSize size;
-		XResult result = GetSize(size);
-		if (result == XResult_NotFound)
-		{
-			UINT width = m_img.GetWidth();
-			UINT height = m_img.GetHeight();
-			size.cx = width;
-			size.cy	= height;
-			SetSize(size);
-		}
+	CSize size;
+	XResult result = GetSize(size);
+	if (result == XResult_NotFound)
+	{
+		UINT width = m_img.GetWidth();
+		UINT height = m_img.GetHeight();
+		size.cx = width;
+		size.cy = height;
+		SetSize(size);
 	}
+	return XResult_OK;
 }

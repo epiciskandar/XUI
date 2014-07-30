@@ -27,15 +27,6 @@ class CXMsg : public IXMsg
 
 //////////////////////////////////////////////////////////////////////////
 
-class CXMsg_PropertyChanged : public CXMsg
-{
-	XMessage(CXMsg_PropertyChanged);
-
-	CString name;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
 class CXMsg_Paint : public CXMsg
 {
 	XMessage(CXMsg_Paint);

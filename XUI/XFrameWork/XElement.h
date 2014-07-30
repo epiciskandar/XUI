@@ -3,12 +3,13 @@
 #include "XTree.hpp"
 #include "XNotifier.hpp"
 #include "XMsg.hpp"
-#include "XProperty.hpp"
+#include "Header/IXProperty.h"
 
 class CXElement 
-	: public virtual IXElement
+	: public IXElement
 	, public CXTreeNode
 	, public CXNotifier
+	, public IXMLPropertyParsable
 {
 	RefCountImplAt(CXTreeNode);
 public:
@@ -18,13 +19,11 @@ public:
 	XFakeProperty(Position);
 	XFakeProperty(Size);
 	XProperty(Rect);
+	XProperty(Invalid);
 	XProperty(SizeLimit);
-	XProperty(LayoutType);
 	XProperty(LayoutInvalid);
-	XProperty(LayoutDirection);
 	XProperty(Padding);
 	XProperty(Margin);
-	XProperty(Align);
 	XProperty(AutoWidth);
 	XProperty(AutoHeight);
 	XProperty(ExpandWidth);
@@ -37,6 +36,12 @@ public:
 	XProperty(Ghost);
 	XProperty(XFont);
 	XProperty(NeedRealPaint);
+	virtual XResult GetLayoutType(Property::ELayoutType& type);
+	virtual XResult SetLayoutType(Property::ELayoutType type);
+	virtual XResult GetLayoutDirection(Property::ELayoutDirection& direction);
+	virtual XResult SetLayoutDirection(Property::ELayoutDirection direction);
+	virtual XResult GetAlign(Property::EAlignType& type);
+	virtual XResult SetAlign(Property::EAlignType type);
 	//////////////////////////////////////////////////////////////////////////
 	// 排版专用属性，不暴露给外边.
 	XFakeProperty(InnerLayoutRect);
@@ -56,25 +61,28 @@ public:
 	virtual VOID MsgDown(IXMsg& msg);
 	virtual VOID MsgUp(IXMsg& msg);
 
-	XResult SetXMLProperty( CString name,CString value );
+	XResult SetXMLProperty( LPCTSTR name,LPCTSTR value ) override;
 
-	Property::CXProperty& GetPrpertyRef()	{return m_property;};
-	VOID GetRectInClientCoord(CRect& rect);
-	BOOL PaintCheck(CRect invalidRect, CRect& paintDstRect, CPoint& paintSrcPt);
+	void GetProperty(IXProperty*& prop) { prop = m_property; }
+	void SetProperty(IXProperty* prop) { m_property = prop; }
+
+	// 绘制相关
+	virtual VOID GetRectInClientCoord(CRect& rect);
+	virtual VOID Render();
+	virtual VOID Paint(CXMsg_Paint& arg);
+	virtual BOOL PaintCheck(CRect invalidRect, CRect& paintDstRect, CPoint& paintSrcPt);
 
 protected:
-	VOID On_CXMsg_PropertyChanged(CXMsg_PropertyChanged& arg);
 	VOID On_CXMsg_SizeChanged(CXMsg_SizeChanged& arg);
 	VOID On_CXMsg_Layout(CXMsg_Layout& arg);
 	VOID On_CXMsg_Paint(CXMsg_Paint& arg);
-	VOID On_CXMsg_RenderElement(CXMsg_RenderElement& arg);
 	VOID On_CXMsg_MouseEnter(CXMsg_MouseEnter& arg);
 	VOID On_CXMsg_MouseLeave(CXMsg_MouseLeave& arg);
 	VOID On_CXMsg_AttachDC(CXMsg_AttachDC& arg);
 	VOID On_CXMsg_FrameClick(CXMsg_FrameClick& arg);
 	VOID On_CXMsg_RealWndClosing(CXMsg_RealWndClosing& arg);
 protected:
-	Property::CXProperty	m_property;		// 属性集合，所有属性都存在这里
+	IXProperty*	m_property=nullptr;		// 属性集合，所有属性都存在这里
 	BOOL	m_isLayouting = FALSE;			// 在排版过程中不触发大小改变等事件
 	CToolTipCtrl	m_toolTip;
 	XPtr<CGDIMemDC>	m_memDC;
